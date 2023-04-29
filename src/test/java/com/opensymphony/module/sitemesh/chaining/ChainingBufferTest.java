@@ -98,12 +98,13 @@ public class ChainingBufferTest extends TestCase {
      */
     public void testWriter() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("123456");
-        SitemeshBufferWriter writer = new SitemeshBufferWriter();
-        writer.write("abc");
-        writer.writeSitemeshBufferFragment(new SitemeshBufferFragment(buffer, 1, 4));
-        writer.write("def");
-        assertEquals("abcdef", writer.toString());
-        assertEquals("abc2345def", getContent(writer.getSitemeshBuffer()));
+        try (SitemeshBufferWriter writer = new SitemeshBufferWriter()) {
+            writer.write("abc");
+            writer.writeSitemeshBufferFragment(new SitemeshBufferFragment(buffer, 1, 4));
+            writer.write("def");
+            assertEquals("abcdef", writer.toString());
+            assertEquals("abc2345def", getContent(writer.getSitemeshBuffer()));
+        }
     }
 
     /**

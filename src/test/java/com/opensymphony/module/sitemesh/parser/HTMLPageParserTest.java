@@ -91,7 +91,7 @@ public class HTMLPageParserTest extends TestCase {
     private Page page;
 
     /** The blocks. */
-    private Map blocks;
+    private Map<Object, Object> blocks;
 
     /** The encoding. */
     private String encoding;
@@ -258,11 +258,12 @@ public class HTMLPageParserTest extends TestCase {
      */
     private static File[] listParserTests(File dir) throws IOException {
         // get list of files to ignore
-        LineNumberReader ignoreReader = new LineNumberReader(new FileReader(new File(dir, "ignore.txt")));
-        final List ignoreFileNames = new ArrayList();
+        final List<String> ignoreFileNames = new ArrayList<>();
         String line;
-        while ((line = ignoreReader.readLine()) != null) {
-            ignoreFileNames.add(line);
+        try (LineNumberReader ignoreReader = new LineNumberReader(new FileReader(new File(dir, "ignore.txt")))) {
+            while ((line = ignoreReader.readLine()) != null) {
+                ignoreFileNames.add(line);
+            }
         }
         return dir.listFiles(new FilenameFilter() {
             public boolean accept(File currentDir, String name) {
@@ -298,8 +299,8 @@ public class HTMLPageParserTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    private Map readBlocks(Reader input) throws IOException {
-        Map blocks = new HashMap();
+    private Map<Object, Object> readBlocks(Reader input) throws IOException {
+        Map<Object, Object> blocks = new HashMap<>();
         LineNumberReader reader = new LineNumberReader(input);
         String line;
         String blockName = null;
