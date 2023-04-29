@@ -1,3 +1,18 @@
+<!--
+
+    sitemesh2 (https://github.com/hazendaz/sitemesh2)
+
+    Copyright 2011-2023 Hazendaz.
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of The Apache Software License,
+    Version 2.0 which accompanies this distribution, and is available at
+    https://www.apache.org/licenses/LICENSE-2.0.txt
+
+    Contributors:
+        Hazendaz (Jeremy Landis).
+
+-->
 <decorators>
     <!-- Any urls that are excluded will never be decorated by Sitemesh -->
     <excludes>
@@ -37,17 +52,17 @@
     <decorator name="inline-panel" page="/inline/dec-panel.jsp" />
 
     <decorator name="inline-5" page="/inline/dec-5.jsp" >
-    	<pattern>/inline/page5.jsp</pattern>
-   	</decorator>
+        <pattern>/inline/page5.jsp</pattern>
+       </decorator>
 
     <decorator name="inline-6" page="/inline/dec-6.jsp" >
-    	<pattern>/inline/page6.jsp</pattern>
-   	</decorator>
+        <pattern>/inline/page6.jsp</pattern>
+       </decorator>
 
     <decorator name="inline-7" page="/inline/dec-7.jsp" >
-    	<pattern>/inline/page7.jsp</pattern>
-    	<pattern>/inline/page7.html</pattern>
-   	</decorator>
+        <pattern>/inline/page7.jsp</pattern>
+        <pattern>/inline/page7.html</pattern>
+       </decorator>
 
     <decorator name="velocity" page="/decorators/velocity.vm">
         <pattern>/velocity/velocity.jsp</pattern>
