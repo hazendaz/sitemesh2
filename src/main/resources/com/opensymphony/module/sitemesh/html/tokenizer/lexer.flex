@@ -21,6 +21,8 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 //%line
 //%column
 
+// Profiling showed that this mode was slightly faster than %pack or %table.
+%switch
 // Profiling showed this as an optimal size buffer that was often filled but rarely exceeded.
 %buffer 2048
 
