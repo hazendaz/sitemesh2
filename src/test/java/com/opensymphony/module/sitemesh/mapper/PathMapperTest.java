@@ -15,8 +15,12 @@ package com.opensymphony.module.sitemesh.mapper;
 
 import junit.framework.TestCase;
 
+/**
+ * The Class PathMapperTest.
+ */
 public class PathMapperTest extends TestCase {
 
+    /** The path mapper. */
     private PathMapper pathMapper;
 
     protected void setUp() throws Exception {
@@ -42,6 +46,12 @@ public class PathMapperTest extends TestCase {
         pathMapper.put("default", "*");
     }
 
+    /**
+     * Test hardening.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testHardening() throws Exception {
         PathMapper bad = new PathMapper();
         bad.put(null, null);
@@ -50,6 +60,12 @@ public class PathMapperTest extends TestCase {
         assertNull(bad.get("/somenonexistingpath"));
     }
 
+    /**
+     * Test find exact key.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testFindExactKey() throws Exception {
         assertEquals("exact1", pathMapper.get("/myexactfile.html"));
         assertEquals("exact2", pathMapper.get("/mydir/myexactfile.html"));
@@ -57,6 +73,12 @@ public class PathMapperTest extends TestCase {
         assertEquals("exact4", pathMapper.get("/mydir/dodo"));
     }
 
+    /**
+     * Test find complex key.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testFindComplexKey() throws Exception {
         assertEquals("complex1", pathMapper.get("/mydir/"));
         assertEquals("complex1", pathMapper.get("/mydir/test1.xml"));
@@ -79,6 +101,12 @@ public class PathMapperTest extends TestCase {
         assertEquals("complex6", pathMapper.get("/mydir/complexx/a___b.xhtml"));
     }
 
+    /**
+     * Test find default key.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testFindDefaultKey() throws Exception {
         assertEquals("default", pathMapper.get(null));
         assertEquals("default", pathMapper.get("/"));

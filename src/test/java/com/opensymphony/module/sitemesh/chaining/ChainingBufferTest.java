@@ -24,32 +24,64 @@ import java.util.TreeMap;
 import junit.framework.TestCase;
 
 /**
+ * The Class ChainingBufferTest.
  */
 public class ChainingBufferTest extends TestCase {
+
+    /**
+     * Test simple chain.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testSimpleChain() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("ab"));
         assertEquals("12ab34", getContent(buffer));
         assertCorrectLength(buffer);
     }
 
+    /**
+     * Test before.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testBefore() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("ab"));
         assertEquals("1", getContent(buffer, 0, 1));
         assertEquals("12ab", getContent(buffer, 0, 2));
     }
 
+    /**
+     * Test after.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testAfter() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("ab"));
         assertEquals("ab34", getContent(buffer, 2, 2));
         assertEquals("4", getContent(buffer, 3, 1));
     }
 
+    /**
+     * Test fragment.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testFragment() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("abcd", 1, 2));
         assertEquals("12bc34", getContent(buffer));
         assertCorrectLength(buffer);
     }
 
+    /**
+     * Test deep fragments.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testDeepFragments() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("123456789", 3,
                 newBufferFragment("abcdefg", 4, newBufferFragment("hijklm", 1, 1), 5, newBufferFragment("nopqr", 1, 4)),
@@ -58,6 +90,12 @@ public class ChainingBufferTest extends TestCase {
         assertCorrectLength(buffer);
     }
 
+    /**
+     * Test writer.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testWriter() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("123456");
         SitemeshBufferWriter writer = new SitemeshBufferWriter();
@@ -68,32 +106,103 @@ public class ChainingBufferTest extends TestCase {
         assertEquals("abc2345def", getContent(writer.getSitemeshBuffer()));
     }
 
+    /**
+     * Gets the content.
+     *
+     * @param buffer
+     *            the buffer
+     *
+     * @return the content
+     *
+     * @throws Exception
+     *             the exception
+     */
     private String getContent(SitemeshBuffer buffer) throws Exception {
         CharArrayWriter writer = new CharArrayWriter();
         buffer.writeTo(writer, 0, buffer.getBufferLength());
         return writer.toString();
     }
 
+    /**
+     * Gets the content.
+     *
+     * @param buffer
+     *            the buffer
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     *
+     * @return the content
+     *
+     * @throws Exception
+     *             the exception
+     */
     private String getContent(SitemeshBuffer buffer, int start, int length) throws Exception {
         CharArrayWriter writer = new CharArrayWriter();
         buffer.writeTo(writer, start, length);
         return writer.toString();
     }
 
+    /**
+     * Assert correct length.
+     *
+     * @param buffer
+     *            the buffer
+     *
+     * @throws Exception
+     *             the exception
+     */
     private void assertCorrectLength(SitemeshBuffer buffer) throws Exception {
         assertEquals(getContent(buffer).length(), buffer.getTotalLength());
     }
 
+    /**
+     * New sitemesh buffer.
+     *
+     * @param content
+     *            the content
+     *
+     * @return the sitemesh buffer
+     */
     private SitemeshBuffer newSitemeshBuffer(String content) {
         return new DefaultSitemeshBuffer(content.toCharArray(), content.length());
     }
 
+    /**
+     * New sitemesh buffer.
+     *
+     * @param content
+     *            the content
+     * @param pos1
+     *            the pos 1
+     * @param frag1
+     *            the frag 1
+     *
+     * @return the sitemesh buffer
+     */
     private SitemeshBuffer newSitemeshBuffer(String content, int pos1, SitemeshBufferFragment frag1) {
         TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<Integer, SitemeshBufferFragment>();
         fragments.put(pos1, frag1);
         return new DefaultSitemeshBuffer(content.toCharArray(), content.length(), fragments);
     }
 
+    /**
+     * New sitemesh buffer.
+     *
+     * @param content
+     *            the content
+     * @param pos1
+     *            the pos 1
+     * @param frag1
+     *            the frag 1
+     * @param pos2
+     *            the pos 2
+     * @param frag2
+     *            the frag 2
+     *
+     * @return the sitemesh buffer
+     */
     private SitemeshBuffer newSitemeshBuffer(String content, int pos1, SitemeshBufferFragment frag1, int pos2,
             SitemeshBufferFragment frag2) {
         TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<Integer, SitemeshBufferFragment>();
@@ -102,18 +211,66 @@ public class ChainingBufferTest extends TestCase {
         return new DefaultSitemeshBuffer(content.toCharArray(), content.length(), fragments);
     }
 
+    /**
+     * New buffer fragment.
+     *
+     * @param content
+     *            the content
+     *
+     * @return the sitemesh buffer fragment
+     */
     private SitemeshBufferFragment newBufferFragment(String content) {
         return new SitemeshBufferFragment(newSitemeshBuffer(content), 0, content.length());
     }
 
+    /**
+     * New buffer fragment.
+     *
+     * @param content
+     *            the content
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     *
+     * @return the sitemesh buffer fragment
+     */
     private SitemeshBufferFragment newBufferFragment(String content, int start, int length) {
         return new SitemeshBufferFragment(newSitemeshBuffer(content), start, length);
     }
 
+    /**
+     * New buffer fragment.
+     *
+     * @param content
+     *            the content
+     * @param pos1
+     *            the pos 1
+     * @param frag1
+     *            the frag 1
+     *
+     * @return the sitemesh buffer fragment
+     */
     private SitemeshBufferFragment newBufferFragment(String content, int pos1, SitemeshBufferFragment frag1) {
         return new SitemeshBufferFragment(newSitemeshBuffer(content, pos1, frag1), 0, content.length());
     }
 
+    /**
+     * New buffer fragment.
+     *
+     * @param content
+     *            the content
+     * @param pos1
+     *            the pos 1
+     * @param frag1
+     *            the frag 1
+     * @param pos2
+     *            the pos 2
+     * @param frag2
+     *            the frag 2
+     *
+     * @return the sitemesh buffer fragment
+     */
     private SitemeshBufferFragment newBufferFragment(String content, int pos1, SitemeshBufferFragment frag1, int pos2,
             SitemeshBufferFragment frag2) {
         return new SitemeshBufferFragment(newSitemeshBuffer(content, pos1, frag1, pos2, frag2), 0, content.length());

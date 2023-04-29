@@ -38,6 +38,22 @@ public abstract class BaseWebAppDecorator implements Decorator {
      * More convenient version of
      * {@link #render(com.opensymphony.sitemesh.Content, com.opensymphony.sitemesh.SiteMeshContext)} suited for Servlet
      * API calls.
+     *
+     * @param content
+     *            the content
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param servletContext
+     *            the servlet context
+     * @param webAppContext
+     *            the web app context
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws ServletException
+     *             the servlet exception
      */
     protected abstract void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException;

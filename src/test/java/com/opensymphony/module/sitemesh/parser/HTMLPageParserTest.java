@@ -35,11 +35,17 @@ import junit.framework.TestSuite;
  */
 public class HTMLPageParserTest extends TestCase {
 
+    /** The Constant PARSER_PATTERN. */
     private static final Pattern PARSER_PATTERN = Pattern.compile("parser\\.(.+)\\.class");
 
     /**
      * This test case builds a custom suite, containing a collection of smaller suites (one for each file in
      * src/parser-tests).
+     *
+     * @return the test
+     *
+     * @throws Exception
+     *             the exception
      */
     public static Test suite() throws Exception {
         TestSuite result = new TestSuite(HTMLPageParserTest.class.getName());
@@ -81,12 +87,31 @@ public class HTMLPageParserTest extends TestCase {
         return result;
     }
 
+    /** The page. */
     private Page page;
+
+    /** The blocks. */
     private Map blocks;
+
+    /** The encoding. */
     private String encoding;
+
+    /** The parser. */
     private final PageParser parser;
+
+    /** The file. */
     private File file;
 
+    /**
+     * Instantiates a new HTML page parser test.
+     *
+     * @param parser
+     *            the parser
+     * @param inputFile
+     *            the input file
+     * @param test
+     *            the test
+     */
     public HTMLPageParserTest(PageParser parser, File inputFile, String test) {
         super(test);
         this.parser = parser;
@@ -103,10 +128,22 @@ public class HTMLPageParserTest extends TestCase {
         this.page = parser.parse(new DefaultSitemeshBuffer(input.toCharArray()));
     }
 
+    /**
+     * Test title.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testTitle() throws Exception {
         assertBlock("TITLE", page.getTitle());
     }
 
+    /**
+     * Test body.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testBody() throws Exception {
         StringWriter body = new StringWriter();
         page.writeBody(body);
@@ -114,6 +151,12 @@ public class HTMLPageParserTest extends TestCase {
         assertBlock("BODY", body.toString());
     }
 
+    /**
+     * Test head.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testHead() throws Exception {
         String head;
         if (page instanceof HTMLPage) {
@@ -127,6 +170,12 @@ public class HTMLPageParserTest extends TestCase {
         assertBlock("HEAD", head.toString());
     }
 
+    /**
+     * Test full page.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testFullPage() throws Exception {
         StringWriter fullPage = new StringWriter();
         page.writePage(fullPage);
@@ -134,6 +183,12 @@ public class HTMLPageParserTest extends TestCase {
         assertBlock("INPUT", fullPage.toString());
     }
 
+    /**
+     * Test properties.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testProperties() throws Exception {
         Properties props = new Properties();
         String propsString = (String) blocks.get("PROPERTIES");
@@ -154,7 +209,10 @@ public class HTMLPageParserTest extends TestCase {
     }
 
     /**
-     * compare difference between using parse(char[]) and parse(char[], length)
+     * compare difference between using parse(char[]) and parse(char[], length).
+     *
+     * @throws Exception
+     *             the exception
      */
     public void testContentSanity() throws Exception {
         String input = (String) blocks.get("INPUT");
@@ -166,6 +224,14 @@ public class HTMLPageParserTest extends TestCase {
         assertEquals(bigPage.getPage(), page.getPage());
     }
 
+    /**
+     * Join.
+     *
+     * @param values
+     *            the values
+     *
+     * @return the string
+     */
     private String join(String[] values) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < values.length; i++) {
@@ -179,6 +245,17 @@ public class HTMLPageParserTest extends TestCase {
 
     // -------------------------------------------------
 
+    /**
+     * List parser tests.
+     *
+     * @param dir
+     *            the dir
+     *
+     * @return the file[]
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private static File[] listParserTests(File dir) throws IOException {
         // get list of files to ignore
         LineNumberReader ignoreReader = new LineNumberReader(new FileReader(new File(dir, "ignore.txt")));
@@ -194,6 +271,17 @@ public class HTMLPageParserTest extends TestCase {
         });
     }
 
+    /**
+     * Assert block.
+     *
+     * @param blockName
+     *            the block name
+     * @param result
+     *            the result
+     *
+     * @throws Exception
+     *             the exception
+     */
     private void assertBlock(String blockName, String result) throws Exception {
         String expected = (String) blocks.get(blockName);
         assertEquals(file.getName() + " : Block did not match", expected.trim(), result.trim());
@@ -201,6 +289,14 @@ public class HTMLPageParserTest extends TestCase {
 
     /**
      * Read input to test and break down into blocks. See parser-tests/readme.txt
+     *
+     * @param input
+     *            the input
+     *
+     * @return the map
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     private Map readBlocks(Reader input) throws IOException {
         Map blocks = new HashMap();

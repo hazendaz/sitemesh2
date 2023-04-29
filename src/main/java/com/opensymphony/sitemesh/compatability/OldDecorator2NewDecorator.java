@@ -36,8 +36,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class OldDecorator2NewDecorator extends BaseWebAppDecorator implements RequestConstants {
 
+    /** The old decorator. */
     private final com.opensymphony.module.sitemesh.Decorator oldDecorator;
 
+    /**
+     * Instantiates a new old decorator 2 new decorator.
+     *
+     * @param oldDecorator
+     *            the old decorator
+     */
     public OldDecorator2NewDecorator(com.opensymphony.module.sitemesh.Decorator oldDecorator) {
         this.oldDecorator = oldDecorator;
     }

@@ -22,10 +22,18 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 /**
+ * The Class DivExtractingPageParserTest.
+ *
  * @author Joe Walnes
  */
 public class DivExtractingPageParserTest extends TestCase {
 
+    /**
+     * Test replaces top level divs with place holders.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testReplacesTopLevelDivsWithPlaceHolders() throws IOException {
         String input = "" + "<html>\n" + "  <head><title>Title</title></head>\n" + "  <body>\n"
                 + "    <div id='one'>Hello</div>\n" + "    Blah\n"

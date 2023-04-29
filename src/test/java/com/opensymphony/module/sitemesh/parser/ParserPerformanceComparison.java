@@ -30,10 +30,24 @@ import java.net.URL;
  */
 public class ParserPerformanceComparison {
 
+    /** The Constant HTML_FILE. */
     private static final String HTML_FILE = "sitemesh-performance-test.html";
+
+    /** The Constant HTML_URL. */
     private static final String HTML_URL = "https://jira.atlassian.com/browse/JRA-1330";
+
+    /** The Constant PARSE_COUNT. */
     private static final int PARSE_COUNT = 1000;
 
+    /**
+     * The main method.
+     *
+     * @param args
+     *            the arguments
+     *
+     * @throws Exception
+     *             the exception
+     */
     public static void main(String... args) throws Exception {
         // Download the file if it doesn't exist
         File file = new File(System.getProperty("java.io.tmpdir"), HTML_FILE);
@@ -99,6 +113,23 @@ public class ParserPerformanceComparison {
                 superfastTime / fastTime * 100, "X"));
     }
 
+    /**
+     * Run performance test.
+     *
+     * @param name
+     *            the name
+     * @param data
+     *            the data
+     * @param parser
+     *            the parser
+     * @param times
+     *            the times
+     *
+     * @return the long
+     *
+     * @throws Exception
+     *             the exception
+     */
     public static long runPerformanceTest(String name, char[] data, PageParser parser, int times) throws Exception {
         Writer writer = new NullWriter();
         long start = System.currentTimeMillis();
@@ -113,6 +144,9 @@ public class ParserPerformanceComparison {
         return time;
     }
 
+    /**
+     * The Class NullWriter.
+     */
     private static class NullWriter extends Writer {
         @Override
         public void write(char[] cbuf, int off, int len) throws IOException {
@@ -128,6 +162,17 @@ public class ParserPerformanceComparison {
         }
     }
 
+    /**
+     * Copy.
+     *
+     * @param is
+     *            the is
+     * @param os
+     *            the os
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private static void copy(InputStream is, OutputStream os) throws IOException {
         byte[] buf = new byte[4096];
         int length;
@@ -136,6 +181,17 @@ public class ParserPerformanceComparison {
         }
     }
 
+    /**
+     * Copy.
+     *
+     * @param reader
+     *            the reader
+     * @param writer
+     *            the writer
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private static void copy(Reader reader, Writer writer) throws IOException {
         char[] buf = new char[4096];
         int length;
@@ -144,6 +200,12 @@ public class ParserPerformanceComparison {
         }
     }
 
+    /**
+     * Close quietly.
+     *
+     * @param closeable
+     *            the closeable
+     */
     private static void closeQuietly(Closeable closeable) {
         try {
             if (closeable != null) {

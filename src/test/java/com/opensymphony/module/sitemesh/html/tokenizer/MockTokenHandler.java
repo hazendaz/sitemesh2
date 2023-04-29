@@ -18,19 +18,49 @@ import com.opensymphony.module.sitemesh.html.Text;
 
 import junit.framework.Assert;
 
+/**
+ * The Class MockTokenHandler.
+ */
 class MockTokenHandler implements TokenHandler {
 
+    /** The expected. */
     private StringBuilder expected = new StringBuilder();
+
+    /** The actual. */
     private StringBuilder actual = new StringBuilder();
 
+    /**
+     * Expect text.
+     *
+     * @param tag
+     *            the tag
+     */
     public void expectText(String tag) {
         expected.append(tag);
     }
 
+    /**
+     * Expect tag.
+     *
+     * @param type
+     *            the type
+     * @param tag
+     *            the tag
+     */
     public void expectTag(int type, String tag) {
         expectTag(type, tag, new String[0]);
     }
 
+    /**
+     * Expect tag.
+     *
+     * @param type
+     *            the type
+     * @param tag
+     *            the tag
+     * @param attributes
+     *            the attributes
+     */
     public void expectTag(int type, String tag, String[] attributes) {
         expected.append("{{TAG : ").append(tag);
         for (int i = 0; i < attributes.length; i += 2) {
@@ -61,10 +91,21 @@ class MockTokenHandler implements TokenHandler {
         Assert.fail("Encountered error: " + message);
     }
 
+    /**
+     * Verify.
+     */
     public void verify() {
         Assert.assertEquals(expected.toString(), actual.toString());
     }
 
+    /**
+     * Type as string.
+     *
+     * @param type
+     *            the type
+     *
+     * @return the string
+     */
     private String typeAsString(int type) {
         switch (type) {
             case Tag.OPEN:

@@ -18,8 +18,12 @@ import com.opensymphony.module.sitemesh.html.Text;
 
 import junit.framework.TestCase;
 
+/**
+ * The Class TagTokenizerTest.
+ */
 public class TagTokenizerTest extends TestCase {
 
+    /** The handler. */
     private MockTokenHandler handler;
 
     protected void setUp() throws Exception {
@@ -27,6 +31,9 @@ public class TagTokenizerTest extends TestCase {
         handler = new MockTokenHandler();
     }
 
+    /**
+     * Test splits tags from text.
+     */
     public void testSplitsTagsFromText() {
         // expectations
         handler.expectTag(Tag.OPEN, "hello");
@@ -41,6 +48,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test distinguishes between open close and empty tags.
+     */
     public void testDistinguishesBetweenOpenCloseAndEmptyTags() {
         // expectations
         handler.expectTag(Tag.OPEN, "open");
@@ -53,6 +63,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test treats comments as text.
+     */
     public void testTreatsCommentsAsText() {
         // expectations
         handler.expectText("hello world ");
@@ -69,6 +82,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test extracts unquoted attributes from tag.
+     */
     public void testExtractsUnquotedAttributesFromTag() {
         // expectations
         handler.expectTag(Tag.OPEN, "hello", new String[] { "name", "world", "foo", "boo" });
@@ -79,6 +95,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test extracts quoted attributes from tag.
+     */
     public void testExtractsQuotedAttributesFromTag() {
         // expectations
         handler.expectTag(Tag.OPEN, "hello", new String[] { "name", "the world", "foo", "boo" });
@@ -89,6 +108,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test handles mixed quote types in attributes.
+     */
     public void testHandlesMixedQuoteTypesInAttributes() {
         // expectations
         handler.expectTag(Tag.OPEN, "hello", new String[] { "name", "it's good", "foo", "say \"boo\"" });
@@ -99,6 +121,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test handles html style empty attributes.
+     */
     public void testHandlesHtmlStyleEmptyAttributes() {
         // expectations
         handler.expectTag(Tag.OPEN, "hello", new String[] { "isgood", null, "and", null, "stuff", null });
@@ -109,6 +134,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test supports whitespace in elements.
+     */
     public void testSupportsWhitespaceInElements() {
         // expectations
         handler.expectTag(Tag.OPEN, "hello", new String[] { "somestuff", "good", "foo", null, "x", "long\n string" });
@@ -124,6 +152,9 @@ public class TagTokenizerTest extends TestCase {
 
     }
 
+    /**
+     * Test exposes original tag to handler.
+     */
     public void testExposesOriginalTagToHandler() {
         // Should really use a mock library for this expectation, but I'd rather not
         // add a new dependency for the sake of a single test.
@@ -154,6 +185,9 @@ public class TagTokenizerTest extends TestCase {
         assertTrue("tag() never called", called[0]);
     }
 
+    /**
+     * Test allows slash in unquoted attribute.
+     */
     public void testAllowsSlashInUnquotedAttribute() {
         // expectations
         handler.expectTag(Tag.OPEN, "something", new String[] { "type", "text/html" });
@@ -164,6 +198,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test allows trailing quote on attribute.
+     */
     public void testAllowsTrailingQuoteOnAttribute() {
         // expectations
         handler.expectTag(Tag.OPEN, "something", new String[] { "type", "bl'ah\"" });
@@ -174,6 +211,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test allows awkward chars in element and attribute.
+     */
     public void testAllowsAwkwardCharsInElementAndAttribute() {
         // expectations
         handler.expectTag(Tag.OPEN, "name:space", new String[] { "foo:bar", "x:y%" });
@@ -189,6 +229,9 @@ public class TagTokenizerTest extends TestCase {
 
     }
 
+    /**
+     * Test treats xmp cdata script and processing instructions as text.
+     */
     public void testTreatsXmpCdataScriptAndProcessingInstructionsAsText() {
         // expectations
         handler.expectText("<script language=jscript> if (a < b & > c)\n alert(); </script>");
@@ -206,6 +249,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test treats unterminated tag at eof as text.
+     */
     public void testTreatsUnterminatedTagAtEofAsText() {
         // expectations
         handler.expectText("hello");
@@ -217,6 +263,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test treats lt at eof as text.
+     */
     public void testTreatsLtAtEofAsText() {
         // expectations
         handler.expectText("hello");
@@ -228,6 +277,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test treats unterminated attribute name at eof as text.
+     */
     public void testTreatsUnterminatedAttributeNameAtEofAsText() {
         // expectations
         handler.expectText("hello");
@@ -245,6 +297,9 @@ public class TagTokenizerTest extends TestCase {
      * TagTokenizer("hello<world x=\"fff"); tokenizer.start(handler); // verify handler.verify(); }
      */
 
+    /**
+     * Test treats unterminated attribute at eof as text.
+     */
     public void testTreatsUnterminatedAttributeAtEofAsText() {
         // expectations
         handler.expectText("hello");
@@ -256,6 +311,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test treats unterminated unquoted attribute value at eof as text.
+     */
     public void testTreatsUnterminatedUnquotedAttributeValueAtEofAsText() {
         // expectations
         handler.expectText("hello");
@@ -267,6 +325,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test treats unterminated closing tag at eof as text.
+     */
     public void testTreatsUnterminatedClosingTagAtEofAsText() {
         // expectations
         handler.expectText("hello");
@@ -278,6 +339,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test ignores evil malformed pair of angle brackets.
+     */
     public void testIgnoresEvilMalformedPairOfAngleBrackets() {
         // expectations
         handler.expectTag(Tag.OPEN, "good");
@@ -288,6 +352,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test does not try to parse tags unless the handler cares.
+     */
     public void testDoesNotTryToParseTagsUnlessTheHandlerCares() {
         // setup
         handler = new MockTokenHandler() {
@@ -308,6 +375,9 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
+    /**
+     * Test parses magic comment blocks.
+     */
     public void testParsesMagicCommentBlocks() {
         // expectations
         handler.expectTag(Tag.OPEN_MAGIC_COMMENT, "if", new String[] { "gte", null, "mso", null, "9", null });
@@ -321,6 +391,9 @@ public class TagTokenizerTest extends TestCase {
 
     }
 
+    /**
+     * Test tolerates extra quote closing attribute value.
+     */
     public void testToleratesExtraQuoteClosingAttributeValue() {
         // expectations
         handler = new MockTokenHandler() {

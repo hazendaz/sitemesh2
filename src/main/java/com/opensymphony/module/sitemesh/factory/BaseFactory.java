@@ -52,12 +52,15 @@ public abstract class BaseFactory extends Factory {
     /** Map that associates content-types with PageParser instances. */
     protected Map pageParsers;
 
-    /** A map of paths that are excluded from decoration */
+    /** A map of paths that are excluded from decoration. */
     protected PathMapper excludeUrls;
 
     /**
      * Constructor for default implementation of Factory. Should never be called by client. Singleton instance should be
      * obtained instead.
+     *
+     * @param config
+     *            the config
      *
      * @see #getInstance(com.opensymphony.module.sitemesh.Config config)
      */
@@ -116,7 +119,14 @@ public abstract class BaseFactory extends Factory {
         decoratorMapper = null;
     }
 
-    /** Push new DecoratorMapper onto end of chain. */
+    /**
+     * Push new DecoratorMapper onto end of chain.
+     *
+     * @param className
+     *            the class name
+     * @param properties
+     *            the properties
+     */
     protected void pushDecoratorMapper(String className, Properties properties) {
         try {
             Class decoratorMapperClass = ClassLoaderUtil.loadClass(className, getClass());
@@ -130,6 +140,19 @@ public abstract class BaseFactory extends Factory {
         }
     }
 
+    /**
+     * Gets the decorator mapper.
+     *
+     * @param decoratorMapperClass
+     *            the decorator mapper class
+     *
+     * @return the decorator mapper
+     *
+     * @throws InstantiationException
+     *             the instantiation exception
+     * @throws IllegalAccessException
+     *             the illegal access exception
+     */
     protected DecoratorMapper getDecoratorMapper(Class decoratorMapperClass)
             throws InstantiationException, IllegalAccessException {
         return (DecoratorMapper) decoratorMapperClass.newInstance();
@@ -143,6 +166,11 @@ public abstract class BaseFactory extends Factory {
     /**
      * Map new PageParser to given content-type. contentType = null signifies default PageParser for unknown
      * content-types.
+     *
+     * @param contentType
+     *            the content type
+     * @param className
+     *            the class name
      */
     protected void mapParser(String contentType, String className) {
         if (className.endsWith(".DefaultPageParser")) {
@@ -161,6 +189,12 @@ public abstract class BaseFactory extends Factory {
         }
     }
 
+    /**
+     * Adds the exclude url.
+     *
+     * @param path
+     *            the path
+     */
     protected void addExcludeUrl(String path) {
         excludeUrls.put("", path);
     }

@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * A converter from one character type to another
  * <p>
- * This class is not threadsafe
+ * This class is not threadsafe.
  */
 public class OutputConverter {
     /**
@@ -29,6 +29,14 @@ public class OutputConverter {
      */
     public static final String WORK_AROUND_RESIN_I18N_BUG = "sitemesh.resin.i18n.workaround";
 
+    /**
+     * Gets the writer.
+     *
+     * @param out
+     *            the out
+     *
+     * @return the writer
+     */
     public static Writer getWriter(Writer out) {
         if ("true".equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG)))
             return new ResinWriter(out);
@@ -36,6 +44,17 @@ public class OutputConverter {
             return out;
     }
 
+    /**
+     * Convert.
+     *
+     * @param inputString
+     *            the input string
+     *
+     * @return the string
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public static String convert(String inputString) throws IOException {
         if ("true".equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG))) {
             StringWriter sr = new StringWriter();
@@ -49,9 +68,19 @@ public class OutputConverter {
      * To get internationalised characters to work on Resin, some conversions need to take place.
      */
     static class ResinWriter extends Writer {
+
+        /** The target. */
         private final Writer target;
+
+        /** The buffer. */
         private final CharArrayWriter buffer = new CharArrayWriter();
 
+        /**
+         * Instantiates a new resin writer.
+         *
+         * @param target
+         *            the target
+         */
         public ResinWriter(Writer target) {
             this.target = target;
         }
@@ -71,6 +100,17 @@ public class OutputConverter {
         }
     }
 
+    /**
+     * Resin convert.
+     *
+     * @param inputString
+     *            the input string
+     * @param writer
+     *            the writer
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private static void resinConvert(String inputString, Writer writer) throws IOException {
         // does this need to be made configurable? Or are these two always correct?
         InputStreamReader reader = new InputStreamReader(

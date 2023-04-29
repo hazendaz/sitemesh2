@@ -32,8 +32,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class DecoratorMapper2DecoratorSelector implements DecoratorSelector {
 
+    /** The decorator mapper. */
     private final DecoratorMapper decoratorMapper;
 
+    /**
+     * Instantiates a new decorator mapper 2 decorator selector.
+     *
+     * @param decoratorMapper
+     *            the decorator mapper
+     */
     public DecoratorMapper2DecoratorSelector(DecoratorMapper decoratorMapper) {
         this.decoratorMapper = decoratorMapper;
     }

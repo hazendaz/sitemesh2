@@ -22,16 +22,34 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+/**
+ * The Class HTMLProcessorTest.
+ */
 public class HTMLProcessorTest extends TestCase {
 
+    /** The body. */
     private SitemeshBufferFragment.Builder body;
 
+    /**
+     * Creates the processor.
+     *
+     * @param input
+     *            the input
+     *
+     * @return the HTML processor
+     */
     private HTMLProcessor createProcessor(String input) {
         SitemeshBuffer buffer = new StringSitemeshBuffer(input);
         body = SitemeshBufferFragment.builder().setBuffer(buffer);
         return new HTMLProcessor(buffer, body);
     }
 
+    /**
+     * Test creates state transition event.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testCreatesStateTransitionEvent() throws IOException {
         String input = "<a></a>";
         HTMLProcessor htmlProcessor = createProcessor(input);
@@ -50,6 +68,12 @@ public class HTMLProcessorTest extends TestCase {
         assertEquals("finished", stateLog.toString());
     }
 
+    /**
+     * Test supports conventional reader and writer.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testSupportsConventionalReaderAndWriter() throws IOException {
         HTMLProcessor processor = createProcessor("<hello><b id=\"something\">world</b></hello>");
         processor.addRule(new TagReplaceRule("b", "strong"));
@@ -58,6 +82,12 @@ public class HTMLProcessorTest extends TestCase {
         assertEquals("<hello><strong id=\"something\">world</strong></hello>", body.build().getStringContent());
     }
 
+    /**
+     * Test allows rules to modify attributes.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testAllowsRulesToModifyAttributes() throws IOException {
         HTMLProcessor processor = createProcessor("<hello><a href=\"modify-me\">world</a></hello>");
         processor.addRule(new BasicRule("a") {
@@ -77,6 +107,12 @@ public class HTMLProcessorTest extends TestCase {
         assertEquals("<hello><a href=\"MODIFY-ME\">world</a></hello>", body.build().getStringContent());
     }
 
+    /**
+     * Test supports chained filtering of text content.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testSupportsChainedFilteringOfTextContent() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>world</hello>");
         processor.addTextFilter(new TextFilter() {
@@ -94,6 +130,12 @@ public class HTMLProcessorTest extends TestCase {
         assertEquals("<HELLo>WoRLD</HELLo>", body.build().getStringContent());
     }
 
+    /**
+     * Test supports text filters for specific states.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testSupportsTextFiltersForSpecificStates() throws IOException {
         HTMLProcessor processor = createProcessor("la la<br> la la <capitalism>laaaa<br> laaaa</capitalism> la la");
         State capsState = new State();
@@ -109,6 +151,12 @@ public class HTMLProcessorTest extends TestCase {
         assertEquals("la la<br> la la <capitalism>LAAAA<BR> LAAAA</capitalism> la la", body.build().getStringContent());
     }
 
+    /**
+     * Test can add attributes to custom tag.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testCanAddAttributesToCustomTag() throws IOException {
         String html = "<h1>Headline</h1>";
         HTMLProcessor htmlProcessor = createProcessor(html);

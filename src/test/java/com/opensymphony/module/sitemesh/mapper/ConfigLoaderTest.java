@@ -19,9 +19,15 @@ import java.io.FileWriter;
 
 import junit.framework.TestCase;
 
+/**
+ * The Class ConfigLoaderTest.
+ */
 public class ConfigLoaderTest extends TestCase {
 
+    /** The config loader. */
     private ConfigLoader configLoader;
+
+    /** The temp config file. */
     private File tempConfigFile;
 
     protected void setUp() throws Exception {
@@ -87,6 +93,12 @@ public class ConfigLoaderTest extends TestCase {
         configLoader = null;
     }
 
+    /**
+     * Test mapped names.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testMappedNames() throws Exception {
         assertEquals(configLoader.getMappedName("/info/somepage.html"), "default");
         assertEquals(configLoader.getMappedName("/test/somepage.html"), "default");
@@ -100,6 +112,12 @@ public class ConfigLoaderTest extends TestCase {
         assertEquals(configLoader.getMappedName("/old/someoldpage.html"), "old");
     }
 
+    /**
+     * Test decorator presence.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testDecoratorPresence() throws Exception {
         assertNotNull(configLoader.getDecoratorByName("default"));
         assertNotNull(configLoader.getDecoratorByName("other"));
@@ -108,6 +126,12 @@ public class ConfigLoaderTest extends TestCase {
         assertNotNull(configLoader.getDecoratorByName("old"));
     }
 
+    /**
+     * Test decorators.
+     *
+     * @throws Exception
+     *             the exception
+     */
     public void testDecorators() throws Exception {
         assertEquals(configLoader.getDecoratorByName("default").getName(), "default");
         assertEquals(configLoader.getDecoratorByName("default").getPage(), "/decorators/default.jsp");

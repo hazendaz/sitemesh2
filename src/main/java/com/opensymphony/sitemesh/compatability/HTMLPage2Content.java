@@ -27,8 +27,16 @@ import java.io.Writer;
  * @since SiteMesh 3
  */
 public class HTMLPage2Content implements Content {
+
+    /** The page. */
     private final HTMLPage page;
 
+    /**
+     * Instantiates a new HTML page 2 content.
+     *
+     * @param page
+     *            the page
+     */
     public HTMLPage2Content(HTMLPage page) {
         this.page = page;
     }

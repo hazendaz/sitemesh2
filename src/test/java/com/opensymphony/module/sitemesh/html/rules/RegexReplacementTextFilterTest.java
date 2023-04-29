@@ -22,16 +22,34 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+/**
+ * The Class RegexReplacementTextFilterTest.
+ */
 public class RegexReplacementTextFilterTest extends TestCase {
 
+    /** The body. */
     private SitemeshBufferFragment.Builder body;
 
+    /**
+     * Creates the processor.
+     *
+     * @param input
+     *            the input
+     *
+     * @return the HTML processor
+     */
     private HTMLProcessor createProcessor(String input) {
         SitemeshBuffer buffer = new DefaultSitemeshBuffer(input.toCharArray());
         body = SitemeshBufferFragment.builder().setBuffer(buffer);
         return new HTMLProcessor(buffer, body);
     }
 
+    /**
+     * Test replaces text content matched by regular expression.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testReplacesTextContentMatchedByRegularExpression() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>Today is DATE so hi</hello>");
         processor.addTextFilter(new RegexReplacementTextFilter("DATE", "1-jan-2009"));
@@ -40,6 +58,12 @@ public class RegexReplacementTextFilterTest extends TestCase {
         assertEquals("<hello>Today is 1-jan-2009 so hi</hello>", body.build().getStringContent());
     }
 
+    /**
+     * Test allows matched group to be used in subsitution.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testAllowsMatchedGroupToBeUsedInSubsitution() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>I think JIRA:SIM-1234 is the way forward</hello>");
         processor.addTextFilter(new RegexReplacementTextFilter("JIRA:([A-Z]+\\-[0-9]+)",
