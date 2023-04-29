@@ -21,8 +21,6 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 //%line
 //%column
 
-// Profiling showed that this mode was slightly faster than %pack or %table.
-%switch
 // Profiling showed this as an optimal size buffer that was often filled but rarely exceeded.
 %buffer 2048
 
@@ -70,4 +68,4 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 }
 
 /* Fallback rule - if nothing else matches. */
-.|\n                    { reportError("Illegal character <"+ yytext() +">", line(), column()); return Parser.TEXT; }
+[^]                    { reportError("Illegal character <"+ yytext() +">", line(), column()); return Parser.TEXT; }
