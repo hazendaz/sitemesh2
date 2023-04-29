@@ -36,7 +36,7 @@ public class Buffer {
 
     private final PageParser pageParser;
     private final String encoding;
-    private final static TextEncoder TEXT_ENCODER = new TextEncoder();
+    private static final TextEncoder TEXT_ENCODER = new TextEncoder();
 
     private SitemeshBufferWriter bufferedWriter;
     private FastByteArrayOutputStream bufferedStream;

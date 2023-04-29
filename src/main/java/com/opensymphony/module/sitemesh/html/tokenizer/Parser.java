@@ -43,17 +43,17 @@ public class Parser extends Lexer {
     private int pushbackToken = -1;
     private String pushbackText;
 
-    public final static short SLASH = 257;
-    public final static short WHITESPACE = 258;
-    public final static short EQUALS = 259;
-    public final static short QUOTE = 260;
-    public final static short WORD = 261;
-    public final static short TEXT = 262;
-    public final static short QUOTED = 263;
-    public final static short LT = 264;
-    public final static short GT = 265;
-    public final static short LT_OPEN_MAGIC_COMMENT = 266;
-    public final static short LT_CLOSE_MAGIC_COMMENT = 267;
+    public static final short SLASH = 257;
+    public static final short WHITESPACE = 258;
+    public static final short EQUALS = 259;
+    public static final short QUOTE = 260;
+    public static final short WORD = 261;
+    public static final short TEXT = 262;
+    public static final short QUOTED = 263;
+    public static final short LT = 264;
+    public static final short GT = 265;
+    public static final short LT_OPEN_MAGIC_COMMENT = 266;
+    public static final short LT_CLOSE_MAGIC_COMMENT = 267;
 
     private final char[] input;
 
