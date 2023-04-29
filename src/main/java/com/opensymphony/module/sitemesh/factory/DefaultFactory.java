@@ -209,7 +209,9 @@ public class DefaultFactory extends BaseFactory {
         }
     }
 
-    /** Loop through children of 'page-parsers' element and add all 'parser' mappings. */
+    /**
+     * Loop through children of 'page-parsers' element and add all 'parser' mappings.
+     */
     private void loadPageParsers(NodeList nodes) {
         clearParserMappings();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -279,7 +281,9 @@ public class DefaultFactory extends BaseFactory {
         }
     }
 
-    /** Check if configuration file has been modified, and if so reload it. */
+    /**
+     * Check if configuration file has been modified, and if so reload it.
+     */
     public void refresh() {
         long time = System.currentTimeMillis();
         if (time - configLastCheck < configCheckMillis)
