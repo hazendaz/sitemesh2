@@ -48,7 +48,8 @@ public class FactoryException extends RuntimeException {
     /**
      * Instantiates a new factory exception.
      *
-     * @param msg the msg
+     * @param msg
+     *            the msg
      */
     public FactoryException(String msg) {
         super(msg);
@@ -57,7 +58,8 @@ public class FactoryException extends RuntimeException {
     /**
      * Instantiates a new factory exception.
      *
-     * @param e the e
+     * @param e
+     *            the e
      */
     public FactoryException(Exception e) {
         super();
@@ -67,8 +69,10 @@ public class FactoryException extends RuntimeException {
     /**
      * Instantiates a new factory exception.
      *
-     * @param msg the msg
-     * @param e the e
+     * @param msg
+     *            the msg
+     * @param e
+     *            the e
      */
     public FactoryException(String msg, Throwable e) {
         super(msg + ": " + e);
