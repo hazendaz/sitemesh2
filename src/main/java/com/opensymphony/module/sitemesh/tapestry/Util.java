@@ -37,7 +37,7 @@ import org.apache.tapestry.valid.RenderString;
  *
  * @author Erik Hatcher
  */
-public class Util {
+public final class Util {
 
     public static String getTitle(IRequestCycle cycle) {
         return getPage(cycle).getTitle();
@@ -53,5 +53,9 @@ public class Util {
 
     public static IRender getHeadRenderer(IRequestCycle cycle) {
         return new RenderString(((HTMLPage) getPage(cycle)).getHead(), true);
+    }
+
+    private Util() {
+        // Do not allow instantiation
     }
 }
