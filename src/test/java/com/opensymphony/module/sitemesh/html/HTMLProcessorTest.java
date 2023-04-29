@@ -38,7 +38,7 @@ public class HTMLProcessorTest extends TestCase {
 
         State defaultState = htmlProcessor.defaultState();
 
-        final StringBuffer stateLog = new StringBuffer();
+        final StringBuilder stateLog = new StringBuilder();
 
         defaultState.addListener(new StateChangeListener() {
             public void stateFinished() {

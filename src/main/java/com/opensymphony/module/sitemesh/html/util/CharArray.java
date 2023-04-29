@@ -16,7 +16,7 @@ package com.opensymphony.module.sitemesh.html.util;
 import java.io.PrintWriter;
 
 /**
- * A leaner, meaner version of StringBuffer.
+ * A leaner, meaner version of StringBuilder.
  * <p>
  * It provides basic functionality to handle dynamically-growing char arrays as quickly as possible. This class is not
  * threadsafe.
@@ -60,7 +60,7 @@ public class CharArray {
     /**
      * Changes the size of the character array to the value specified. If the new size is less than the current size,
      * the data in the internal array will be truncated. If the new size is &lt;= 0, the array will be reset to empty
-     * (but, unlike StringBuffer, the internal array will NOT be shrunk). If the new size is &gt the current size, the
+     * (but, unlike StringBuilder, the internal array will NOT be shrunk). If the new size is &gt the current size, the
      * array will be padded out with null characters (<code>'&#92;u0000'</code>).
      *
      * @param newSize

@@ -166,7 +166,7 @@ public class HTMLPageParserTest extends TestCase {
     }
 
     private String join(String[] values) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
                 result.append(',');
@@ -206,14 +206,14 @@ public class HTMLPageParserTest extends TestCase {
         LineNumberReader reader = new LineNumberReader(input);
         String line;
         String blockName = null;
-        StringBuffer blockContents = null;
+        StringBuilder blockContents = null;
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("~~~ ") && line.endsWith(" ~~~")) {
                 if (blockName != null) {
                     blocks.put(blockName, blockContents.toString());
                 }
                 blockName = line.substring(4, line.length() - 4);
-                blockContents = new StringBuffer();
+                blockContents = new StringBuilder();
             } else {
                 if (blockName != null) {
                     blockContents.append(line);

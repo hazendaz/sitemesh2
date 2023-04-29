@@ -222,7 +222,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
                 PageResponseWrapper pageResponse = new PageResponseWrapper(
                         (HttpServletResponse) pageContext.getResponse(), factory);
 
-                StringBuffer sb = new StringBuffer(contentType != null ? contentType : "text/html");
+                StringBuilder sb = new StringBuilder(contentType != null ? contentType : "text/html");
                 if (encoding != null) {
                     sb.append(";charset=").append(encoding);
                 }

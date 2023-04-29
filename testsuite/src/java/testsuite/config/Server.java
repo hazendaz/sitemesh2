@@ -81,7 +81,7 @@ public class Server {
 	public int getType() { return type; }
 
 	public String toString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append( "{ Server : \n  name=" );
 		result.append( name );
 		result.append( "\n  version=" );

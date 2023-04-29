@@ -47,7 +47,7 @@ public class Application {
 	public File getEarLocation() { return earLocation; }
 
 	public String toString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append( "{ Application : \n  name=" );
 		result.append( name );
 		result.append( "\n  warLocation=" );

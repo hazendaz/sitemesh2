@@ -20,8 +20,8 @@ import junit.framework.Assert;
 
 class MockTokenHandler implements TokenHandler {
 
-    private StringBuffer expected = new StringBuffer();
-    private StringBuffer actual = new StringBuffer();
+    private StringBuilder expected = new StringBuilder();
+    private StringBuilder actual = new StringBuilder();
 
     public void expectText(String tag) {
         expected.append(tag);

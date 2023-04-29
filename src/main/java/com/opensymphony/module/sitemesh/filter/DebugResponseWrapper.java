@@ -202,7 +202,7 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
     }
 
     private void debug(String methodName, String arg1, String arg2) {
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         s.append("[debug ");
         s.append(count);
         s.append("] ");
