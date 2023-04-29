@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Utility for determining the Servlet Container the application is running in. Currently supported containers: Tomcat,
  * Resin, Orion, OC4J, WebLogic, HPAS, JRun, Websphere.
- * <h3>Usage:</h3> <code>if (Container.get() == Container.TOMCAT) { .... }</code>
+ * <h2>Usage:</h2> <code>if (Container.get() == Container.TOMCAT) { .... }</code>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
