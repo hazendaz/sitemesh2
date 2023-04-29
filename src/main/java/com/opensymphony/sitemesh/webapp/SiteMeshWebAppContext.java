@@ -15,12 +15,13 @@ package com.opensymphony.sitemesh.webapp;
 
 import com.opensymphony.sitemesh.SiteMeshContext;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 
 /**
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class SiteMeshWebAppContext implements SiteMeshContext {
@@ -33,7 +34,8 @@ public class SiteMeshWebAppContext implements SiteMeshContext {
 
     private String contentType;
 
-    public SiteMeshWebAppContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+    public SiteMeshWebAppContext(HttpServletRequest request, HttpServletResponse response,
+            ServletContext servletContext) {
         this.request = request;
         this.response = response;
         this.servletContext = servletContext;

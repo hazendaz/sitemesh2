@@ -24,10 +24,11 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * Will wrap a request for the {@link RequestDispatcherWrapper}.
  *
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
+ *
  * @version $Revision: 1.4 $
  */
 public class PageRequestWrapper extends HttpServletRequestWrapper {
-    private static final boolean SUPPRESS_IF_MODIFIED_HEADER = true; //todo - pull this from a config file
+    private static final boolean SUPPRESS_IF_MODIFIED_HEADER = true; // todo - pull this from a config file
 
     public PageRequestWrapper(HttpServletRequest request) {
         super(request);
@@ -41,8 +42,7 @@ public class PageRequestWrapper extends HttpServletRequestWrapper {
         // suppress 'if-modified-since' header, so that decorators can modify the response.
         if (SUPPRESS_IF_MODIFIED_HEADER && "IF-MODIFIED-SINCE".equalsIgnoreCase(string)) {
             return "";
-        }
-        else {
+        } else {
             return super.getHeader(string);
         }
     }

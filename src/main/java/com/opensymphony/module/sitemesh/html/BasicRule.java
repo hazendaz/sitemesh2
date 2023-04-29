@@ -14,10 +14,6 @@
 package com.opensymphony.module.sitemesh.html;
 
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
-
-import java.io.IOException;
-import java.io.StringWriter;
 
 public abstract class BasicRule implements TagRule {
 
@@ -30,7 +26,7 @@ public abstract class BasicRule implements TagRule {
     }
 
     protected BasicRule(String acceptableTagName) {
-        this.acceptableTagNames = new String[] {acceptableTagName};
+        this.acceptableTagNames = new String[] { acceptableTagName };
     }
 
     protected BasicRule() {
@@ -47,8 +43,9 @@ public abstract class BasicRule implements TagRule {
                     + " should be constructed with acceptableTagNames OR should implement shouldProcess()");
         }
 
-        for (int i=0; i<acceptableTagNames.length; i++) {
-            if (name.equals(acceptableTagNames[i])) return true;
+        for (int i = 0; i < acceptableTagNames.length; i++) {
+            if (name.equals(acceptableTagNames[i]))
+                return true;
         }
         return false;
     }

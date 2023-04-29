@@ -25,27 +25,28 @@ package com.opensymphony.module.sitemesh.parser;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
 /**
  * Abstract implementation of {@link com.opensymphony.module.sitemesh.Page} .
+ * <p>
+ * Contains base methods for storing and accessing page properties. *
  *
- * <p>Contains base methods for storing and accessing page properties.
- * *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.6 $
  *
  * @see com.opensymphony.module.sitemesh.Page
  */
 public abstract class AbstractPage implements Page {
     /**
-     * Map of all properties.
-     * Key is String. Value is java.util.List of multiple String values.
+     * Map of all properties. Key is String. Value is java.util.List of multiple String values.
      */
     private final Map properties = new HashMap();
 
@@ -75,9 +76,8 @@ public abstract class AbstractPage implements Page {
 
     /**
      * Write data of html <code>&lt;body&gt;</code> tag.
-     *
-     * <p>Must be implemented. Data written should not actually contain the
-     * body tags, but all the data in between.
+     * <p>
+     * Must be implemented. Data written should not actually contain the body tags, but all the data in between.
      */
     public abstract void writeBody(Writer out) throws IOException;
 
@@ -97,15 +97,15 @@ public abstract class AbstractPage implements Page {
     }
 
     public String getProperty(String name) {
-        if (!isPropertySet(name)) return null;
-        return (String)properties.get(name);
+        if (!isPropertySet(name))
+            return null;
+        return (String) properties.get(name);
     }
 
     public int getIntProperty(String name) {
         try {
             return Integer.parseInt(noNull(getProperty(name)));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return 0;
         }
     }
@@ -113,15 +113,15 @@ public abstract class AbstractPage implements Page {
     public long getLongProperty(String name) {
         try {
             return Long.parseLong(noNull(getProperty(name)));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return 0;
         }
     }
 
     public boolean getBooleanProperty(String name) {
         String property = getProperty(name);
-        if (property == null || property.trim().length() == 0) return false;
+        if (property == null || property.trim().length() == 0)
+            return false;
         switch (property.charAt(0)) {
             case '1':
             case 't':
@@ -139,9 +139,9 @@ public abstract class AbstractPage implements Page {
     }
 
     public String[] getPropertyKeys() {
-        synchronized(properties) {
+        synchronized (properties) {
             Set keys = properties.keySet();
-            return (String[])keys.toArray(new String[keys.size()]);
+            return (String[]) keys.toArray(new String[keys.size()]);
         }
     }
 
@@ -166,8 +166,10 @@ public abstract class AbstractPage implements Page {
     /**
      * Add a property to the properties list.
      *
-     * @param name Name of property
-     * @param value Value of property
+     * @param name
+     *            Name of property
+     * @param value
+     *            Value of property
      */
     public void addProperty(String name, String value) {
         properties.put(name, value);

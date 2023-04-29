@@ -27,42 +27,30 @@ import java.io.Writer;
 
 /**
  * Extension of {@link com.opensymphony.module.sitemesh.Page} providing access to HTML data.
- *
- * <p>The page is parsed and the <code>&lt;title&gt;</code>, <code>&lt;head&gt;</code>
- * (minus the <code>&lt;title&gt;</code>) and <code>&lt;body&gt;</code> are split
- * into chunks. These can then be used by a {@link com.opensymphony.module.sitemesh.Decorator}.
- * Properties are also extracted from the HTML.</p>
- *
+ * <p>
+ * The page is parsed and the <code>&lt;title&gt;</code>, <code>&lt;head&gt;</code> (minus the
+ * <code>&lt;title&gt;</code>) and <code>&lt;body&gt;</code> are split into chunks. These can then be used by a
+ * {@link com.opensymphony.module.sitemesh.Decorator}. Properties are also extracted from the HTML.
+ * </p>
  * <h2>Page Properties</h2>
- *
- * <p>When the page is parsed, values from certain tags are added to the properties
- * to allow easy access to them. The following tags have properties extracted from them.</p>
- *
+ * <p>
+ * When the page is parsed, values from certain tags are added to the properties to allow easy access to them. The
+ * following tags have properties extracted from them.
+ * </p>
  * <ul>
- *   <li>
- *     <b>HTML Tag</b><br>
- *     All attributes of the <code>&lt;html&gt;</code>
- *     tag shall be added as properties.
- *   </li>
- *   <li>
- *     <b>TITLE Tag</b><br>
- *     The contents of the <code>&lt;title&gt;</code> tag
- *     shall be added as the <code>title</code> property.
- *   </li>
- *   <li>
- *     <b>META Tags</b><br>
- *     All the <code>&lt;meta&gt;</code> tags with
- *     <code>name</code> and <code>content</code> attributes
- *     will be added with the <code>meta</code> prefix.
- *   </li>
- *   <li>
- *     <b>BODY Tag</b><br>
- *     All attributes of the <code>&lt;body&gt;</code> tag
- *     shall be added as properties with the
- *     <code>body</code> prefix.
- *   </li>
+ * <li><b>HTML Tag</b><br>
+ * All attributes of the <code>&lt;html&gt;</code> tag shall be added as properties.</li>
+ * <li><b>TITLE Tag</b><br>
+ * The contents of the <code>&lt;title&gt;</code> tag shall be added as the <code>title</code> property.</li>
+ * <li><b>META Tags</b><br>
+ * All the <code>&lt;meta&gt;</code> tags with <code>name</code> and <code>content</code> attributes will be added with
+ * the <code>meta</code> prefix.</li>
+ * <li><b>BODY Tag</b><br>
+ * All attributes of the <code>&lt;body&gt;</code> tag shall be added as properties with the <code>body</code> prefix.
+ * </li>
  * </ul>
  * <h4>Example</h4>
+ *
  * <pre>
  *   <xmp>
  *     <html template="funky">
@@ -86,6 +74,7 @@ import java.io.Writer;
  * </pre>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.3 $
  */
 public interface HTMLPage extends Page {
@@ -99,13 +88,13 @@ public interface HTMLPage extends Page {
      * Convenience method to return the contents of the <code>&lt;head&gt;</code> tag as a String.
      *
      * @since 2.1.1
-     * @see #writeHead(java.io.Writer) 
+     *
+     * @see #writeHead(java.io.Writer)
      */
     String getHead();
 
     /**
-     * Check to see if this page contains an
-     * <a href="http://www.w3.org/TR/html4/present/frames.html">HTML frameset</a>.
+     * Check to see if this page contains an <a href="http://www.w3.org/TR/html4/present/frames.html">HTML frameset</a>.
      */
     boolean isFrameSet();
 
@@ -113,8 +102,9 @@ public interface HTMLPage extends Page {
      * Marks this page as a frameset.
      *
      * @since 2.3
+     *
      * @see #isFrameSet()
      */
     void setFrameSet(boolean frameset);
-    
+
 }

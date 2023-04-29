@@ -14,6 +14,7 @@
 package com.opensymphony.module.sitemesh.tapestry;
 
 import com.opensymphony.module.sitemesh.Page;
+
 import org.apache.tapestry.BaseComponent;
 
 /**

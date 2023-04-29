@@ -14,12 +14,10 @@
 package com.opensymphony.module.sitemesh.html;
 
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
 
 /**
- * Tag returned by HTMLTagTokenizer. Allows easy access to element name and attributes.
- *
- * This interface supports read-only operations on the tag. To change a tag, use {@link CustomTag}.
+ * Tag returned by HTMLTagTokenizer. Allows easy access to element name and attributes. This interface supports
+ * read-only operations on the tag. To change a tag, use {@link CustomTag}.
  *
  * @see com.opensymphony.module.sitemesh.html.tokenizer.TokenHandler
  * @see com.opensymphony.module.sitemesh.html.tokenizer.TagTokenizer
@@ -36,9 +34,8 @@ public interface Tag {
     int CLOSE_MAGIC_COMMENT = 5;
 
     /**
-     * Get the complete tag in its original form, preserving original formatting.
-     *
-     * This has a slight overhead in that it needs to construct a String. For improved performance, use writeTo() instead.
+     * Get the complete tag in its original form, preserving original formatting. This has a slight overhead in that it
+     * needs to construct a String. For improved performance, use writeTo() instead.
      */
     String getContents();
 

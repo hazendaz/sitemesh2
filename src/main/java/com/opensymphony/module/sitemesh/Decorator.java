@@ -26,17 +26,18 @@ import java.util.Iterator;
 
 /**
  * Representation of a Decorator.
- *
- * <p>A Decorator is infact a Servlet/JSP, and this is a wrapper to reference it.
- * An implementation is returned by the {@link com.opensymphony.module.sitemesh.DecoratorMapper}.</p>
+ * <p>
+ * A Decorator is infact a Servlet/JSP, and this is a wrapper to reference it. An implementation is returned by the
+ * {@link com.opensymphony.module.sitemesh.DecoratorMapper}.
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.1 $
  */
 public interface Decorator {
     /**
-     * URI of the Servlet/JSP to dispatch the request to (relative to the
-     * web-app context).
+     * URI of the Servlet/JSP to dispatch the request to (relative to the web-app context).
      */
     String getPage();
 
@@ -50,17 +51,19 @@ public interface Decorator {
     String getRole();
 
     /**
-     * Returns a String containing the value of the named initialization parameter,
-     * or null if the parameter does not exist.
+     * Returns a String containing the value of the named initialization parameter, or null if the parameter does not
+     * exist.
      *
-	 * @param paramName Key of parameter.
+     * @param paramName
+     *            Key of parameter.
+     *
      * @return Value of the parameter or null if not found.
      */
     String getInitParameter(String paramName);
 
     /**
-     * Returns the names of the Decorator's initialization parameters as an Iterator
-     * of String objects, or an empty Iterator if the Decorator has no initialization parameters.
+     * Returns the names of the Decorator's initialization parameters as an Iterator of String objects, or an empty
+     * Iterator if the Decorator has no initialization parameters.
      */
     Iterator getInitParameterNames();
 }

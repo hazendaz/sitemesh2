@@ -43,7 +43,7 @@ public class CustomTagTest extends TestCase {
 
         tag.setAttributeValue("a", false, "zzz");
         assertEquals("<hello a=\"zzz\">", tag.getContents());
-      
+
         tag.addAttribute("c", "ccc");
         int index = tag.getAttributeIndex("c", true);
         assertEquals(1, index);

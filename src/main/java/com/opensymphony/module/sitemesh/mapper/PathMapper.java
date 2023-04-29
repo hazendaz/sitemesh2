@@ -23,18 +23,14 @@
 package com.opensymphony.module.sitemesh.mapper;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
- * The PathMapper is used to map file patterns to keys, and find an approriate
- * key for a given file path. The pattern rules are consistent with those defined
- * in the Servlet 2.3 API on the whole. Wildcard patterns are also supported, using
- * any combination of * and ?.
- *
- * <h3>Example</h3>
- *
- * <blockquote><code>
+ * The PathMapper is used to map file patterns to keys, and find an approriate key for a given file path. The pattern
+ * rules are consistent with those defined in the Servlet 2.3 API on the whole. Wildcard patterns are also supported,
+ * using any combination of * and ?.
+ * <h3>Example</h3> <blockquote><code>
  * PathMapper pm = new PathMapper();<br>
  * <br>
  * pm.put("one","/");<br>
@@ -50,6 +46,7 @@ import java.util.Iterator;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:mcannon@internet.com">Mike Cannon-Brookes</a>
  * @author <a href="mailto:hani@formicary.net">Hani Suleiman</a>
+ *
  * @version $Revision: 1.3 $
  */
 public class PathMapper {
@@ -64,23 +61,28 @@ public class PathMapper {
 
     /** Retrieve appropriate key by matching patterns with supplied path. */
     public String get(String path) {
-        if (path == null) path = "/";
+        if (path == null)
+            path = "/";
         String mapped = findKey(path, mappings);
-        if (mapped == null) return null;
+        if (mapped == null)
+            return null;
         return (String) mappings.get(mapped);
     }
 
     /** Find exact key in mappings. */
     private static String findKey(String path, Map mappings) {
         String result = findExactKey(path, mappings);
-        if (result == null) result = findComplexKey(path, mappings);
-        if (result == null) result = findDefaultKey(mappings);
+        if (result == null)
+            result = findComplexKey(path, mappings);
+        if (result == null)
+            result = findDefaultKey(mappings);
         return result;
     }
 
     /** Check if path matches exact pattern ( /blah/blah.jsp ). */
     private static String findExactKey(String path, Map mappings) {
-        if (mappings.containsKey(path)) return path;
+        if (mappings.containsKey(path))
+            return path;
         return null;
     }
 
@@ -101,9 +103,10 @@ public class PathMapper {
 
     /** Look for root pattern ( / ). */
     private static String findDefaultKey(Map mappings) {
-        String[] defaultKeys = {"/", "*", "/*"};
+        String[] defaultKeys = { "/", "*", "/*" };
         for (int i = 0; i < defaultKeys.length; i++) {
-            if (mappings.containsKey(defaultKeys[i])) return defaultKeys[i];
+            if (mappings.containsKey(defaultKeys[i]))
+                return defaultKeys[i];
         }
         return null;
     }
@@ -136,8 +139,7 @@ public class PathMapper {
                     if (isCaseSensitive && ch != strArr[i]) {
                         return false; // Character mismatch
                     }
-                    if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                            Character.toUpperCase(strArr[i])) {
+                    if (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[i])) {
                         return false; // Character mismatch
                     }
                 }
@@ -155,8 +157,7 @@ public class PathMapper {
                 if (isCaseSensitive && ch != strArr[strIdxStart]) {
                     return false; // Character mismatch
                 }
-                if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                        Character.toUpperCase(strArr[strIdxStart])) {
+                if (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart])) {
                     return false; // Character mismatch
                 }
             }
@@ -180,8 +181,7 @@ public class PathMapper {
                 if (isCaseSensitive && ch != strArr[strIdxEnd]) {
                     return false; // Character mismatch
                 }
-                if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                        Character.toUpperCase(strArr[strIdxEnd])) {
+                if (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxEnd])) {
                     return false; // Character mismatch
                 }
             }
@@ -219,16 +219,15 @@ public class PathMapper {
             int patLength = (patIdxTmp - patIdxStart - 1);
             int strLength = (strIdxEnd - strIdxStart + 1);
             int foundIdx = -1;
-            strLoop:
-            for (int i = 0; i <= strLength - patLength; i++) {
+            strLoop: for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
                     ch = patArr[patIdxStart + j + 1];
                     if (ch != '?') {
                         if (isCaseSensitive && ch != strArr[strIdxStart + i + j]) {
                             continue strLoop;
                         }
-                        if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                                Character.toUpperCase(strArr[strIdxStart + i + j])) {
+                        if (!isCaseSensitive
+                                && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart + i + j])) {
                             continue strLoop;
                         }
                     }

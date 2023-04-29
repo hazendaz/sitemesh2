@@ -21,7 +21,6 @@ import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 import com.opensymphony.module.sitemesh.html.State;
 import com.opensymphony.module.sitemesh.html.StateTransitionRule;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
 import com.opensymphony.module.sitemesh.html.rules.BodyTagRule;
 import com.opensymphony.module.sitemesh.html.rules.ContentBlockExtractingRule;
 import com.opensymphony.module.sitemesh.html.rules.FramesetRule;
@@ -29,18 +28,20 @@ import com.opensymphony.module.sitemesh.html.rules.HeadExtractingRule;
 import com.opensymphony.module.sitemesh.html.rules.HtmlAttributesRule;
 import com.opensymphony.module.sitemesh.html.rules.MSOfficeDocumentPropertiesRule;
 import com.opensymphony.module.sitemesh.html.rules.MetaTagRule;
+import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
 import com.opensymphony.module.sitemesh.html.rules.ParameterExtractingRule;
 import com.opensymphony.module.sitemesh.html.rules.TitleExtractingRule;
-import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
 
 import java.io.IOException;
 
 /**
- * <p>Builds an HTMLPage object from an HTML document. This behaves
- * similarly to the FastPageParser, however it's a complete rewrite that is simpler to add custom features to such as
- * extraction and transformation of elements.</p>
- *
- * <p>To customize the rules used, this class can be extended and have the userDefinedRules() methods overridden.</p>
+ * <p>
+ * Builds an HTMLPage object from an HTML document. This behaves similarly to the FastPageParser, however it's a
+ * complete rewrite that is simpler to add custom features to such as extraction and transformation of elements.
+ * </p>
+ * <p>
+ * To customize the rules used, this class can be extended and have the userDefinedRules() methods overridden.
+ * </p>
  *
  * @author Joe Walnes
  *
@@ -81,9 +82,9 @@ public class HTMLPageParser implements PageParser {
         html.addRule(new StateTransitionRule("xml", xml));
 
         // Useful properties
-        html.addRule(new HtmlAttributesRule(page));         // attributes in <html> element
-        html.addRule(new MetaTagRule(page));                // all <meta> tags
-        html.addRule(new ParameterExtractingRule(page));    // <parameter> blocks
+        html.addRule(new HtmlAttributesRule(page)); // attributes in <html> element
+        html.addRule(new MetaTagRule(page)); // all <meta> tags
+        html.addRule(new ParameterExtractingRule(page)); // <parameter> blocks
         html.addRule(new ContentBlockExtractingRule(page)); // <content> blocks
 
         // Capture properties written to documents by MS Office (author, version, company, etc).

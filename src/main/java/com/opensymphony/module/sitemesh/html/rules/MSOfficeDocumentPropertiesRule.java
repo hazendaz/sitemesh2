@@ -17,8 +17,8 @@ import com.opensymphony.module.sitemesh.html.BlockExtractingRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
 /**
- * Extracts the extra properties saved in HTML from MS Office applications (Word and Excel),
- * such as Author, Company, Version, etc.
+ * Extracts the extra properties saved in HTML from MS Office applications (Word and Excel), such as Author, Company,
+ * Version, etc.
  *
  * @author Joe Walnes
  */

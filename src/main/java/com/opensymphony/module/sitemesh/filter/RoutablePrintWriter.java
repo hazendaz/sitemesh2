@@ -16,21 +16,20 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.Writer;
-
-import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.SitemeshWriter;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+
 /**
- * Provides a PrintWriter that routes through to another PrintWriter, however the destination
- * can be changed at any point. The destination can be passed in using a factory, so it will not be created
- * until it's actually needed.
+ * Provides a PrintWriter that routes through to another PrintWriter, however the destination can be changed at any
+ * point. The destination can be passed in using a factory, so it will not be created until it's actually needed.
  *
  * @author Joe Walnes
+ *
  * @version $Revision: 1.1 $
  */
 public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
@@ -197,8 +196,7 @@ public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
 
     }
 
-    public boolean writeSitemeshBufferFragment(SitemeshBufferFragment bufferFragment) throws IOException
-    {
+    public boolean writeSitemeshBufferFragment(SitemeshBufferFragment bufferFragment) throws IOException {
         PrintWriter destination = getDestination();
         if (destination instanceof SitemeshWriter) {
             return ((SitemeshWriter) destination).writeSitemeshBufferFragment(bufferFragment);
@@ -208,8 +206,7 @@ public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
         }
     }
 
-    public SitemeshBuffer getSitemeshBuffer()
-    {
+    public SitemeshBuffer getSitemeshBuffer() {
         PrintWriter destination = getDestination();
         if (destination instanceof SitemeshWriter) {
             return ((SitemeshWriter) destination).getSitemeshBuffer();

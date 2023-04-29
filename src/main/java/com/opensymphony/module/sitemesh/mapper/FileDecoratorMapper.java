@@ -27,14 +27,15 @@ import com.opensymphony.module.sitemesh.Decorator;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * The FileDecoratorMapper will treat the name of the decorator as a file-name to use
- * (in the context of the web-app).
+ * The FileDecoratorMapper will treat the name of the decorator as a file-name to use (in the context of the web-app).
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mike@atlassian.com">Mike Cannon-Brookes</a>
+ *
  * @version $Revision: 1.3 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
@@ -51,10 +52,9 @@ public class FileDecoratorMapper extends AbstractDecoratorMapper {
         URL resourcePath;
 
         // try to locate the resource (might be an unexpanded WAR)
-        try  {
+        try {
             resourcePath = config.getServletContext().getResource('/' + name);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             return super.getNamedDecorator(req, name);
         }
 
@@ -63,20 +63,17 @@ public class FileDecoratorMapper extends AbstractDecoratorMapper {
         if (filePath == null && resourcePath == null) {
             pathNotAvailable = true;
             return super.getNamedDecorator(req, name);
-        }
-        else if (filePath != null) { // do we really need this disk file check?!
+        } else if (filePath != null) { // do we really need this disk file check?!
             File file = new File(filePath);
 
             if (file.exists() && file.canRead() && file.isFile()) {
                 // if filename exists with name of supplied decorator, return Decorator
                 return new DefaultDecorator(name, name, null);
-            }
-            else {
+            } else {
                 // otherwise delegate to parent mapper.
                 return super.getNamedDecorator(req, name);
             }
-        }
-        else {
+        } else {
             // file path is null and resource path is not null - can't check file on disk
             return new DefaultDecorator(name, name, null);
         }

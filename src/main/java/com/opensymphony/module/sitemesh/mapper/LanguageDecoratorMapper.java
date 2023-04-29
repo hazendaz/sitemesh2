@@ -27,29 +27,30 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * The LanguageDecoratorMapper can determine the preferred language set in the
- * browser requesting a page, and map to a suitable Decorator (using the
- * "Accept-Language" HTTP header).
- *
- * <p>This can be useful for supplying different versions of the same content
- * for different languages.</p>
- *
- * <p>When LanguageDecoratorMapper is in the chain, it will request the appropriate Decorator
- * from its parent. It will then add an extention to the filename of the Decorator, and
- * if that file exists it shall be used as the Decorator instead. For example, if the
- * Decorator path is <code>/blah.jsp</code> and the detected preferred language is <code>en</code>,
- * the path <code>/blah-en.jsp</code> shall be used.</p>
- *
- * <p>The language mappings are configured by passing properties with <code>match.</code> as a prefix.
- * For example: 'match.en'=engl , 'match.nl'=dutch .</p>
+ * The LanguageDecoratorMapper can determine the preferred language set in the browser requesting a page, and map to a
+ * suitable Decorator (using the "Accept-Language" HTTP header).
+ * <p>
+ * This can be useful for supplying different versions of the same content for different languages.
+ * </p>
+ * <p>
+ * When LanguageDecoratorMapper is in the chain, it will request the appropriate Decorator from its parent. It will then
+ * add an extention to the filename of the Decorator, and if that file exists it shall be used as the Decorator instead.
+ * For example, if the Decorator path is <code>/blah.jsp</code> and the detected preferred language is <code>en</code>,
+ * the path <code>/blah-en.jsp</code> shall be used.
+ * </p>
+ * <p>
+ * The language mappings are configured by passing properties with <code>match.</code> as a prefix. For example:
+ * 'match.en'=engl , 'match.nl'=dutch .
+ * </p>
  *
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
  *
@@ -80,8 +81,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
                 };
             }
             return result == null ? super.getDecorator(request, page) : result;
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return super.getDecorator(request, page);
         }
     }
@@ -92,7 +92,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
         while (i.hasNext()) {
             Map.Entry entry = (Map.Entry) i.next();
 
-           // Get the first language (preferred one) in the header, and
+            // Get the first language (preferred one) in the header, and
             // only check the first two chars (the acceptLanguage could be en-gb, but
             // we don't support this for now).
             if (acceptLanguage.substring(0, 2).equals(entry.getKey())) {
@@ -114,8 +114,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
         int dot = path.indexOf('.');
         if (dot > -1) {
             return path.substring(0, dot) + '-' + ext + path.substring(dot);
-        }
-        else {
+        } else {
             return path + '-' + ext;
         }
     }
@@ -128,7 +127,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
             String key = (String) entry.getKey();
             if (key.startsWith("match.")) {
                 String match = key.substring(6);
-               map.put(match, entry.getValue());
+                map.put(match, entry.getValue());
             }
         }
     }

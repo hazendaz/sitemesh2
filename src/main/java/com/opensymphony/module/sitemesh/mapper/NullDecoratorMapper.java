@@ -27,16 +27,17 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * The NullDecoratorMapper represents the top-level DecoratorMapper that
- * is finally delegated to if no other DecoratorMapper has intervened.
- * It is used so the parent property does not have to be checked by
- * other DecoratorMappers (null object pattern).
+ * The NullDecoratorMapper represents the top-level DecoratorMapper that is finally delegated to if no other
+ * DecoratorMapper has intervened. It is used so the parent property does not have to be checked by other
+ * DecoratorMappers (null object pattern).
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.1 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper

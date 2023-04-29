@@ -16,17 +16,19 @@ package com.opensymphony.sitemesh.compatability;
 import com.opensymphony.module.sitemesh.*;
 import com.opensymphony.module.sitemesh.filter.HttpContentType;
 import com.opensymphony.sitemesh.Content;
+import com.opensymphony.sitemesh.ContentProcessor;
 import com.opensymphony.sitemesh.SiteMeshContext;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
-import com.opensymphony.sitemesh.ContentProcessor;
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 /**
  * Adapts a SiteMesh 2 {@link PageParser} to a SiteMesh 3 {@link ContentProcessor}.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class PageParser2ContentProcessor implements ContentProcessor {
@@ -46,8 +48,7 @@ public class PageParser2ContentProcessor implements ContentProcessor {
         String servletPath = request.getServletPath();
         String pathInfo = request.getPathInfo();
         String query = request.getQueryString();
-        return (servletPath == null ? "" : servletPath)
-                + (pathInfo == null ? "" : pathInfo)
+        return (servletPath == null ? "" : servletPath) + (pathInfo == null ? "" : pathInfo)
                 + (query == null ? "" : ("?" + query));
     }
 

@@ -13,14 +13,12 @@
  */
 package com.opensymphony.module.sitemesh.parser;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.SitemeshWriter;
+
+import java.io.IOException;
+import java.io.Writer;
 
 public class PartialPageParserPage extends AbstractPage {
 

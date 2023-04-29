@@ -19,15 +19,17 @@ package com.opensymphony.module.sitemesh.filter;
 import com.opensymphony.module.sitemesh.*;
 import com.opensymphony.module.sitemesh.util.FastByteArrayOutputStream;
 
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import javax.servlet.ServletOutputStream;
 
 /**
  * When SiteMesh is activated for a request, the contents of the response are stored in this buffer, where they can
  * later be accessed as a parsed Page object.
  *
  * @author Joe Walnes
+ *
  * @version $Revision: 1.3 $
  */
 public class Buffer {

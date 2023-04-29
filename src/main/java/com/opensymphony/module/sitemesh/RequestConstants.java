@@ -23,10 +23,11 @@
 package com.opensymphony.module.sitemesh;
 
 /**
- * A set of static constants of Strings to be used as ServletRequest attribute keys
- * to represent various objects passed between pages.
+ * A set of static constants of Strings to be used as ServletRequest attribute keys to represent various objects passed
+ * between pages.
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.3 $
  *
  * @see com.opensymphony.sitemesh.webapp.SiteMeshFilter
@@ -37,23 +38,23 @@ package com.opensymphony.module.sitemesh;
 public interface RequestConstants {
 
     /**
-     * Stores {@link com.opensymphony.module.sitemesh.Page} instance for parsed page to be
-     * passed across to {@link com.opensymphony.module.sitemesh.Decorator}.
+     * Stores {@link com.opensymphony.module.sitemesh.Page} instance for parsed page to be passed across to
+     * {@link com.opensymphony.module.sitemesh.Decorator}.
      */
-    String PAGE           = "__sitemesh__page";
+    String PAGE = "__sitemesh__page";
 
     /**
-     * The name (String) of the Decorator to suggest using. This is set by
-     * the {@link com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag}
-     * and used by the corresponding {@link com.opensymphony.module.sitemesh.DecoratorMapper}.
+     * The name (String) of the Decorator to suggest using. This is set by the
+     * {@link com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag} and used by the corresponding
+     * {@link com.opensymphony.module.sitemesh.DecoratorMapper}.
      */
-    String DECORATOR      = "__sitemesh__decorator";
+    String DECORATOR = "__sitemesh__decorator";
 
     /**
-     * Marker that stores a Boolean (under the session) to state whether the current
-     * session is the session of a web search engine spider. This is set and used by the
+     * Marker that stores a Boolean (under the session) to state whether the current session is the session of a web
+     * search engine spider. This is set and used by the
      * {@link com.opensymphony.module.sitemesh.mapper.RobotDecoratorMapper}.
      */
-    String ROBOT          = "__sitemesh__robot";
+    String ROBOT = "__sitemesh__robot";
 
 }

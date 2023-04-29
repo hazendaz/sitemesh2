@@ -18,16 +18,19 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * <p>Will look at a session attribute to find the name of an appropriate decorator to use. If the
- * session attribute is present, the mapper will not do anything and allow the next mapper in the chain
- * to select a decorator.</p>
- * 
- * <p>By default, it will look at the 'decorator' session attribute, however this can be overriden by
- * configuring the mapper with a 'decorator.parameter' property.</p>
+ * <p>
+ * Will look at a session attribute to find the name of an appropriate decorator to use. If the session attribute is
+ * present, the mapper will not do anything and allow the next mapper in the chain to select a decorator.
+ * </p>
+ * <p>
+ * By default, it will look at the 'decorator' session attribute, however this can be overriden by configuring the
+ * mapper with a 'decorator.parameter' property.
+ * </p>
  *
  * @author Ricardo Lecheta
  */
@@ -44,7 +47,7 @@ public class SessionDecoratorMapper extends AbstractDecoratorMapper {
         Decorator result = null;
         String decorator = (String) request.getSession().getAttribute(decoratorParameter);
 
-        //get decorator from HttpSession
+        // get decorator from HttpSession
         if (decorator != null) {
             result = getNamedDecorator(request, decorator);
         }

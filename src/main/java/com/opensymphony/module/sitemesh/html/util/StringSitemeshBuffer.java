@@ -53,8 +53,7 @@ public class StringSitemeshBuffer implements SitemeshBuffer {
         return false;
     }
 
-    public static SitemeshBufferFragment createBufferFragment(String buffer)
-    {
+    public static SitemeshBufferFragment createBufferFragment(String buffer) {
         return new SitemeshBufferFragment(new StringSitemeshBuffer(buffer), 0, buffer.length());
     }
 

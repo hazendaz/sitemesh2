@@ -13,15 +13,14 @@
  */
 package com.opensymphony.module.sitemesh.html;
 
-import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.html.rules.TagReplaceRule;
 import com.opensymphony.module.sitemesh.html.util.StringSitemeshBuffer;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
+
+import junit.framework.TestCase;
 
 public class HTMLProcessorTest extends TestCase {
 
@@ -34,22 +33,22 @@ public class HTMLProcessorTest extends TestCase {
     }
 
     public void testCreatesStateTransitionEvent() throws IOException {
-		String input = "<a></a>";
-		HTMLProcessor htmlProcessor = createProcessor(input);
+        String input = "<a></a>";
+        HTMLProcessor htmlProcessor = createProcessor(input);
 
-		State defaultState = htmlProcessor.defaultState();
+        State defaultState = htmlProcessor.defaultState();
 
-		final StringBuffer stateLog = new StringBuffer();
+        final StringBuffer stateLog = new StringBuffer();
 
-		defaultState.addListener(new StateChangeListener() {
-			public void stateFinished() {
-				stateLog.append("finished");
-			}
-		});
+        defaultState.addListener(new StateChangeListener() {
+            public void stateFinished() {
+                stateLog.append("finished");
+            }
+        });
 
-		htmlProcessor.process();
-		assertEquals("finished", stateLog.toString());
-	}
+        htmlProcessor.process();
+        assertEquals("finished", stateLog.toString());
+    }
 
     public void testSupportsConventionalReaderAndWriter() throws IOException {
         HTMLProcessor processor = createProcessor("<hello><b id=\"something\">world</b></hello>");

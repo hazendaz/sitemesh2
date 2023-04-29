@@ -15,6 +15,7 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 
 import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.Text;
+
 import junit.framework.TestCase;
 
 public class TagTokenizerTest extends TestCase {
@@ -61,7 +62,8 @@ public class TagTokenizerTest extends TestCase {
         handler.expectText("good\n bye.");
         handler.expectTag(Tag.OPEN, "br");
         // execute
-        TagTokenizer tokenizer = new TagTokenizer("hello world <!-- how are<we> \n -doing? --><!-- --><!---->good\n bye.<br>");
+        TagTokenizer tokenizer = new TagTokenizer(
+                "hello world <!-- how are<we> \n -doing? --><!-- --><!---->good\n bye.<br>");
         tokenizer.start(handler);
         // verify
         handler.verify();
@@ -69,7 +71,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testExtractsUnquotedAttributesFromTag() {
         // expectations
-        handler.expectTag(Tag.OPEN, "hello", new String[]{"name", "world", "foo", "boo"});
+        handler.expectTag(Tag.OPEN, "hello", new String[] { "name", "world", "foo", "boo" });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<hello name=world foo=boo>");
         tokenizer.start(handler);
@@ -79,7 +81,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testExtractsQuotedAttributesFromTag() {
         // expectations
-        handler.expectTag(Tag.OPEN, "hello", new String[]{"name", "the world", "foo", "boo"});
+        handler.expectTag(Tag.OPEN, "hello", new String[] { "name", "the world", "foo", "boo" });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<hello name=\"the world\" foo=\"boo\">");
         tokenizer.start(handler);
@@ -89,7 +91,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testHandlesMixedQuoteTypesInAttributes() {
         // expectations
-        handler.expectTag(Tag.OPEN, "hello", new String[]{"name", "it's good", "foo", "say \"boo\""});
+        handler.expectTag(Tag.OPEN, "hello", new String[] { "name", "it's good", "foo", "say \"boo\"" });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<hello name=\"it's good\" foo=\'say \"boo\"'>");
         tokenizer.start(handler);
@@ -99,7 +101,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testHandlesHtmlStyleEmptyAttributes() {
         // expectations
-        handler.expectTag(Tag.OPEN, "hello", new String[]{"isgood", null, "and", null, "stuff", null});
+        handler.expectTag(Tag.OPEN, "hello", new String[] { "isgood", null, "and", null, "stuff", null });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<hello isgood and stuff>");
         tokenizer.start(handler);
@@ -109,20 +111,16 @@ public class TagTokenizerTest extends TestCase {
 
     public void testSupportsWhitespaceInElements() {
         // expectations
-        handler.expectTag(Tag.OPEN, "hello", new String[]{"somestuff", "good", "foo", null, "x", "long\n string"});
+        handler.expectTag(Tag.OPEN, "hello", new String[] { "somestuff", "good", "foo", null, "x", "long\n string" });
         handler.expectTag(Tag.EMPTY, "empty");
-        handler.expectTag(Tag.OPEN, "HTML", new String[]{"notonnewline", "yo", "newline", "hello", "anotherline", "bye"});
+        handler.expectTag(Tag.OPEN, "HTML",
+                new String[] { "notonnewline", "yo", "newline", "hello", "anotherline", "bye" });
         // execute
-        TagTokenizer tokenizer = new TagTokenizer(""
-                + "<hello \n somestuff = \ngood \n   foo \nx=\"long\n string\"   >"
-                + "<empty      />"
-                + "<HTML notonnewline=yo newline=\n"
-                + "hello anotherline=\n"
-                + "\"bye\">");
+        TagTokenizer tokenizer = new TagTokenizer("" + "<hello \n somestuff = \ngood \n   foo \nx=\"long\n string\"   >"
+                + "<empty      />" + "<HTML notonnewline=yo newline=\n" + "hello anotherline=\n" + "\"bye\">");
         tokenizer.start(handler);
         // verify
         handler.verify();
-
 
     }
 
@@ -131,7 +129,7 @@ public class TagTokenizerTest extends TestCase {
         // add a new dependency for the sake of a single test.
         final String originalTag = "<hello \n somestuff = \ngood \n   foo \nx=\"long\n string\"   >";
         TagTokenizer tokenizer = new TagTokenizer("some text" + originalTag + "more text");
-        final boolean[] called = {false}; // has to be final array so anonymous inner class can change the value.
+        final boolean[] called = { false }; // has to be final array so anonymous inner class can change the value.
 
         tokenizer.start(new TokenHandler() {
 
@@ -158,7 +156,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testAllowsSlashInUnquotedAttribute() {
         // expectations
-        handler.expectTag(Tag.OPEN, "something", new String[]{"type", "text/html"});
+        handler.expectTag(Tag.OPEN, "something", new String[] { "type", "text/html" });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<something type=text/html>");
         tokenizer.start(handler);
@@ -168,7 +166,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testAllowsTrailingQuoteOnAttribute() {
         // expectations
-        handler.expectTag(Tag.OPEN, "something", new String[]{"type", "bl'ah\""});
+        handler.expectTag(Tag.OPEN, "something", new String[] { "type", "bl'ah\"" });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<something type=bl'ah\">");
         tokenizer.start(handler);
@@ -178,13 +176,12 @@ public class TagTokenizerTest extends TestCase {
 
     public void testAllowsAwkwardCharsInElementAndAttribute() {
         // expectations
-        handler.expectTag(Tag.OPEN, "name:space", new String[]{"foo:bar", "x:y%"});
-        handler.expectTag(Tag.EMPTY, "a_b-c$d", new String[]{"b_b-c$d", "c_b=c$d"});
-        handler.expectTag(Tag.OPEN, "a", new String[]{"href", "/exec/obidos/flex-sign-in/ref=pd_nfy_gw_si/026-2634699-7306802?opt=a&page=misc/login/flex-sign-in-secure.html&response=tg/new-for-you/new-for-you/-/main"});
+        handler.expectTag(Tag.OPEN, "name:space", new String[] { "foo:bar", "x:y%" });
+        handler.expectTag(Tag.EMPTY, "a_b-c$d", new String[] { "b_b-c$d", "c_b=c$d" });
+        handler.expectTag(Tag.OPEN, "a", new String[] { "href",
+                "/exec/obidos/flex-sign-in/ref=pd_nfy_gw_si/026-2634699-7306802?opt=a&page=misc/login/flex-sign-in-secure.html&response=tg/new-for-you/new-for-you/-/main" });
         // execute
-        TagTokenizer tokenizer = new TagTokenizer(""
-                + "<name:space foo:bar=x:y%>"
-                + "<a_b-c$d b_b-c$d=c_b=c$d />"
+        TagTokenizer tokenizer = new TagTokenizer("" + "<name:space foo:bar=x:y%>" + "<a_b-c$d b_b-c$d=c_b=c$d />"
                 + "<a href=/exec/obidos/flex-sign-in/ref=pd_nfy_gw_si/026-2634699-7306802?opt=a&page=misc/login/flex-sign-in-secure.html&response=tg/new-for-you/new-for-you/-/main>");
         tokenizer.start(handler);
         // verify
@@ -201,13 +198,9 @@ public class TagTokenizerTest extends TestCase {
         handler.expectText("<SCRIPT>stuff</SCRIPT>");
         handler.expectText("<!DOCTYPE html PUBLIC \\\"-//W3C//DTD HTML 4.01 Transitional//EN\\\">");
         // execute
-        TagTokenizer tokenizer = new TagTokenizer(""
-                + "<script language=jscript> if (a < b & > c)\n alert(); </script>"
-                + "<xmp><evil \n<stuff<</xmp>"
-                + "<?some stuff ?>"
-                + "<![CDATA[ evil<>> <\n    ]]>"
-                + "<SCRIPT>stuff</SCRIPT>"
-                + "<!DOCTYPE html PUBLIC \\\"-//W3C//DTD HTML 4.01 Transitional//EN\\\">");
+        TagTokenizer tokenizer = new TagTokenizer("" + "<script language=jscript> if (a < b & > c)\n alert(); </script>"
+                + "<xmp><evil \n<stuff<</xmp>" + "<?some stuff ?>" + "<![CDATA[ evil<>> <\n    ]]>"
+                + "<SCRIPT>stuff</SCRIPT>" + "<!DOCTYPE html PUBLIC \\\"-//W3C//DTD HTML 4.01 Transitional//EN\\\">");
         tokenizer.start(handler);
         // verify
         handler.verify();
@@ -246,18 +239,11 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 
-    /* TODO
-    public void testTreatsUnterminatedQuotedAttributeValueAtEofAsText() {
-        // expectations
-        handler.expectText("hello");
-        handler.expectText("<world x=\"fff");
-        // execute
-        TagTokenizer tokenizer = new TagTokenizer("hello<world x=\"fff");
-        tokenizer.start(handler);
-        // verify
-        handler.verify();
-    }
-    */
+    /*
+     * TODO public void testTreatsUnterminatedQuotedAttributeValueAtEofAsText() { // expectations
+     * handler.expectText("hello"); handler.expectText("<world x=\"fff"); // execute TagTokenizer tokenizer = new
+     * TagTokenizer("hello<world x=\"fff"); tokenizer.start(handler); // verify handler.verify(); }
+     */
 
     public void testTreatsUnterminatedAttributeAtEofAsText() {
         // expectations
@@ -324,7 +310,7 @@ public class TagTokenizerTest extends TestCase {
 
     public void testParsesMagicCommentBlocks() {
         // expectations
-        handler.expectTag(Tag.OPEN_MAGIC_COMMENT, "if", new String[] {"gte", null, "mso", null, "9", null});
+        handler.expectTag(Tag.OPEN_MAGIC_COMMENT, "if", new String[] { "gte", null, "mso", null, "9", null });
         handler.expectTag(Tag.OPEN, "stuff");
         handler.expectTag(Tag.CLOSE_MAGIC_COMMENT, "endif");
         // execute
@@ -342,7 +328,7 @@ public class TagTokenizerTest extends TestCase {
                 // warning ok!
             }
         };
-        handler.expectTag(Tag.OPEN, "a", new String[] {"href", "something-with-a-naughty-quote"});
+        handler.expectTag(Tag.OPEN, "a", new String[] { "href", "something-with-a-naughty-quote" });
         // execute
         TagTokenizer tokenizer = new TagTokenizer("<a href=\"something-with-a-naughty-quote\"\">");
         tokenizer.start(handler);
@@ -350,4 +336,3 @@ public class TagTokenizerTest extends TestCase {
         handler.verify();
     }
 }
-

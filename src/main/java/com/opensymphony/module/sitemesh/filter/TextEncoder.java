@@ -33,13 +33,13 @@ import java.nio.charset.CodingErrorAction;
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
  * @author <a href="mailto:hani@formicary.net">Hani Suleiman</a>
  * @author Joe Walnes
+ *
  * @version $Revision: 1.1 $
-*/
+ */
 public class TextEncoder {
 
     private static final String DEFAULT_ENCODING = System.getProperty("file.encoding");
-    private static final boolean JDK14 =
-            System.getProperty("java.version").startsWith("1.4")
+    private static final boolean JDK14 = System.getProperty("java.version").startsWith("1.4")
             || System.getProperty("java.version").startsWith("1.5");
 
     public char[] encode(byte[] data, String encoding) throws IOException {
@@ -74,9 +74,11 @@ public class TextEncoder {
     }
 
     private char[] get14Buffer(byte[] data, String encoding) throws IOException {
-        if (!Charset.isSupported(encoding)) throw new IOException("Unsupported encoding " + encoding);
+        if (!Charset.isSupported(encoding))
+            throw new IOException("Unsupported encoding " + encoding);
         Charset charset = Charset.forName(encoding);
-        CharsetDecoder cd = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE).onUnmappableCharacter(CodingErrorAction.REPLACE);
+        CharsetDecoder cd = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE)
+                .onUnmappableCharacter(CodingErrorAction.REPLACE);
         int en = (int) (cd.maxCharsPerByte() * data.length);
         char[] ca = new char[en];
         ByteBuffer bb = ByteBuffer.wrap(data);

@@ -21,7 +21,7 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * A fragment of a sitemesh buffer.  This includes a start and a length, and may contain a list of deleted sections of
+ * A fragment of a sitemesh buffer. This includes a start and a length, and may contain a list of deleted sections of
  * the buffer.
  */
 public class SitemeshBufferFragment {
@@ -37,10 +37,14 @@ public class SitemeshBufferFragment {
     /**
      * Create a sitemesh buffer fragment
      *
-     * @param buffer    The buffer that this is a fragment of
-     * @param start     The start of the fragment
-     * @param length    The length of the fragment
-     * @param deletions Deleted parts of the fragment, as a map of positions to the length to be deleted.
+     * @param buffer
+     *            The buffer that this is a fragment of
+     * @param start
+     *            The start of the fragment
+     * @param length
+     *            The length of the fragment
+     * @param deletions
+     *            Deleted parts of the fragment, as a map of positions to the length to be deleted.
      */
     public SitemeshBufferFragment(SitemeshBuffer buffer, int start, int length, TreeMap<Integer, Integer> deletions) {
         this.buffer = buffer;
@@ -52,8 +56,11 @@ public class SitemeshBufferFragment {
     /**
      * Write the fragment to the given writer
      *
-     * @param writer The writer to write the fragment to
-     * @throws IOException If an error occured
+     * @param writer
+     *            The writer to write the fragment to
+     *
+     * @throws IOException
+     *             If an error occured
      */
     public void writeTo(Writer writer) throws IOException {
         int pos = start;
@@ -103,16 +110,12 @@ public class SitemeshBufferFragment {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "SitemeshBufferFragment{" +
-                // Here we generate our own ID, because if the underlying writer is a CharArrayWriter, we'll end up
-                // with its entire contents, which we don't really want in this method.
-                "buffer=" + buffer.getClass().getName() + "@" + Integer.toHexString(hashCode()) +
-                ", start=" + start +
-                ", length=" + length +
-                ", deletions=" + deletions +
-                '}';
+        // Here we generate our own ID, because if the underlying writer is a CharArrayWriter, we'll end up
+        // with its entire contents, which we don't really want in this method.
+                "buffer=" + buffer.getClass().getName() + "@" + Integer.toHexString(hashCode()) + ", start=" + start
+                + ", length=" + length + ", deletions=" + deletions + '}';
     }
 
     public int getStart() {
@@ -166,8 +169,11 @@ public class SitemeshBufferFragment {
         /**
          * Delete length characters from pos in this buffer fragment
          *
-         * @param pos    The position to delete from
-         * @param length The number of characters to delete
+         * @param pos
+         *            The position to delete from
+         * @param length
+         *            The number of characters to delete
+         *
          * @return The builder
          */
         public Builder delete(int pos, int length) {
@@ -178,7 +184,9 @@ public class SitemeshBufferFragment {
         /**
          * Mark the start of the fragment
          *
-         * @param pos The start of the fragment
+         * @param pos
+         *            The start of the fragment
+         *
          * @return The builder
          */
         public Builder markStart(int pos) {
@@ -190,7 +198,9 @@ public class SitemeshBufferFragment {
         /**
          * End the fragment
          *
-         * @param pos The position of the end of the fragment
+         * @param pos
+         *            The position of the end of the fragment
+         *
          * @return The builder
          */
         public Builder end(int pos) {
@@ -201,9 +211,13 @@ public class SitemeshBufferFragment {
         /**
          * Mark the start of a deletion.
          *
-         * @param pos The position to start deleting from
+         * @param pos
+         *            The position to start deleting from
+         *
          * @return The builder
-         * @throws IllegalStateException If markStartDelete() has already been called and endDelete() hasn't been called
+         *
+         * @throws IllegalStateException
+         *             If markStartDelete() has already been called and endDelete() hasn't been called
          */
         public Builder markStartDelete(int pos) {
             if (startDelete != null) {
@@ -216,9 +230,13 @@ public class SitemeshBufferFragment {
         /**
          * End the current deletion
          *
-         * @param pos The position to delete to
+         * @param pos
+         *            The position to delete to
+         *
          * @return The builder
-         * @throws IllegalStateException If markStartDelete() hasn't been called
+         *
+         * @throws IllegalStateException
+         *             If markStartDelete() hasn't been called
          */
         public Builder endDelete(int pos) {
             if (startDelete == null) {
@@ -232,8 +250,11 @@ public class SitemeshBufferFragment {
         /**
          * Insert the given fragment to the given position
          *
-         * @param position The position to insert the fragment to
-         * @param fragment The fragment to insert
+         * @param position
+         *            The position to insert the fragment to
+         * @param fragment
+         *            The fragment to insert
+         *
          * @return The builder
          */
         public Builder insert(int position, SitemeshBufferFragment fragment) {
@@ -244,8 +265,11 @@ public class SitemeshBufferFragment {
         /**
          * Insert the given string fragment to the given position
          *
-         * @param position The position to insert at
-         * @param fragment The fragment to insert
+         * @param position
+         *            The position to insert at
+         * @param fragment
+         *            The fragment to insert
+         *
          * @return The builder
          */
         public Builder insert(int position, String fragment) {
@@ -254,9 +278,11 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * Set the buffer.  This resets both start and length to be that of the buffer.
+         * Set the buffer. This resets both start and length to be that of the buffer.
          *
-         * @param sitemeshBuffer The buffer to set.
+         * @param sitemeshBuffer
+         *            The buffer to set.
+         *
          * @return The builder
          */
         public Builder setBuffer(SitemeshBuffer sitemeshBuffer) {

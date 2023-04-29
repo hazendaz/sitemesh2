@@ -16,7 +16,6 @@ package com.opensymphony.module.sitemesh.parser;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.SitemeshWriter;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
 import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
 
 import java.io.IOException;

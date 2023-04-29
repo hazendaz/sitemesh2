@@ -27,35 +27,38 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * The AgentDecoratorMapper can determine the user-agent (i.e. web-browser)
- * requesting a page, and map to a suitable Decorator.
- *
- * <p>This can be useful for supplying different versions of the same content
- * for different browsers (e.g. vanilla HTML for Lynx, complex tables and frames
- * for Netscape, extra stuff for IE5, etc).</p>
- *
- * <p>This can also be used to enhance search-engine ratings by using a 'bait and
- * switch' system - this involves showing a search-engine friendly of the content
- * to spiders only.</p>
- *
- * <p>When AgentDecoratorMapper is in the chain, it will request the appropriate Decorator
- * from its parent. It will then add an extention to the filename of the Decorator, and
- * if that file exists it shall be used as the Decorator instead. For example, if the
- * Decorator path is <code>/blah.jsp</code> and the detected user-agent is <code>ie</code>,
- * the path <code>/blah-ie.jsp</code> shall be used.</p>
- *
- * <p>The agent mappings are configured by passing properties with <code>match.</code> as a prefix.
- * For example: 'match.MSIE'=ie , 'match.Lynx'=plain .</p>
+ * The AgentDecoratorMapper can determine the user-agent (i.e. web-browser) requesting a page, and map to a suitable
+ * Decorator.
+ * <p>
+ * This can be useful for supplying different versions of the same content for different browsers (e.g. vanilla HTML for
+ * Lynx, complex tables and frames for Netscape, extra stuff for IE5, etc).
+ * </p>
+ * <p>
+ * This can also be used to enhance search-engine ratings by using a 'bait and switch' system - this involves showing a
+ * search-engine friendly of the content to spiders only.
+ * </p>
+ * <p>
+ * When AgentDecoratorMapper is in the chain, it will request the appropriate Decorator from its parent. It will then
+ * add an extention to the filename of the Decorator, and if that file exists it shall be used as the Decorator instead.
+ * For example, if the Decorator path is <code>/blah.jsp</code> and the detected user-agent is <code>ie</code>, the path
+ * <code>/blah-ie.jsp</code> shall be used.
+ * </p>
+ * <p>
+ * The agent mappings are configured by passing properties with <code>match.</code> as a prefix. For example:
+ * 'match.MSIE'=ie , 'match.Lynx'=plain .
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.3 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
@@ -85,8 +88,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
                 };
             }
             return result == null ? super.getDecorator(request, page) : result;
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return super.getDecorator(request, page);
         }
     }
@@ -97,7 +99,8 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         while (i.hasNext()) {
             Map.Entry entry = (Map.Entry) i.next();
             String curr = (String) entry.getKey();
-            if (userAgent.indexOf(curr) > -1) return (String) entry.getValue();
+            if (userAgent.indexOf(curr) > -1)
+                return (String) entry.getValue();
         }
         return null;
     }
@@ -107,8 +110,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         int dot = path.indexOf('.');
         if (dot > -1) {
             return path.substring(0, dot) + '-' + ext + path.substring(dot);
-        }
-        else {
+        } else {
             return path + '-' + ext;
         }
     }

@@ -30,12 +30,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * A speedy implementation of ByteArrayOutputStream. It's not synchronized, and it
- * does not copy buffers when it's expanded. There's also no copying of the internal buffer
- * if it's contents is extracted with the writeTo(stream) method.
+ * A speedy implementation of ByteArrayOutputStream. It's not synchronized, and it does not copy buffers when it's
+ * expanded. There's also no copying of the internal buffer if it's contents is extracted with the writeTo(stream)
+ * method.
  *
  * @author Rickard �berg
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
+ *
  * @version $Revision: 1.2 $
  */
 public class FastByteArrayOutputStream extends ByteArrayOutputStream {
@@ -72,7 +73,6 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         // write the internal buffer directly
         out.write(buffer, 0, index);
     }
-
 
     public int size() {
         return size + index;
@@ -118,19 +118,15 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     public void write(byte[] data, int offset, int length) {
         if (data == null) {
             throw new NullPointerException();
-        }
-        else if ((offset < 0) || (offset + length > data.length)
-                || (length < 0)) {
+        } else if ((offset < 0) || (offset + length > data.length) || (length < 0)) {
             throw new IndexOutOfBoundsException();
-        }
-        else {
+        } else {
             if (index + length >= blockSize) {
                 // Write byte by byte
                 // FIXME optimize this to use arraycopy's instead
                 for (int i = 0; i < length; i++)
                     write(data[offset + i]);
-            }
-            else {
+            } else {
                 // copy in the subarray
                 System.arraycopy(data, offset, buffer, index, length);
                 index += length;

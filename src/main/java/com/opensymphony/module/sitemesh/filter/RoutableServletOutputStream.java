@@ -16,15 +16,17 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 
+import javax.servlet.ServletOutputStream;
+
 /**
- * Provides a ServletOutputStream that routes through to another ServletOutputStream, however the destination
- * can be changed at any point. The destination can be passed in using a factory, so it will not be created
- * until it's actually needed.
+ * Provides a ServletOutputStream that routes through to another ServletOutputStream, however the destination can be
+ * changed at any point. The destination can be passed in using a factory, so it will not be created until it's actually
+ * needed.
  *
  * @author Joe Walnes
+ *
  * @version $Revision: 1.1 $
  */
 public class RoutableServletOutputStream extends ServletOutputStream {

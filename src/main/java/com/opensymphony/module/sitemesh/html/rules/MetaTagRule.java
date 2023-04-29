@@ -29,7 +29,8 @@ public class MetaTagRule extends BasicRule {
         if (tag.hasAttribute("name", false)) {
             page.addProperty("meta." + tag.getAttributeValue("name", false), tag.getAttributeValue("content", false));
         } else if (tag.hasAttribute("http-equiv", false)) {
-            page.addProperty("meta.http-equiv." + tag.getAttributeValue("http-equiv", false), tag.getAttributeValue("content", false));
+            page.addProperty("meta.http-equiv." + tag.getAttributeValue("http-equiv", false),
+                    tag.getAttributeValue("content", false));
         }
     }
 }

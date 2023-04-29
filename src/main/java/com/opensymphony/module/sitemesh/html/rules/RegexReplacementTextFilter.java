@@ -15,20 +15,20 @@ package com.opensymphony.module.sitemesh.html.rules;
 
 import com.opensymphony.module.sitemesh.html.TextFilter;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * TextFilter that substitutes content using a JDK 1.4 regular expression.
+ * <h3>Example</h3> This will substitute 'Google:Blah' for a link to a google search.
  *
- * <h3>Example</h3>
- *
- * This will substitute 'Google:Blah' for a link to a google search.
- *
- * <pre>HTMLProcessor processor = new HTMLProcessor(in, out);
- * processor.addTextFilter(new RegexReplacementTextFilter("Google:([a-zA-Z]+)", "<a href='http://www.google.com/q=$1'>$1</a>"));
+ * <pre>
+ * HTMLProcessor processor = new HTMLProcessor(in, out);
+ * processor.addTextFilter(
+ *         new RegexReplacementTextFilter("Google:([a-zA-Z]+)", "<a href='http://www.google.com/q=$1'>$1</a>"));
  * // add more TextFilters and TagRules
- * processor.process();</pre>
+ * processor.process();
+ * </pre>
  *
  * @author Joe Walnes
  */

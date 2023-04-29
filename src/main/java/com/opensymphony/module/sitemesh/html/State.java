@@ -13,7 +13,6 @@
  */
 package com.opensymphony.module.sitemesh.html;
 
-import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.html.util.StringSitemeshBuffer;
 
 import java.util.ArrayList;
@@ -62,18 +61,20 @@ public final class State {
         return null;
     }
 
-	public void addListener(StateChangeListener listener) {
-    if(listeners == null) listeners = new ArrayList();
-    listeners.add(listener);
-	}
+    public void addListener(StateChangeListener listener) {
+        if (listeners == null)
+            listeners = new ArrayList();
+        listeners.add(listener);
+    }
 
-	public void endOfState() {
-    if(listeners == null) return;
-    for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-			StateChangeListener listener = (StateChangeListener) iter.next();
-			listener.stateFinished();			
-		}
-	}
+    public void endOfState() {
+        if (listeners == null)
+            return;
+        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+            StateChangeListener listener = (StateChangeListener) iter.next();
+            listener.stateFinished();
+        }
+    }
 
     public void handleText(Text text, HTMLProcessorContext context) {
         if (textFilters != null && !textFilters.isEmpty()) {

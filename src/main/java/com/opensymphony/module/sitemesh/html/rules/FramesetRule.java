@@ -21,7 +21,7 @@ public class FramesetRule extends BasicRule {
     private final PageBuilder page;
 
     public FramesetRule(PageBuilder page) {
-        super(new String[] {"frame", "frameset"});
+        super(new String[] { "frame", "frameset" });
         this.page = page;
     }
 

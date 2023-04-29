@@ -31,6 +31,7 @@ import java.io.Writer;
  * Write property of Page to out.
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.4 $
  *
  * @see com.opensymphony.module.sitemesh.Page#getProperty(java.lang.String)
@@ -87,13 +88,11 @@ public class PropertyTag extends AbstractTag {
                     out.write("=\"");
                     out.write(propertyValue);
                     out.write("\"");
-                }
-                else {
+                } else {
                     out.write(propertyValue);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             trace(e);
         }
         return EVAL_PAGE;

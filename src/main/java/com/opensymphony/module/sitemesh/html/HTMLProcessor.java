@@ -39,7 +39,7 @@ public class HTMLProcessor {
 
     /**
      * Equivalent of htmlProcessor.defaultState().addRule()
-     */ 
+     */
     public void addRule(TagRule rule) {
         defaultState.addRule(rule);
     }
@@ -64,18 +64,19 @@ public class HTMLProcessor {
             private int size;
 
             public void pushBuffer(SitemeshBufferFragment.Builder buffer) {
-                if(size == buffers.length) {
-                  SitemeshBufferFragment.Builder[] newBuffers = new SitemeshBufferFragment.Builder[buffers.length * 2];
-                  System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
-                  buffers = newBuffers;
+                if (size == buffers.length) {
+                    SitemeshBufferFragment.Builder[] newBuffers = new SitemeshBufferFragment.Builder[buffers.length
+                            * 2];
+                    System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
+                    buffers = newBuffers;
                 }
                 buffers[size++] = buffer;
             }
-  
+
             public SitemeshBufferFragment.Builder currentBuffer() {
                 return buffers[size - 1];
             }
-  
+
             public SitemeshBufferFragment.Builder popBuffer() {
                 SitemeshBufferFragment.Builder last = buffers[size - 1];
                 buffers[--size] = null;

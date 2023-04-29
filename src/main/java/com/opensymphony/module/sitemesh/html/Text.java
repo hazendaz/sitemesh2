@@ -26,9 +26,8 @@ import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 public interface Text {
 
     /**
-     * Get the complete contents of the text block, preserving original formatting.
-     *
-     * This has a slight overhead in that it needs to construct a String. For improved performance, use writeTo() instead.
+     * Get the complete contents of the text block, preserving original formatting. This has a slight overhead in that
+     * it needs to construct a String. For improved performance, use writeTo() instead.
      */
     String getContents();
 

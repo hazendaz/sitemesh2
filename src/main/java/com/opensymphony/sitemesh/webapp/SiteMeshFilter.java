@@ -16,22 +16,24 @@ package com.opensymphony.sitemesh.webapp;
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.sitemesh.Content;
+import com.opensymphony.sitemesh.ContentProcessor;
 import com.opensymphony.sitemesh.Decorator;
 import com.opensymphony.sitemesh.DecoratorSelector;
-import com.opensymphony.sitemesh.ContentProcessor;
 import com.opensymphony.sitemesh.compatability.DecoratorMapper2DecoratorSelector;
 import com.opensymphony.sitemesh.compatability.PageParser2ContentProcessor;
+
+import java.io.IOException;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Core Filter for integrating SiteMesh into a Java web application.
  *
  * @author Joe Walnes
  * @author Scott Farquhar
+ *
  * @since SiteMesh 3
  */
 public class SiteMeshFilter implements Filter {
@@ -52,8 +54,9 @@ public class SiteMeshFilter implements Filter {
 
     /**
      * Main method of the Filter.
-     * <p>Checks if the Filter has been applied this request. If not, parses the page
-     * and applies {@link com.opensymphony.module.sitemesh.Decorator} (if found).
+     * <p>
+     * Checks if the Filter has been applied this request. If not, parses the page and applies
+     * {@link com.opensymphony.module.sitemesh.Decorator} (if found).
      */
     public void doFilter(ServletRequest rq, ServletResponse rs, FilterChain chain)
             throws IOException, ServletException {
@@ -68,7 +71,8 @@ public class SiteMeshFilter implements Filter {
         DecoratorSelector decoratorSelector = initDecoratorSelector(webAppContext);
 
         if (filterAlreadyAppliedForRequest(request)) {
-            // Prior to Servlet 2.4 spec, it was unspecified whether the filter should be called again upon an include().
+            // Prior to Servlet 2.4 spec, it was unspecified whether the filter should be called again upon an
+            // include().
             chain.doFilter(request, response);
             return;
         }
@@ -131,22 +135,23 @@ public class SiteMeshFilter implements Filter {
     }
 
     /**
-     * Continue in filter-chain, writing all content to buffer and parsing
-     * into returned {@link com.opensymphony.module.sitemesh.Page} object. If
-     * {@link com.opensymphony.module.sitemesh.Page} is not parseable, null is returned.
+     * Continue in filter-chain, writing all content to buffer and parsing into returned
+     * {@link com.opensymphony.module.sitemesh.Page} object. If {@link com.opensymphony.module.sitemesh.Page} is not
+     * parseable, null is returned.
      */
     private Content obtainContent(ContentProcessor contentProcessor, SiteMeshWebAppContext webAppContext,
-                                  HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        ContentBufferingResponse contentBufferingResponse = new ContentBufferingResponse(response, contentProcessor, webAppContext);
+        ContentBufferingResponse contentBufferingResponse = new ContentBufferingResponse(response, contentProcessor,
+                webAppContext);
         chain.doFilter(request, contentBufferingResponse);
         // TODO: check if another servlet or filter put a page object in the request
-        //            Content result = request.getAttribute(PAGE);
-        //            if (result == null) {
-        //                // parse the page
-        //                result = pageResponse.getPage();
-        //            }
+        // Content result = request.getAttribute(PAGE);
+        // if (result == null) {
+        // // parse the page
+        // result = pageResponse.getPage();
+        // }
         webAppContext.setUsingStream(contentBufferingResponse.isUsingStream());
         return contentBufferingResponse.getContent();
     }

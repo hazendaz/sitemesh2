@@ -16,7 +16,6 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.Tag;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
 
 public class BodyTagRule extends BasicRule {
 
@@ -38,7 +37,8 @@ public class BodyTagRule extends BasicRule {
             body.markStart(tag.getPosition() + tag.getLength());
         } else {
             body.end(tag.getPosition());
-            context.pushBuffer(SitemeshBufferFragment.builder()); // unused buffer: everything after </body> is discarded.
+            context.pushBuffer(SitemeshBufferFragment.builder()); // unused buffer: everything after </body> is
+                                                                  // discarded.
         }
     }
 

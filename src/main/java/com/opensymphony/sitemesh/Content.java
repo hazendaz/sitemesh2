@@ -18,6 +18,7 @@ import java.io.Writer;
 
 /**
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public interface Content {
@@ -42,15 +43,15 @@ public interface Content {
      */
     String getTitle();
 
-
     /**
      * Get a property embedded into the <code>Page</code> as a <code>String</code>.
      *
-     * @param name Name of property
+     * @param name
+     *            Name of property
+     *
      * @return Property value
      */
     String getProperty(String name);
-
 
     /**
      * Get all available property keys for the <code>Page</code>.

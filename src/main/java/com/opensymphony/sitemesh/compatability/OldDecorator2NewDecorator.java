@@ -13,23 +13,25 @@
  */
 package com.opensymphony.sitemesh.compatability;
 
+import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.sitemesh.webapp.decorator.BaseWebAppDecorator;
-import com.opensymphony.module.sitemesh.RequestConstants;
+
+import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
- * Adapts a SiteMesh 2 {@link com.opensymphony.module.sitemesh.Decorator} to a
- * SiteMesh 3 {@link com.opensymphony.sitemesh.Decorator}.
+ * Adapts a SiteMesh 2 {@link com.opensymphony.module.sitemesh.Decorator} to a SiteMesh 3
+ * {@link com.opensymphony.sitemesh.Decorator}.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class OldDecorator2NewDecorator extends BaseWebAppDecorator implements RequestConstants {
@@ -41,8 +43,7 @@ public class OldDecorator2NewDecorator extends BaseWebAppDecorator implements Re
     }
 
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
-                          ServletContext servletContext, SiteMeshWebAppContext webAppContext)
-            throws IOException, ServletException {
+            ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
 
         request.setAttribute(PAGE, new Content2HTMLPage(content, request));
 

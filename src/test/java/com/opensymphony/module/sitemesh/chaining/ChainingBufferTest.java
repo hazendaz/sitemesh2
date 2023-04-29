@@ -13,15 +13,14 @@
  */
 package com.opensymphony.module.sitemesh.chaining;
 
-import java.io.CharArrayWriter;
-import java.util.Arrays;
-import java.util.TreeMap;
-
 import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
-
 import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
+
+import java.io.CharArrayWriter;
+import java.util.TreeMap;
+
 import junit.framework.TestCase;
 
 /**
@@ -52,10 +51,8 @@ public class ChainingBufferTest extends TestCase {
     }
 
     public void testDeepFragments() throws Exception {
-        SitemeshBuffer buffer = newSitemeshBuffer("123456789",
-                3, newBufferFragment("abcdefg",
-                        4, newBufferFragment("hijklm", 1, 1),
-                        5, newBufferFragment("nopqr", 1, 4)),
+        SitemeshBuffer buffer = newSitemeshBuffer("123456789", 3,
+                newBufferFragment("abcdefg", 4, newBufferFragment("hijklm", 1, 1), 5, newBufferFragment("nopqr", 1, 4)),
                 8, newBufferFragment("tuzwx", 0, 2));
         assertEquals("123abcdieopqrfg45678tu9", getContent(buffer));
         assertCorrectLength(buffer);
@@ -97,7 +94,8 @@ public class ChainingBufferTest extends TestCase {
         return new DefaultSitemeshBuffer(content.toCharArray(), content.length(), fragments);
     }
 
-    private SitemeshBuffer newSitemeshBuffer(String content, int pos1, SitemeshBufferFragment frag1, int pos2, SitemeshBufferFragment frag2) {
+    private SitemeshBuffer newSitemeshBuffer(String content, int pos1, SitemeshBufferFragment frag1, int pos2,
+            SitemeshBufferFragment frag2) {
         TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<Integer, SitemeshBufferFragment>();
         fragments.put(pos1, frag1);
         fragments.put(pos2, frag2);
@@ -116,7 +114,8 @@ public class ChainingBufferTest extends TestCase {
         return new SitemeshBufferFragment(newSitemeshBuffer(content, pos1, frag1), 0, content.length());
     }
 
-    private SitemeshBufferFragment newBufferFragment(String content, int pos1, SitemeshBufferFragment frag1, int pos2, SitemeshBufferFragment frag2) {
+    private SitemeshBufferFragment newBufferFragment(String content, int pos1, SitemeshBufferFragment frag1, int pos2,
+            SitemeshBufferFragment frag2) {
         return new SitemeshBufferFragment(newSitemeshBuffer(content, pos1, frag1, pos2, frag2), 0, content.length());
     }
 }

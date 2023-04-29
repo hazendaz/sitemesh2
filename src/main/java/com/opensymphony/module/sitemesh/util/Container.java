@@ -27,45 +27,41 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Utility for determining the Servlet Container the application is running in.
- * Currently supported containers: Tomcat, Resin, Orion, OC4J, WebLogic, HPAS, JRun,
- * Websphere.
- *
- * <h3>Usage:</h3>
- *
- * <code>if (Container.get() == Container.TOMCAT) { .... }</code>
+ * Utility for determining the Servlet Container the application is running in. Currently supported containers: Tomcat,
+ * Resin, Orion, OC4J, WebLogic, HPAS, JRun, Websphere.
+ * <h3>Usage:</h3> <code>if (Container.get() == Container.TOMCAT) { .... }</code>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.2 $
  */
 public final class Container {
-    public static final int UNKNOWN   = 0;
-    public static final int TOMCAT    = 1;
-    public static final int RESIN     = 2;
-    public static final int ORION     = 3; // Orion or OC4J
-    public static final int WEBLOGIC  = 4;
-    public static final int HPAS      = 5;
-    public static final int JRUN      = 6;
+    public static final int UNKNOWN = 0;
+    public static final int TOMCAT = 1;
+    public static final int RESIN = 2;
+    public static final int ORION = 3; // Orion or OC4J
+    public static final int WEBLOGIC = 4;
+    public static final int HPAS = 5;
+    public static final int JRUN = 6;
     public static final int WEBSPHERE = 7;
 
     private static int result = -1;
 
     /**
-     * A map containing classes that can be searched for,
-     * and which container they are typically found in.
+     * A map containing classes that can be searched for, and which container they are typically found in.
      */
     private static Map classMappings = null;
 
     static {
         // initialize the classes that can be searched for
         classMappings = new HashMap(6);
-        classMappings.put("org.apache.jasper.runtime.JspFactoryImpl",             new Integer(TOMCAT));
-        classMappings.put("com.caucho.jsp.JspServlet",                            new Integer(RESIN));
-        classMappings.put("com.evermind.server.http.JSPServlet",                  new Integer(ORION));
-        classMappings.put("weblogic.servlet.JSPServlet",                          new Integer(WEBLOGIC));
+        classMappings.put("org.apache.jasper.runtime.JspFactoryImpl", new Integer(TOMCAT));
+        classMappings.put("com.caucho.jsp.JspServlet", new Integer(RESIN));
+        classMappings.put("com.evermind.server.http.JSPServlet", new Integer(ORION));
+        classMappings.put("weblogic.servlet.JSPServlet", new Integer(WEBLOGIC));
         classMappings.put("com.hp.mwlabs.j2ee.containers.servlet.jsp.JspServlet", new Integer(HPAS));
-        classMappings.put("jrun.servlet.WebApplicationService",                   new Integer(JRUN));
-        classMappings.put("com.ibm.ws.webcontainer.jsp.servlet.JspServlet",       new Integer(WEBSPHERE));
+        classMappings.put("jrun.servlet.WebApplicationService", new Integer(JRUN));
+        classMappings.put("com.ibm.ws.webcontainer.jsp.servlet.JspServlet", new Integer(WEBSPHERE));
     }
 
     /** Get the current container. */
@@ -75,8 +71,7 @@ public final class Container {
 
             if (classMatch == null) {
                 result = UNKNOWN;
-            }
-            else {
+            } else {
                 result = ((Integer) classMappings.get(classMatch)).intValue();
             }
         }
@@ -84,8 +79,7 @@ public final class Container {
     }
 
     /**
-     * Walk up the classloader hierachy and attempt to find a class in the classMappings Map
-     * that can be loaded.
+     * Walk up the classloader hierachy and attempt to find a class in the classMappings Map that can be loaded.
      *
      * @return Name of the match class, or null if not found.
      */
@@ -104,8 +98,7 @@ public final class Container {
                     loader.loadClass(className);
                     // if no exception has been thrown, we're in luck.
                     return className;
-                }
-                catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException e) {
                     // no problem... we'll keep trying...
                 }
             }

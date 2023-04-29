@@ -28,6 +28,7 @@ import com.opensymphony.module.sitemesh.taglib.AbstractTag;
  * Write the Page <code>&lt;title&gt;</code> value to out.
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.3 $
  *
  * @see com.opensymphony.module.sitemesh.HTMLPage#getTitle()
@@ -43,10 +44,11 @@ public class TitleTag extends AbstractTag {
     public final int doEndTag() {
         try {
             String title = getPage().getTitle();
-            if (title == null || title.trim().length() == 0) title = defaultTitle;
-            if (title != null) getOut().write(title);
-        }
-        catch (Exception e) {
+            if (title == null || title.trim().length() == 0)
+                title = defaultTitle;
+            if (title != null)
+                getOut().write(title);
+        } catch (Exception e) {
             trace(e);
         }
         return EVAL_PAGE;

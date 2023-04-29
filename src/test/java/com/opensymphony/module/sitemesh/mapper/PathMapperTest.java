@@ -55,20 +55,20 @@ public class PathMapperTest extends TestCase {
         assertEquals("exact2", pathMapper.get("/mydir/myexactfile.html"));
         assertEquals("exact3", pathMapper.get("/mydir/myexactfile.jsp"));
         assertEquals("exact4", pathMapper.get("/mydir/dodo"));
-	}
+    }
 
-	public void testFindComplexKey() throws Exception {
-	    assertEquals("complex1", pathMapper.get("/mydir/"));
+    public void testFindComplexKey() throws Exception {
+        assertEquals("complex1", pathMapper.get("/mydir/"));
         assertEquals("complex1", pathMapper.get("/mydir/test1.xml"));
         assertEquals("complex1", pathMapper.get("/mydir/test321.jsp"));
         assertEquals("complex1", pathMapper.get("/mydir/otherdir"));
 
         assertEquals("complex2", pathMapper.get("/mydir/otherdir/test321.jsp"));
 
-	    assertEquals("complex3", pathMapper.get("/otherdir/test2.jsp"));
+        assertEquals("complex3", pathMapper.get("/otherdir/test2.jsp"));
         assertEquals("complex3", pathMapper.get("/otherdir/test2.bpp"));
 
-	    assertEquals("complex4", pathMapper.get("/somedir/one/two/some/deep/file/test.xml"));
+        assertEquals("complex4", pathMapper.get("/somedir/one/two/some/deep/file/test.xml"));
         assertEquals("complex4", pathMapper.get("/somedir/321.jsp.xml"));
 
         assertEquals("complex5", pathMapper.get("/mydir/otherdir/admin/myfile.html"));

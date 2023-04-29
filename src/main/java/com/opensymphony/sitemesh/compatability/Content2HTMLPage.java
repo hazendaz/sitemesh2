@@ -16,17 +16,19 @@ package com.opensymphony.sitemesh.compatability;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.sitemesh.Content;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Adapts a SiteMesh 3 {@link Content} to a SiteMesh 2 {@link HTMLPage}.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class Content2HTMLPage implements HTMLPage {
@@ -92,8 +94,7 @@ public class Content2HTMLPage implements HTMLPage {
     public int getIntProperty(String name) {
         try {
             return Integer.parseInt(noNull(getProperty(name)));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return 0;
         }
     }
@@ -112,7 +113,8 @@ public class Content2HTMLPage implements HTMLPage {
 
     public boolean getBooleanProperty(String name) {
         String property = getProperty(name);
-        if (property == null || property.trim().length() == 0) return false;
+        if (property == null || property.trim().length() == 0)
+            return false;
         switch (property.charAt(0)) {
             case '1':
             case 't':

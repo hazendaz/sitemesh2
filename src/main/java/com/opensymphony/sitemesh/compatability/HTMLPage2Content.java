@@ -23,6 +23,7 @@ import java.io.Writer;
  * Adapts a SiteMesh 2 {@link HTMLPage} to a SiteMesh 3 {@link Content}.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class HTMLPage2Content implements Content {

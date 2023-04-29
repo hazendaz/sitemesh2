@@ -16,7 +16,7 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
-public class HtmlAttributesRule extends BasicRule{
+public class HtmlAttributesRule extends BasicRule {
 
     private final PageBuilder page;
 

@@ -27,27 +27,29 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
- * Common interface to ServletConfig and FilterConfig
- * (since javax.servlet.Config was removed from 2.3 spec).
+ * Common interface to ServletConfig and FilterConfig (since javax.servlet.Config was removed from 2.3 spec).
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.2 $
  */
 public class Config {
     private ServletConfig servletConfig;
     private FilterConfig filterConfig;
     private String configFile;
-  
+
     public Config(ServletConfig servletConfig) {
-        if (servletConfig == null) throw new NullPointerException("ServletConfig cannot be null");
+        if (servletConfig == null)
+            throw new NullPointerException("ServletConfig cannot be null");
         this.servletConfig = servletConfig;
         this.configFile = servletConfig.getInitParameter("configFile");
     }
 
     public Config(FilterConfig filterConfig) {
-        if (filterConfig == null) throw new NullPointerException("FilterConfig cannot be null");
+        if (filterConfig == null)
+            throw new NullPointerException("FilterConfig cannot be null");
         this.filterConfig = filterConfig;
-      this.configFile = filterConfig.getInitParameter("configFile");
+        this.configFile = filterConfig.getInitParameter("configFile");
     }
 
     public ServletContext getServletContext() {

@@ -16,7 +16,7 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
-public class ParameterExtractingRule extends BasicRule{
+public class ParameterExtractingRule extends BasicRule {
 
     private final PageBuilder page;
 

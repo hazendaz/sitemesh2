@@ -16,7 +16,6 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.html.BlockExtractingRule;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
 
 public class HeadExtractingRule extends BlockExtractingRule {
 

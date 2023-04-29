@@ -27,17 +27,19 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Abstract DecoratorMapper implementation for easy creation of new DecoratorMappers.
- *
- * <p>Typically, an implementation would override getNamedDecorator() <b>or</b> getDecorator().
- * If a Decorator cannot be returned from either of these, then they should delegate to their
- * superclass.</p>
+ * <p>
+ * Typically, an implementation would override getNamedDecorator() <b>or</b> getDecorator(). If a Decorator cannot be
+ * returned from either of these, then they should delegate to their superclass.
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.1 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper

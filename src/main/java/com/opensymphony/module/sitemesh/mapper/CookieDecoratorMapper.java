@@ -27,18 +27,20 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
 import java.util.Properties;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * The CookieDecoratorMapper will map a suitable decorator based on a cookie value.
- *
- * <p>The CookieDecoratorMapper is configured via one properties.
- * <code>cookie.name</code> - the cookie which contains the name of the
- * decorator which will be mapped.</p>
+ * <p>
+ * The CookieDecoratorMapper is configured via one properties. <code>cookie.name</code> - the cookie which contains the
+ * name of the decorator which will be mapped.
+ * </p>
  *
  * @author Paul Hammant
+ *
  * @version $Revision: 1.2 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper

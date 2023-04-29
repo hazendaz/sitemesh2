@@ -18,10 +18,7 @@ import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.State;
 import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
 import com.opensymphony.module.sitemesh.parser.HTMLPageParser;
-
-import java.nio.channels.GatheringByteChannel;
 
 public class DivExtractingPageParser extends HTMLPageParser {
 

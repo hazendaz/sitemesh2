@@ -25,41 +25,46 @@ package com.opensymphony.module.sitemesh.mapper;
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.factory.DefaultFactory;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
-import javax.servlet.ServletException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
 /**
- * The ConfigLoader reads a configuration XML file that contains Decorator definitions
- * (name, url, init-params) and path-mappings (pattern, name).
- *
- * <p>These can then be accessed by the getDecoratorByName() methods and getMappedName()
- * methods respectively.</p>
- *
- * <p>The DTD for the configuration file in old (deprecated) format is located at
+ * The ConfigLoader reads a configuration XML file that contains Decorator definitions (name, url, init-params) and
+ * path-mappings (pattern, name).
+ * <p>
+ * These can then be accessed by the getDecoratorByName() methods and getMappedName() methods respectively.
+ * </p>
+ * <p>
+ * The DTD for the configuration file in old (deprecated) format is located at
  * <a href="http://www.opensymphony.com/dtds/sitemesh_1_0_decorators.dtd">
- *  http://www.opensymphony.com/dtds/sitemesh_1_0_decorators.dtd
- * </a>.</p>
- *
- * <p>The DTD for the configuration file in new format is located at
+ * http://www.opensymphony.com/dtds/sitemesh_1_0_decorators.dtd </a>.
+ * </p>
+ * <p>
+ * The DTD for the configuration file in new format is located at
  * <a href="http://www.opensymphony.com/dtds/sitemesh_1_5_decorators.dtd">
- *  http://www.opensymphony.com/dtds/sitemesh_1_5_decorators.dtd
- * </a>.</p>
- *
- * <p>Editing the config file will cause it to be auto-reloaded.</p>
- *
- * <p>This class is used by ConfigDecoratorMapper, and uses PathMapper for pattern matching.</p>
+ * http://www.opensymphony.com/dtds/sitemesh_1_5_decorators.dtd </a>.
+ * </p>
+ * <p>
+ * Editing the config file will cause it to be auto-reloaded.
+ * </p>
+ * <p>
+ * This class is used by ConfigDecoratorMapper, and uses PathMapper for pattern matching.
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
+ *
  * @version $Revision: 1.8 $
  *
  * @see com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper
@@ -68,29 +73,25 @@ import java.util.Map;
 public class ConfigLoader {
 
     /**
-     * State visibile across threads stored in a single container so that we
-     * can efficiently atomically access it with the guarantee that we wont see
-     * a partially loaded configuration in the face of one thread reloading the
+     * State visibile across threads stored in a single container so that we can efficiently atomically access it with
+     * the guarantee that we wont see a partially loaded configuration in the face of one thread reloading the
      * configuration while others are trying to read it.
      */
     private static class State {
         /**
-         * Timestamp of the last time we checked for an update to the
-         * configuration file used to rate limit the frequency at which we check
-         * for efficiency.
+         * Timestamp of the last time we checked for an update to the configuration file used to rate limit the
+         * frequency at which we check for efficiency.
          */
         long lastModificationCheck = System.currentTimeMillis();
 
         /**
-         * Timestamp of the modification time of the configuration file when we
-         * generated the state.
+         * Timestamp of the modification time of the configuration file when we generated the state.
          */
         long lastModified;
 
         /**
-         * Whether a thread is currently checking if the configuration file has
-         * been modified and potentially reloading it and therefore others
-         * shouldn't attempt the same till it's done.
+         * Whether a thread is currently checking if the configuration file has been modified and potentially reloading
+         * it and therefore others shouldn't attempt the same till it's done.
          */
         boolean checking = false;
 
@@ -99,8 +100,7 @@ public class ConfigLoader {
     }
 
     /**
-     * Mark volatile so that the installation of new versions is guaranteed to
-     * be visible across threads.
+     * Mark volatile so that the installation of new versions is guaranteed to be visible across threads.
      */
     private volatile State state;
 
@@ -167,17 +167,13 @@ public class ConfigLoader {
             parseConfig(newState, document);
 
             return newState;
-        }
-        catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new ServletException("Could not get XML parser", e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new ServletException("Could not read the config file: " + configFileName, e);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new ServletException("Could not parse the config file: " + configFileName, e);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new ServletException("Could not find the config file: " + configFileName, e);
         }
     }
@@ -187,7 +183,8 @@ public class ConfigLoader {
 
         // get the default directory for the decorators
         String defaultDir = getAttribute(root, "defaultdir");
-        if (defaultDir == null) defaultDir = getAttribute(root, "defaultDir");
+        if (defaultDir == null)
+            defaultDir = getAttribute(root, "defaultDir");
 
         // Get decorators
         NodeList decoratorNodes = root.getElementsByTagName("decorator");
@@ -208,13 +205,16 @@ public class ConfigLoader {
 
                 // Append the defaultDir
                 if (defaultDir != null && page != null && page.length() > 0 && !page.startsWith("/")) {
-                    if (page.charAt(0) == '/') page = defaultDir + page;
-                    else page = defaultDir + '/' + page;
+                    if (page.charAt(0) == '/')
+                        page = defaultDir + page;
+                    else
+                        page = defaultDir + '/' + page;
                 }
 
                 // The uriPath must begin with a slash
                 if (uriPath != null && uriPath.length() > 0) {
-                    if (uriPath.charAt(0) != '/') uriPath = '/' + uriPath;
+                    if (uriPath.charAt(0) != '/')
+                        uriPath = '/' + uriPath;
                 }
 
                 // Get all <pattern>...</pattern> and <url-pattern>...</url-pattern> nodes and add a mapping
@@ -226,7 +226,8 @@ public class ConfigLoader {
                 page = getContainedText(decoratorNodes.item(i), "resource");
                 // We have this here because the use of jsp-file is deprecated, but we still want
                 // it to work.
-                if (page == null) page = getContainedText(decoratorNodes.item(i), "jsp-file");
+                if (page == null)
+                    page = getContainedText(decoratorNodes.item(i), "jsp-file");
             }
 
             Map params = new HashMap();
@@ -282,8 +283,7 @@ public class ConfigLoader {
         try {
             Node tag = ((Element) parent).getElementsByTagName(childTagName).item(0);
             return ((Text) tag.getFirstChild()).getData();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -319,7 +319,8 @@ public class ConfigLoader {
         boolean check = false;
         synchronized (currentState) {
             oldLastModified = currentState.lastModified;
-            if (!currentState.checking && current >= currentState.lastModificationCheck + DefaultFactory.configCheckMillis) {
+            if (!currentState.checking
+                    && current >= currentState.lastModificationCheck + DefaultFactory.configCheckMillis) {
                 currentState.lastModificationCheck = current;
                 currentState.checking = true;
                 check = true;

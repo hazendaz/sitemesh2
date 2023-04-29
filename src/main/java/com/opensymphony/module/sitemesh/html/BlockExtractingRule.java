@@ -38,7 +38,8 @@ public abstract class BlockExtractingRule extends BasicRule {
             if (!keepInBuffer) {
                 context.currentBuffer().markStartDelete(tag.getPosition());
             }
-            context.pushBuffer(createBuffer(context.getSitemeshBuffer()).markStart(tag.getPosition() + tag.getLength()));
+            context.pushBuffer(
+                    createBuffer(context.getSitemeshBuffer()).markStart(tag.getPosition() + tag.getLength()));
             start(tag);
             seenOpeningTag = true;
         } else if (tag.getType() == Tag.CLOSE && seenOpeningTag) {

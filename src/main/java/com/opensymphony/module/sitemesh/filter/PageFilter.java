@@ -23,9 +23,9 @@ import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  * @author <a href="scott@atlassian.com">Scott Farquhar</a>
+ *
  * @version $Revision: 1.17 $
  */
 public class PageFilter extends SiteMeshFilter {
-
 
 }

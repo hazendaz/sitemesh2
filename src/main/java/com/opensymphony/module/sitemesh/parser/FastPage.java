@@ -33,64 +33,57 @@ import java.util.Map;
  * HTMLPage implementation produced by FastPageParser.
  *
  * @author <a href="mailto:salaman@qoretech.com">Victor Salaman</a>
+ *
  * @version $Revision: 1.5 $
  */
-public final class FastPage extends AbstractHTMLPage
-{
-   private String head;
-   private String body;
+public final class FastPage extends AbstractHTMLPage {
+    private String head;
+    private String body;
 
-   public FastPage(SitemeshBuffer sitemeshBuffer, Map sitemeshProps, Map htmlProps, Map metaProps, Map bodyProps,
-                   String title, String head, String body, boolean frameSet)
-   {
-      super(sitemeshBuffer);
-      this.head = head;
-      this.body = body;
-      setFrameSet(frameSet);
-      addAttributeList("", htmlProps);
-      addAttributeList("page.", sitemeshProps);
-      addAttributeList("body.", bodyProps);
-      addAttributeList("meta.", metaProps);
-      addProperty("title", title);
-   }
+    public FastPage(SitemeshBuffer sitemeshBuffer, Map sitemeshProps, Map htmlProps, Map metaProps, Map bodyProps,
+            String title, String head, String body, boolean frameSet) {
+        super(sitemeshBuffer);
+        this.head = head;
+        this.body = body;
+        setFrameSet(frameSet);
+        addAttributeList("", htmlProps);
+        addAttributeList("page.", sitemeshProps);
+        addAttributeList("body.", bodyProps);
+        addAttributeList("meta.", metaProps);
+        addProperty("title", title);
+    }
 
-   public void writeHead(Writer out) throws IOException
-   {
-      out.write(head);
-   }
+    public void writeHead(Writer out) throws IOException {
+        out.write(head);
+    }
 
-   public void writeBody(Writer out) throws IOException
-   {
-      out.write(body);
-   }
+    public void writeBody(Writer out) throws IOException {
+        out.write(body);
+    }
 
-   private void addAttributeList(String prefix, Map attributes)
-   {
-      if(attributes == null || attributes.isEmpty()) return;
+    private void addAttributeList(String prefix, Map attributes) {
+        if (attributes == null || attributes.isEmpty())
+            return;
 
-      String name, value;
-      Iterator i = attributes.entrySet().iterator();
+        String name, value;
+        Iterator i = attributes.entrySet().iterator();
 
-      while (i.hasNext())
-      {
-         Map.Entry entry = (Map.Entry) i.next();
-         name = (String) entry.getKey();
-         value = (String) entry.getValue();
+        while (i.hasNext()) {
+            Map.Entry entry = (Map.Entry) i.next();
+            name = (String) entry.getKey();
+            value = (String) entry.getValue();
 
-         if(value != null && value.trim().length() > 0)
-         {
-            addProperty(prefix + name, value);
-         }
-      }
-   }
+            if (value != null && value.trim().length() > 0) {
+                addProperty(prefix + name, value);
+            }
+        }
+    }
 
-   public String getBody()
-   {
-      return body;
-   }
+    public String getBody() {
+        return body;
+    }
 
-   public String getHead()
-   {
-      return head;
-   }
+    public String getHead() {
+        return head;
+    }
 }

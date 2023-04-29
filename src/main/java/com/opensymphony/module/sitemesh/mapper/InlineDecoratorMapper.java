@@ -30,27 +30,29 @@ import com.opensymphony.module.sitemesh.factory.FactoryException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * The InlineDecoratorMapper is used to determine the correct Decorator when
- * using inline decorators.
- *
- * <p>It will check the request attribute value defined by the key
- * {@link com.opensymphony.module.sitemesh.RequestConstants#DECORATOR} and use the appropriate named
- * Decorator. This is passed across from the page:applyDecorator tag.</p>
+ * The InlineDecoratorMapper is used to determine the correct Decorator when using inline decorators.
+ * <p>
+ * It will check the request attribute value defined by the key
+ * {@link com.opensymphony.module.sitemesh.RequestConstants#DECORATOR} and use the appropriate named Decorator. This is
+ * passed across from the page:applyDecorator tag.
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.2 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class InlineDecoratorMapper extends AbstractDecoratorMapper implements RequestConstants {
-	public Decorator getDecorator(HttpServletRequest request, Page page) {
-		Decorator result = null;
-		if (request.getAttribute(DECORATOR) != null) {
-			// Retrieve name of decorator to use from request
-			String decoratorName = (String)request.getAttribute(DECORATOR);
-			result = getNamedDecorator(request, decoratorName);
-			if (result == null) throw new FactoryException("Cannot locate inline Decorator: " + decoratorName);
-		}
-		return result == null ? super.getDecorator(request, page) : result;
-	}
+    public Decorator getDecorator(HttpServletRequest request, Page page) {
+        Decorator result = null;
+        if (request.getAttribute(DECORATOR) != null) {
+            // Retrieve name of decorator to use from request
+            String decoratorName = (String) request.getAttribute(DECORATOR);
+            result = getNamedDecorator(request, decoratorName);
+            if (result == null)
+                throw new FactoryException("Cannot locate inline Decorator: " + decoratorName);
+        }
+        return result == null ? super.getDecorator(request, page) : result;
+    }
 }

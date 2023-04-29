@@ -23,9 +23,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import junit.framework.Test;
 
 /**
  * Test case for HTMLPageParser implementations. See parser-tests/readme.txt.
@@ -37,7 +37,8 @@ public class HTMLPageParserTest extends TestCase {
     private static final Pattern PARSER_PATTERN = Pattern.compile("parser\\.(.+)\\.class");
 
     /**
-     * This test case builds a custom suite, containing a collection of smaller suites (one for each file in src/parser-tests).
+     * This test case builds a custom suite, containing a collection of smaller suites (one for each file in
+     * src/parser-tests).
      */
     public static Test suite() throws Exception {
         TestSuite result = new TestSuite(HTMLPageParserTest.class.getName());
@@ -116,7 +117,7 @@ public class HTMLPageParserTest extends TestCase {
         String head;
         if (page instanceof HTMLPage) {
             StringWriter headWriter = new StringWriter();
-            ((HTMLPage)page).writeHead(headWriter);
+            ((HTMLPage) page).writeHead(headWriter);
             headWriter.flush();
             head = headWriter.toString();
         } else {
@@ -139,15 +140,14 @@ public class HTMLPageParserTest extends TestCase {
         props.load(input);
 
         String[] pageKeys = page.getPropertyKeys();
-        assertEquals(file.getName() + " : Unexpected number of page properties [" + join(pageKeys) + "]",
-                props.size(), pageKeys.length);
+        assertEquals(file.getName() + " : Unexpected number of page properties [" + join(pageKeys) + "]", props.size(),
+                pageKeys.length);
 
         for (int i = 0; i < pageKeys.length; i++) {
             String pageKey = pageKeys[i];
             String blockValue = props.getProperty(pageKey);
             String pageValue = page.getProperty(pageKey);
-            assertEquals(file.getName() + ": " + pageKey,
-                    blockValue == null ? null : blockValue.trim(),
+            assertEquals(file.getName() + ": " + pageKey, blockValue == null ? null : blockValue.trim(),
                     pageValue == null ? null : pageValue.trim());
         }
     }
@@ -176,7 +176,7 @@ public class HTMLPageParserTest extends TestCase {
         return result.toString();
     }
 
-    //-------------------------------------------------
+    // -------------------------------------------------
 
     private static File[] listParserTests(File dir) throws IOException {
         // get list of files to ignore
@@ -230,4 +230,3 @@ public class HTMLPageParserTest extends TestCase {
     }
 
 }
-

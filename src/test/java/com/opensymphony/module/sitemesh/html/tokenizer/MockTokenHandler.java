@@ -15,6 +15,7 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 
 import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.Text;
+
 import junit.framework.Assert;
 
 class MockTokenHandler implements TokenHandler {
@@ -32,7 +33,7 @@ class MockTokenHandler implements TokenHandler {
 
     public void expectTag(int type, String tag, String[] attributes) {
         expected.append("{{TAG : ").append(tag);
-        for (int i = 0; i < attributes.length; i+=2) {
+        for (int i = 0; i < attributes.length; i += 2) {
             expected.append(' ').append(attributes[i]).append("=\"").append(attributes[i + 1]).append('"');
         }
         expected.append(' ').append(typeAsString(type)).append("}}");
@@ -46,7 +47,8 @@ class MockTokenHandler implements TokenHandler {
     public void tag(Tag tag) {
         actual.append("{{TAG : ").append(tag.getName());
         for (int i = 0; i < tag.getAttributeCount(); i++) {
-            actual.append(' ').append(tag.getAttributeName(i)).append("=\"").append(tag.getAttributeValue(i)).append('"');
+            actual.append(' ').append(tag.getAttributeName(i)).append("=\"").append(tag.getAttributeValue(i))
+                    .append('"');
         }
         actual.append(' ').append(typeAsString(tag.getType())).append("}}");
     }
@@ -65,10 +67,14 @@ class MockTokenHandler implements TokenHandler {
 
     private String typeAsString(int type) {
         switch (type) {
-            case Tag.OPEN: return "*open*";
-            case Tag.CLOSE: return "*close*";
-            case Tag.EMPTY: return "*empty*";
-            default: return "*unknown*";
+            case Tag.OPEN:
+                return "*open*";
+            case Tag.CLOSE:
+                return "*close*";
+            case Tag.EMPTY:
+                return "*empty*";
+            default:
+                return "*unknown*";
         }
     }
 

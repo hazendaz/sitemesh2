@@ -16,16 +16,18 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 /**
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.2 $
  */
 public class DebugResponseWrapper extends HttpServletResponseWrapper {
@@ -42,22 +44,26 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void addCookie(Cookie cookie) {
-        if (enabled()) debug("addCookie", cookie.getName(), cookie.toString());
+        if (enabled())
+            debug("addCookie", cookie.getName(), cookie.toString());
         super.addCookie(cookie);
     }
 
     public void addDateHeader(String name, long date) {
-        if (enabled()) debug("addDateHeader", name, String.valueOf(date));
+        if (enabled())
+            debug("addDateHeader", name, String.valueOf(date));
         super.addDateHeader(name, date);
     }
 
     public void addHeader(String name, String value) {
-        if (enabled()) debug("addHeader", name, value);
+        if (enabled())
+            debug("addHeader", name, value);
         super.addHeader(name, value);
     }
 
     public void addIntHeader(String name, int value) {
-        if (enabled()) debug("addIntHeader", name, String.valueOf(value));
+        if (enabled())
+            debug("addIntHeader", name, String.valueOf(value));
         super.addIntHeader(name, value);
     }
 
@@ -74,47 +80,56 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void sendError(int sc) throws IOException {
-        if (enabled()) debug("sendError", String.valueOf(sc), null);
+        if (enabled())
+            debug("sendError", String.valueOf(sc), null);
         super.sendError(sc);
     }
 
     public void sendError(int sc, String msg) throws IOException {
-        if (enabled()) debug("sendError", String.valueOf(sc), msg);
+        if (enabled())
+            debug("sendError", String.valueOf(sc), msg);
         super.sendError(sc, msg);
     }
 
     public void sendRedirect(String location) throws IOException {
-        if (enabled()) debug("sendRedirect", location, null);
+        if (enabled())
+            debug("sendRedirect", location, null);
         super.sendRedirect(location);
     }
 
     public void setDateHeader(String name, long date) {
-        if (enabled()) debug("setDateHeader", name, String.valueOf(date));
+        if (enabled())
+            debug("setDateHeader", name, String.valueOf(date));
         super.setDateHeader(name, date);
     }
 
     public void setHeader(String name, String value) {
-        if (enabled()) debug("setHeader", name, value);
+        if (enabled())
+            debug("setHeader", name, value);
         super.setHeader(name, value);
     }
 
     public void setIntHeader(String name, int value) {
-        if (enabled()) debug("setIntHeader", name, String.valueOf(value));
+        if (enabled())
+            debug("setIntHeader", name, String.valueOf(value));
         super.setIntHeader(name, value);
     }
 
     public void setStatus(int sc) {
-        if (enabled()) debug("setStatus", String.valueOf(sc), null);
+        if (enabled())
+            debug("setStatus", String.valueOf(sc), null);
         super.setStatus(sc);
     }
 
     public void setStatus(int sc, String msg) {
-        if (enabled()) debug("setStatus", String.valueOf(sc), msg);
+        if (enabled())
+            debug("setStatus", String.valueOf(sc), msg);
         super.setStatus(sc, msg);
     }
 
     public void flushBuffer() throws IOException {
-        if (enabled()) debug("flushBuffer", null, null);
+        if (enabled())
+            debug("flushBuffer", null, null);
         super.flushBuffer();
     }
 
@@ -134,12 +149,14 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public ServletOutputStream getOutputStream() throws IOException {
-        if (enabled()) debug("getOutputStream", null, null);
+        if (enabled())
+            debug("getOutputStream", null, null);
         return super.getOutputStream();
     }
 
     public PrintWriter getWriter() throws IOException {
-        if (enabled()) debug("getWriter", null, null);
+        if (enabled())
+            debug("getWriter", null, null);
         return super.getWriter();
     }
 
@@ -149,31 +166,36 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void reset() {
-        if (enabled()) debug("reset", null, null);
+        if (enabled())
+            debug("reset", null, null);
         super.reset();
     }
 
-	/*public void resetBuffer() {
-		super.resetBuffer();
-	}*/
+    /*
+     * public void resetBuffer() { super.resetBuffer(); }
+     */
 
     public void setBufferSize(int size) {
-        if (enabled()) debug("setBufferSize", String.valueOf(size), null);
+        if (enabled())
+            debug("setBufferSize", String.valueOf(size), null);
         super.setBufferSize(size);
     }
 
     public void setContentLength(int len) {
-        if (enabled()) debug("setContentLength", String.valueOf(len), null);
+        if (enabled())
+            debug("setContentLength", String.valueOf(len), null);
         super.setContentLength(len);
     }
 
     public void setContentType(String type) {
-        if (enabled()) debug("setContentType", type, null);
+        if (enabled())
+            debug("setContentType", type, null);
         super.setContentType(type);
     }
 
     public void setLocale(Locale locale) {
-        if (enabled()) debug("setBufferSize", locale.getDisplayName(), null);
+        if (enabled())
+            debug("setBufferSize", locale.getDisplayName(), null);
         super.setLocale(locale);
     }
 

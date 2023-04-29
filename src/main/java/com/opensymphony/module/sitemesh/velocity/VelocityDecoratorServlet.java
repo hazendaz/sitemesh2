@@ -25,22 +25,25 @@ package com.opensymphony.module.sitemesh.velocity;
 import com.opensymphony.module.sitemesh.*;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
+import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.StringWriter;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.context.Context;
+import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
 
 /**
  * Servlet that allows Velocity templates to be used as decorators.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.9 $
  */
 public class VelocityDecoratorServlet extends VelocityViewServlet {
-    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context) throws Exception {
+    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context)
+            throws Exception {
         HTMLPage htmlPage = (HTMLPage) request.getAttribute(RequestConstants.PAGE);
         String template;
 
@@ -56,8 +59,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
             context.put("body", "<p>Body?</p>");
             context.put("head", "<!-- head -->");
             template = request.getServletPath();
-        }
-        else {
+        } else {
             context.put("title", OutputConverter.convert(htmlPage.getTitle()));
             {
                 StringWriter buffer = new StringWriter();

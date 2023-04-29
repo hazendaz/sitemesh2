@@ -26,8 +26,8 @@ import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.module.sitemesh.PageParser;
-import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 import com.opensymphony.module.sitemesh.mapper.PathMapper;
+import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +37,7 @@ import java.util.Properties;
  * Base Factory implementation. Provides utility methods for implementation.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.9 $
  */
 public abstract class BaseFactory extends Factory {
@@ -44,10 +45,9 @@ public abstract class BaseFactory extends Factory {
     protected Config config = null;
 
     /**
-     * Instance of {@link com.opensymphony.module.sitemesh.DecoratorMapper}.
-     * Because it is thread-safe, it can be shared by multiple clients. This
-     * is only the last DecoratorMapper in the chain, and all parents will be
-     * automatically delegated to it.
+     * Instance of {@link com.opensymphony.module.sitemesh.DecoratorMapper}. Because it is thread-safe, it can be shared
+     * by multiple clients. This is only the last DecoratorMapper in the chain, and all parents will be automatically
+     * delegated to it.
      */
     protected DecoratorMapper decoratorMapper = null;
 
@@ -58,8 +58,7 @@ public abstract class BaseFactory extends Factory {
     protected PathMapper excludeUrls = null;
 
     /**
-     * Constructor for default implementation of Factory.
-     * Should never be called by client. Singleton instance should be
+     * Constructor for default implementation of Factory. Should never be called by client. Singleton instance should be
      * obtained instead.
      *
      * @see #getInstance(com.opensymphony.module.sitemesh.Config config)
@@ -78,14 +77,16 @@ public abstract class BaseFactory extends Factory {
 
     /**
      * Create a PageParser suitable for the given content-type.
+     * <p>
+     * For example, if the supplied parameter is <code>text/html</code> a parser shall be returned that can parse HTML
+     * accordingly. Returns null if no parser can be found for the supplied content type.
+     * </p>
      *
-     * <p>For example, if the supplied parameter is <code>text/html</code>
-     * a parser shall be returned that can parse HTML accordingly. Returns
-     * null if no parser can be found for the supplied content type.</p>
+     * @param contentType
+     *            The MIME content-type of the data to be parsed
      *
-     * @param contentType The MIME content-type of the data to be parsed
-     * @return Appropriate <code>PageParser</code> for reading data, or
-     * <code>null</code> if no suitable parser was found.
+     * @return Appropriate <code>PageParser</code> for reading data, or <code>null</code> if no suitable parser was
+     *         found.
      */
     public PageParser getPageParser(String contentType) {
         return (PageParser) pageParsers.get(contentType);
@@ -99,9 +100,11 @@ public abstract class BaseFactory extends Factory {
     }
 
     /**
-     * Returns <code>true</code> if the supplied path matches one of the exclude
-     * URLs specified in sitemesh.xml, otherwise returns <code>false</code>.
+     * Returns <code>true</code> if the supplied path matches one of the exclude URLs specified in sitemesh.xml,
+     * otherwise returns <code>false</code>.
+     *
      * @param path
+     *
      * @return whether the path is excluded
      */
     public boolean isPathExcluded(String path) {
@@ -122,27 +125,26 @@ public abstract class BaseFactory extends Factory {
             DecoratorMapper newMapper = getDecoratorMapper(decoratorMapperClass);
             newMapper.init(config, properties, decoratorMapper);
             decoratorMapper = newMapper;
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new FactoryException("Could not load DecoratorMapper class : " + className, e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new FactoryException("Could not initialize DecoratorMapper : " + className, e);
         }
     }
 
-	protected DecoratorMapper getDecoratorMapper(Class decoratorMapperClass) throws InstantiationException, IllegalAccessException {
-		return (DecoratorMapper) decoratorMapperClass.newInstance();
-	}
+    protected DecoratorMapper getDecoratorMapper(Class decoratorMapperClass)
+            throws InstantiationException, IllegalAccessException {
+        return (DecoratorMapper) decoratorMapperClass.newInstance();
+    }
 
-	/** Clear all PageParser mappings. */
+    /** Clear all PageParser mappings. */
     protected void clearParserMappings() {
         pageParsers = new HashMap();
     }
 
     /**
-     * Map new PageParser to given content-type. contentType = null signifies default
-     * PageParser for unknown content-types.
+     * Map new PageParser to given content-type. contentType = null signifies default PageParser for unknown
+     * content-types.
      */
     protected void mapParser(String contentType, String className) {
         if (className.endsWith(".DefaultPageParser")) {
@@ -154,11 +156,9 @@ public abstract class BaseFactory extends Factory {
             // is most probably the legacy default page parser which
             // we no longer have a use for]
             pageParsers.put(contentType, pp);
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new FactoryException("Could not load PageParser class : " + className, e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new FactoryException("Could not instantiate PageParser : " + className, e);
         }
     }

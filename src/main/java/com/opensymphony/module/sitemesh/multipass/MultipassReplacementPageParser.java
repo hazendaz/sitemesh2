@@ -14,17 +14,17 @@
 package com.opensymphony.module.sitemesh.multipass;
 
 import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
-import com.opensymphony.module.sitemesh.PageParser;
 import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
-import com.opensymphony.module.sitemesh.html.util.CharArray;
-import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 import com.opensymphony.module.sitemesh.html.BasicRule;
+import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 import com.opensymphony.module.sitemesh.html.Tag;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class MultipassReplacementPageParser implements PageParser {
     private final Page page;

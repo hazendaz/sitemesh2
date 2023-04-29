@@ -20,21 +20,23 @@ import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.PageParserSelector;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 /**
- * Implementation of HttpServletResponseWrapper that captures page data instead of
- * sending to the writer.
+ * Implementation of HttpServletResponseWrapper that captures page data instead of sending to the writer.
  * <p/>
- * <p>Should be used in filter-chains or when forwarding/including pages
- * using a RequestDispatcher.</p>
+ * <p>
+ * Should be used in filter-chains or when forwarding/including pages using a RequestDispatcher.
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
+ *
  * @version $Revision: 1.17 $
  */
 public class PageResponseWrapper extends HttpServletResponseWrapper {
@@ -56,17 +58,18 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
                 return response.getWriter();
             }
         });
-        routableServletOutputStream = new RoutableServletOutputStream(new RoutableServletOutputStream.DestinationFactory() {
-            public ServletOutputStream create() throws IOException {
-                return response.getOutputStream();
-            }
-        });
+        routableServletOutputStream = new RoutableServletOutputStream(
+                new RoutableServletOutputStream.DestinationFactory() {
+                    public ServletOutputStream create() throws IOException {
+                        return response.getOutputStream();
+                    }
+                });
 
     }
 
     /**
-     * Set the content-type of the request and store it so it can
-     * be passed to the {@link com.opensymphony.module.sitemesh.PageParser}.
+     * Set the content-type of the request and store it so it can be passed to the
+     * {@link com.opensymphony.module.sitemesh.PageParser}.
      */
     public void setContentType(String type) {
         super.setContentType(type);
@@ -120,14 +123,16 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
      * Prevent content-length being set if page is parseable.
      */
     public void setContentLength(int contentLength) {
-        if (!parseablePage) super.setContentLength(contentLength);
+        if (!parseablePage)
+            super.setContentLength(contentLength);
     }
 
     /**
      * Prevent buffer from being flushed if this is a page being parsed.
      */
     public void flushBuffer() throws IOException {
-        if (!parseablePage) super.flushBuffer();
+        if (!parseablePage)
+            super.flushBuffer();
     }
 
     /**
@@ -158,7 +163,7 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     public void setStatus(int sc) {
         if (sc == HttpServletResponse.SC_NOT_MODIFIED) {
             aborted = true;
-            // route any content back to the original writer.  There shouldn't be any content, but just to be safe
+            // route any content back to the original writer. There shouldn't be any content, but just to be safe
             deactivateSiteMesh();
         }
         super.setStatus(sc);

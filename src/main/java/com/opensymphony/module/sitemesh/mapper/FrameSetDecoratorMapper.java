@@ -28,19 +28,19 @@ import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * The FrameSetDecoratorMapper will use the specified decorator when the Page
- * is an instance of {@link com.opensymphony.module.sitemesh.HTMLPage} and
- * <code>isFrameSet()</code> returns true.
- *
- * <p>The name of this decorator should be supplied in the <code>decorator</code>
- * property - if no decorator property is supplied, no decorator is applied to
- * frame based pages.
+ * The FrameSetDecoratorMapper will use the specified decorator when the Page is an instance of
+ * {@link com.opensymphony.module.sitemesh.HTMLPage} and <code>isFrameSet()</code> returns true.
+ * <p>
+ * The name of this decorator should be supplied in the <code>decorator</code> property - if no decorator property is
+ * supplied, no decorator is applied to frame based pages.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.2 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
@@ -54,10 +54,9 @@ public class FrameSetDecoratorMapper extends AbstractDecoratorMapper {
     }
 
     public Decorator getDecorator(HttpServletRequest request, Page page) {
-        if (page instanceof HTMLPage && ((HTMLPage)page).isFrameSet()) {
+        if (page instanceof HTMLPage && ((HTMLPage) page).isFrameSet()) {
             return getNamedDecorator(request, decorator);
-        }
-        else {
+        } else {
             return super.getDecorator(request, page);
         }
     }

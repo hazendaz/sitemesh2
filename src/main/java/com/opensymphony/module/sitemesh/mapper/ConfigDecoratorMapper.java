@@ -27,16 +27,18 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Properties;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Default implementation of DecoratorMapper. Reads decorators and
- * mappings from the <code>config</code> property (default '/WEB-INF/decorators.xml').
+ * Default implementation of DecoratorMapper. Reads decorators and mappings from the <code>config</code> property
+ * (default '/WEB-INF/decorators.xml').
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mcannon@internet.com">Mike Cannon-Brookes</a>
+ *
  * @version $Revision: 1.2 $
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
@@ -52,8 +54,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
         try {
             String fileName = properties.getProperty("config", "/WEB-INF/decorators.xml");
             configLoader = new ConfigLoader(fileName, config);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new InstantiationException(e.toString());
         }
     }
@@ -68,12 +69,10 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
             if (request.getPathInfo() != null) {
                 // strip the pathInfo from the requestURI
                 thisPath = requestURI.substring(0, requestURI.indexOf(request.getPathInfo()));
-            }
-            else {
+            } else {
                 thisPath = requestURI;
             }
-        }
-        else if ("".equals(thisPath)) {
+        } else if ("".equals(thisPath)) {
             // in servlet 2.4, if a request is mapped to '/*', getServletPath returns null (SIM-130)
             thisPath = request.getPathInfo();
         }
@@ -81,8 +80,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
         String name = null;
         try {
             name = configLoader.getMappedName(thisPath);
-        }
-        catch (ServletException e) {
+        } catch (ServletException e) {
             e.printStackTrace();
         }
 
@@ -95,16 +93,14 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
         Decorator result = null;
         try {
             result = configLoader.getDecoratorByName(name);
-        }
-        catch (ServletException e) {
+        } catch (ServletException e) {
             e.printStackTrace();
         }
 
         if (result == null || (result.getRole() != null && !request.isUserInRole(result.getRole()))) {
             // if the result is null or the user is not in the role
             return super.getNamedDecorator(request, name);
-        }
-        else {
+        } else {
             return result;
         }
     }

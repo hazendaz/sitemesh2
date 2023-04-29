@@ -26,17 +26,18 @@ import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.Writer;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.Tag;
+
 /**
- * Convenience implementation of Tag containing generice methods required
- * by all (or most) taglibs.
+ * Convenience implementation of Tag containing generice methods required by all (or most) taglibs.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.4 $
  */
 public abstract class AbstractTag extends BodyTagSupport implements RequestConstants {
@@ -67,18 +68,17 @@ public abstract class AbstractTag extends BodyTagSupport implements RequestConst
     }
 
     /**
-     * Return the Page object from the PAGE scope. If this is found in REQUEST scope
-     * instead, it will be moved into PAGE scope - to handle multi-level includes.
+     * Return the Page object from the PAGE scope. If this is found in REQUEST scope instead, it will be moved into PAGE
+     * scope - to handle multi-level includes.
      */
     protected Page getPage() {
-        Page p = (Page)pageContext.getAttribute(PAGE, PageContext.PAGE_SCOPE);
+        Page p = (Page) pageContext.getAttribute(PAGE, PageContext.PAGE_SCOPE);
 
         if (p == null) {
-            p = (Page)pageContext.getAttribute(PAGE, PageContext.REQUEST_SCOPE);
+            p = (Page) pageContext.getAttribute(PAGE, PageContext.REQUEST_SCOPE);
             if (p == null) {
                 pageContext.removeAttribute(PAGE, PageContext.PAGE_SCOPE);
-            }
-            else {
+            } else {
                 pageContext.setAttribute(PAGE, p, PageContext.PAGE_SCOPE);
             }
             pageContext.removeAttribute(PAGE, PageContext.REQUEST_SCOPE);
@@ -92,9 +92,9 @@ public abstract class AbstractTag extends BodyTagSupport implements RequestConst
     }
 
     /**
-     * Get the outputWriter.  This method should be used in preference to
-     * <code>pageContext.getOut()</code>, as some charset conversions may need
-     * to happen in some servers.
+     * Get the outputWriter. This method should be used in preference to <code>pageContext.getOut()</code>, as some
+     * charset conversions may need to happen in some servers.
+     *
      * @return the writer for use in the tag
      */
     protected Writer getOut() {

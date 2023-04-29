@@ -20,12 +20,16 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
  * <p/>
  * You need to supply a custom {@link TokenHandler} that will receive callbacks as text and tags are processed.
  * <p/>
- * <pre>char[] input = ...;
+ *
+ * <pre>
+ * char[] input = ...;
  * HTMLTagTokenizer tokenizer = new HTMLTagTokenizer(input);
  * TokenHandler handler = new MyTokenHandler();
- * tokenizer.start(handler);</pre>
+ * tokenizer.start(handler);
+ * </pre>
  *
  * @author Joe Walnes
+ *
  * @see TokenHandler
  * @see com.opensymphony.module.sitemesh.parser.HTMLPageParser
  */

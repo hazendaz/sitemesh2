@@ -30,6 +30,7 @@ import javax.servlet.jsp.tagext.VariableInfo;
  * TagExtraInfo implementation to expose Page object as variable.
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.1 $
  *
  * @see UsePageTag
@@ -42,6 +43,6 @@ public class UsePageTEI extends TagExtraInfo {
 
     public VariableInfo[] getVariableInfo(TagData data) {
         String id = data.getAttributeString("id");
-        return new VariableInfo[] {new VariableInfo(id, getType(), true, VariableInfo.AT_END)};
+        return new VariableInfo[] { new VariableInfo(id, getType(), true, VariableInfo.AT_END) };
     }
 }

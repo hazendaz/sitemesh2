@@ -16,15 +16,11 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
-import junit.framework.TestCase;
+import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
 
-import com.opensymphony.module.sitemesh.html.HTMLProcessor;
+import junit.framework.TestCase;
 
 public class RegexReplacementTextFilterTest extends TestCase {
 
@@ -46,8 +42,7 @@ public class RegexReplacementTextFilterTest extends TestCase {
 
     public void testAllowsMatchedGroupToBeUsedInSubsitution() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>I think JIRA:SIM-1234 is the way forward</hello>");
-        processor.addTextFilter(new RegexReplacementTextFilter(
-                "JIRA:([A-Z]+\\-[0-9]+)",
+        processor.addTextFilter(new RegexReplacementTextFilter("JIRA:([A-Z]+\\-[0-9]+)",
                 "<a href='http://jira.opensymhony.com/browse/$1'>$1</a>"));
 
         processor.process();

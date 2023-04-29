@@ -16,19 +16,21 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
+import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.io.IOException;
 
 /**
- * Special request dispatcher that will include when an inline decorator includes
- * a resource that uses an internal forward.
+ * Special request dispatcher that will include when an inline decorator includes a resource that uses an internal
+ * forward.
  *
  * @see com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag
  *
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
+ *
  * @version $Revision: 1.2 $
  */
 public class RequestDispatcherWrapper implements RequestDispatcher {
@@ -39,21 +41,21 @@ public class RequestDispatcherWrapper implements RequestDispatcher {
         this.rd = rd;
     }
 
-    public void forward(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+    public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
+            throws ServletException, IOException {
         if (!done) {
             include(servletRequest, servletResponse);
             done = true;
-        }
-        else {
+        } else {
             throw new IllegalStateException("Response has already been committed");
         }
     }
 
-    public void include(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+    public void include(ServletRequest servletRequest, ServletResponse servletResponse)
+            throws ServletException, IOException {
         if (!done) {
             rd.include(servletRequest, servletResponse);
-        }
-        else {
+        } else {
             throw new IllegalStateException("Response has already been committed");
         }
     }

@@ -32,6 +32,7 @@ import java.io.IOException;
  * Looks for patterns of tokens in the Lexer and translates these to calls to pass to the TokenHandler.
  *
  * @author Joe Walnes
+ *
  * @see TagTokenizer
  */
 public class Parser extends Lexer {
@@ -42,17 +43,17 @@ public class Parser extends Lexer {
     private int pushbackToken = -1;
     private String pushbackText;
 
-    public final static short SLASH=257;
-    public final static short WHITESPACE=258;
-    public final static short EQUALS=259;
-    public final static short QUOTE=260;
-    public final static short WORD=261;
-    public final static short TEXT=262;
-    public final static short QUOTED=263;
-    public final static short LT=264;
-    public final static short GT=265;
-    public final static short LT_OPEN_MAGIC_COMMENT=266;
-    public final static short LT_CLOSE_MAGIC_COMMENT=267;
+    public final static short SLASH = 257;
+    public final static short WHITESPACE = 258;
+    public final static short EQUALS = 259;
+    public final static short QUOTE = 260;
+    public final static short WORD = 261;
+    public final static short TEXT = 262;
+    public final static short QUOTED = 263;
+    public final static short LT = 264;
+    public final static short GT = 265;
+    public final static short LT_OPEN_MAGIC_COMMENT = 266;
+    public final static short LT_CLOSE_MAGIC_COMMENT = 267;
 
     private final char[] input;
 
@@ -175,7 +176,7 @@ public class Parser extends Lexer {
                 parsedText(start, position() - start);
             }
         } else if (token == Parser.GT) {
-            // Token ">" - an illegal <> or <  > tag. Ignore
+            // Token ">" - an illegal <> or < > tag. Ignore
         } else if (token == 0) {
             parsedText(start, position() - start); // eof
         } else {
@@ -320,7 +321,7 @@ public class Parser extends Lexer {
     }
 
     protected void parsedAttribute(String name, String value, boolean quoted) {
-        if(reusableToken.attributeCount + 2 >= reusableToken.attributes.length) {
+        if (reusableToken.attributeCount + 2 >= reusableToken.attributes.length) {
             String[] newAttributes = new String[reusableToken.attributeCount * 2];
             System.arraycopy(reusableToken.attributes, 0, newAttributes, 0, reusableToken.attributeCount);
             reusableToken.attributes = newAttributes;
@@ -341,7 +342,7 @@ public class Parser extends Lexer {
 
         public int attributeCount = 0;
         public String[] attributes = new String[10]; // name1, value1, name2, value2...
-      
+
         public String getName() {
             return name;
         }
@@ -355,7 +356,8 @@ public class Parser extends Lexer {
         }
 
         public void writeTo(SitemeshBufferFragment.Builder buffer, int position) {
-            buffer.insert(position, SitemeshBufferFragment.builder().setBuffer(new DefaultSitemeshBuffer(input)).setStart(position).setLength(length).build());
+            buffer.insert(position, SitemeshBufferFragment.builder().setBuffer(new DefaultSitemeshBuffer(input))
+                    .setStart(position).setLength(length).build());
         }
 
         public int getAttributeCount() {
@@ -363,10 +365,10 @@ public class Parser extends Lexer {
         }
 
         public int getAttributeIndex(String name, boolean caseSensitive) {
-            if(attributeCount == 0)
-               return -1;
+            if (attributeCount == 0)
+                return -1;
             final int len = attributeCount;
-            for (int i = 0; i < len; i+=2) {
+            for (int i = 0; i < len; i += 2) {
                 final String current = attributes[i];
                 if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {
                     return i / 2;
@@ -384,16 +386,16 @@ public class Parser extends Lexer {
         }
 
         public String getAttributeValue(String name, boolean caseSensitive) {
-          if(attributeCount == 0)
-             return null;
-          final int len = attributeCount;
-          for (int i = 0; i < len; i+=2) {
-              final String current = attributes[i];
-              if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {
-                  return attributes[i + 1];
-              }
-          }
-          return null;
+            if (attributeCount == 0)
+                return null;
+            final int len = attributeCount;
+            for (int i = 0; i < len; i += 2) {
+                final String current = attributes[i];
+                if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {
+                    return attributes[i + 1];
+                }
+            }
+            return null;
         }
 
         public boolean hasAttribute(String name, boolean caseSensitive) {

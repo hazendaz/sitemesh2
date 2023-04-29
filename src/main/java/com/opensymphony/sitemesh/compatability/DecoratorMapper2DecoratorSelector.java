@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
  * Adapts a SiteMesh 2 {@link DecoratorMapper} to a SiteMesh 2 {@link DecoratorSelector}.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class DecoratorMapper2DecoratorSelector implements DecoratorSelector {
@@ -40,8 +41,8 @@ public class DecoratorMapper2DecoratorSelector implements DecoratorSelector {
     public Decorator selectDecorator(Content content, SiteMeshContext context) {
         SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;
         HttpServletRequest request = webAppContext.getRequest();
-        com.opensymphony.module.sitemesh.Decorator decorator =
-                decoratorMapper.getDecorator(request, new Content2HTMLPage(content, request));
+        com.opensymphony.module.sitemesh.Decorator decorator = decoratorMapper.getDecorator(request,
+                new Content2HTMLPage(content, request));
         if (decorator == null || decorator.getPage() == null) {
             return new NoDecorator();
         } else {

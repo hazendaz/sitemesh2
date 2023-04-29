@@ -19,6 +19,7 @@ package com.opensymphony.sitemesh;
  * Note: Since SiteMesh 3, this replaces the DecoratorMapper.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public interface DecoratorSelector {

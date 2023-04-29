@@ -30,12 +30,13 @@ import java.io.Writer;
 
 /**
  * Abstract implementation of {@link com.opensymphony.module.sitemesh.HTMLPage}.
- *
- * <p>Adds to {@link com.opensymphony.module.sitemesh.parser.AbstractPage} some HTML methods.
- * To implement, follow guidelines of super-class, and implement the 2
- * abstract methods states below.</p>
+ * <p>
+ * Adds to {@link com.opensymphony.module.sitemesh.parser.AbstractPage} some HTML methods. To implement, follow
+ * guidelines of super-class, and implement the 2 abstract methods states below.
+ * </p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.5 $
  *
  * @see com.opensymphony.module.sitemesh.parser.AbstractPage
@@ -49,9 +50,8 @@ public abstract class AbstractHTMLPage extends AbstractPage implements HTMLPage 
 
     /**
      * Write data of html <code>&lt;head&gt;</code> tag.
-     *
-     * <p>Must be implemented. Data written should not actually contain the
-     * head tags, but all the data in between.
+     * <p>
+     * Must be implemented. Data written should not actually contain the head tags, but all the data in between.
      */
     public abstract void writeHead(Writer out) throws IOException;
 
@@ -60,12 +60,9 @@ public abstract class AbstractHTMLPage extends AbstractPage implements HTMLPage 
     }
 
     public void setFrameSet(boolean frameset) {
-        if (frameset)
-        {
+        if (frameset) {
             addProperty("frameset", "true");
-        }
-        else if (isPropertySet("frameset"))
-        {
+        } else if (isPropertySet("frameset")) {
             addProperty("frameset", "false");
         }
     }

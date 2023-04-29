@@ -26,19 +26,22 @@ import com.opensymphony.module.sitemesh.factory.FactoryException;
 import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 import com.opensymphony.module.sitemesh.util.Container;
 
-import javax.naming.InitialContext;
-import javax.rmi.PortableRemoteObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.naming.InitialContext;
+import javax.rmi.PortableRemoteObject;
+
 /**
- * Factory responsible for creating appropriate instances of implementations.
- * This is specific to a web context and is obtained through {@link #getInstance(com.opensymphony.module.sitemesh.Config)}.
- *
- * <p>The actual Factory method used is determined by the enviroment entry <code>sitemesh.factory</code>.
- * If this doesn't exist, it defaults to {@link com.opensymphony.module.sitemesh.factory.DefaultFactory} .</p>
+ * Factory responsible for creating appropriate instances of implementations. This is specific to a web context and is
+ * obtained through {@link #getInstance(com.opensymphony.module.sitemesh.Config)}.
+ * <p>
+ * The actual Factory method used is determined by the enviroment entry <code>sitemesh.factory</code>. If this doesn't
+ * exist, it defaults to {@link com.opensymphony.module.sitemesh.factory.DefaultFactory} .
+ * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.9 $
  */
 public abstract class Factory implements PageParserSelector {
@@ -46,22 +49,22 @@ public abstract class Factory implements PageParserSelector {
     private static final String SITEMESH_FACTORY = "sitemesh.factory";
 
     /**
-     * Entry-point for obtaining singleton instance of Factory. The default factory class
-     * that will be instantiated can be overridden with the environment
-     * entry <code>sitemesh.factory</code>.
+     * Entry-point for obtaining singleton instance of Factory. The default factory class that will be instantiated can
+     * be overridden with the environment entry <code>sitemesh.factory</code>.
      */
     public static Factory getInstance(Config config) {
-        Factory instance = (Factory)config.getServletContext().getAttribute(SITEMESH_FACTORY);
+        Factory instance = (Factory) config.getServletContext().getAttribute(SITEMESH_FACTORY);
         if (instance == null) {
-            String factoryClass = getEnvEntry("sitemesh.factory", "com.opensymphony.module.sitemesh.factory.DefaultFactory");
+            String factoryClass = getEnvEntry("sitemesh.factory",
+                    "com.opensymphony.module.sitemesh.factory.DefaultFactory");
             try {
                 Class cls = ClassLoaderUtil.loadClass(factoryClass, config.getClass());
                 Constructor con = cls.getConstructor(new Class[] { Config.class });
-                instance = (Factory)con.newInstance(new Config[] { config });
+                instance = (Factory) con.newInstance(new Config[] { config });
                 config.getServletContext().setAttribute(SITEMESH_FACTORY, instance);
             } catch (InvocationTargetException e) {
                 throw new FactoryException("Cannot construct Factory : " + factoryClass, e.getTargetException());
-        
+
             } catch (Exception e) {
                 throw new FactoryException("Cannot construct Factory : " + factoryClass, e);
             }
@@ -77,13 +80,16 @@ public abstract class Factory implements PageParserSelector {
 
     /**
      * Create a PageParser suitable for the given content-type.
+     * <p>
+     * For example, if the supplied parameter is <code>text/html</code> a parser shall be returned that can parse HTML
+     * accordingly.
+     * </p>
+     * Never returns null.
      *
-     * <p>For example, if the supplied parameter is <code>text/html</code>
-     * a parser shall be returned that can parse HTML accordingly.</p> Never returns null.
+     * @param contentType
+     *            The MIME content-type of the data to be parsed
      *
-     * @param contentType The MIME content-type of the data to be parsed
      * @return Appropriate <code>PageParser</code> for reading data
-     *
      */
     public abstract PageParser getPageParser(String contentType);
 
@@ -104,11 +110,12 @@ public abstract class Factory implements PageParserSelector {
                 InitialContext ctx = new InitialContext();
                 Object o = ctx.lookup("java:comp/env/" + envEntry);
                 ctx.close();
-                result = (String)PortableRemoteObject.narrow(o, String.class); // rmi-iiop friendly.
+                result = (String) PortableRemoteObject.narrow(o, String.class); // rmi-iiop friendly.
             }
-        }
-        catch (Exception e) { } // failed - don't moan, just return default.
-        catch (NoClassDefFoundError e) { } // to deal with restricted class loaders (i.e. on AppEngine).
+        } catch (Exception e) {
+        } // failed - don't moan, just return default.
+        catch (NoClassDefFoundError e) {
+        } // to deal with restricted class loaders (i.e. on AppEngine).
         return result == null || result.trim().length() == 0 ? defaultValue : result;
     }
 }

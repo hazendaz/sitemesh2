@@ -16,12 +16,13 @@ package com.opensymphony.sitemesh.webapp.decorator;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 
+import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Decorator that dispatches to another path in the Servlet Container (such as a JSP or path mapped to a Servlet).
@@ -32,6 +33,7 @@ import java.io.IOException;
  * To dispatch to a decorator in another web-app on the same server, use {@link ExternalDispatchedDecorator}.
  *
  * @author Joe Walnes
+ *
  * @since SiteMesh 3.0
  */
 public class DispatchedDecorator extends BaseWebAppDecorator {
@@ -46,8 +48,7 @@ public class DispatchedDecorator extends BaseWebAppDecorator {
     }
 
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
-                          ServletContext servletContext, SiteMeshWebAppContext webAppContext)
-            throws IOException, ServletException {
+            ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
         Object oldContent = request.getAttribute(CONTENT_KEY);
         Object oldWebAppContext = request.getAttribute(CONTEXT_KEY);
 

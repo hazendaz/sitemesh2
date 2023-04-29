@@ -13,19 +13,21 @@
  */
 package com.opensymphony.sitemesh.webapp;
 
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.PageParserSelector;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.filter.PageResponseWrapper;
-import com.opensymphony.module.sitemesh.PageParserSelector;
-import com.opensymphony.module.sitemesh.PageParser;
-import com.opensymphony.sitemesh.ContentProcessor;
 import com.opensymphony.sitemesh.Content;
+import com.opensymphony.sitemesh.ContentProcessor;
 
-import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * @author Joe Walnes
+ *
  * @since SiteMesh 3
  */
 public class ContentBufferingResponse extends HttpServletResponseWrapper {
@@ -37,7 +39,8 @@ public class ContentBufferingResponse extends HttpServletResponseWrapper {
     private final ContentProcessor contentProcessor;
     private final SiteMeshWebAppContext webAppContext;
 
-    public ContentBufferingResponse(HttpServletResponse response, final ContentProcessor contentProcessor, final SiteMeshWebAppContext webAppContext) {
+    public ContentBufferingResponse(HttpServletResponse response, final ContentProcessor contentProcessor,
+            final SiteMeshWebAppContext webAppContext) {
         super(new PageResponseWrapper(response, new PageParserSelector() {
             public boolean shouldParsePage(String contentType) {
                 return contentProcessor.handles(contentType);
@@ -47,7 +50,7 @@ public class ContentBufferingResponse extends HttpServletResponseWrapper {
                 // Migration: Not actually needed by PageResponseWrapper, so long as getPage() isn't called.
                 return null;
             }
-        }){
+        }) {
             public void setContentType(String contentType) {
                 webAppContext.setContentType(contentType);
                 super.setContentType(contentType);

@@ -29,6 +29,7 @@ import javax.servlet.jsp.tagext.Tag;
  * Add a parameter to the inline Decorator, as if specified in the Page.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
+ *
  * @version $Revision: 1.2 $
  */
 public class ParamTag extends BodyTagSupport {
@@ -41,7 +42,7 @@ public class ParamTag extends BodyTagSupport {
     public int doAfterBody() {
         Tag parent = findAncestorWithClass(this, ApplyDecoratorTag.class);
         if (parent instanceof ApplyDecoratorTag) {
-            ApplyDecoratorTag t = (ApplyDecoratorTag)parent;
+            ApplyDecoratorTag t = (ApplyDecoratorTag) parent;
             t.addParam(name, getBodyContent().getString());
         }
         return SKIP_BODY;

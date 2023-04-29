@@ -13,9 +13,9 @@
  */
 package com.opensymphony.module.sitemesh.filter;
 
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
-import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshWriter;
 
 import java.io.IOException;

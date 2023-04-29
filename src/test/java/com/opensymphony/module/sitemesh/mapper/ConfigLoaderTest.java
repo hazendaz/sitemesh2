@@ -13,11 +13,11 @@
  */
 package com.opensymphony.module.sitemesh.mapper;
 
-import junit.framework.TestCase;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+
+import junit.framework.TestCase;
 
 public class ConfigLoaderTest extends TestCase {
 
@@ -81,7 +81,8 @@ public class ConfigLoaderTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        if (tempConfigFile != null) tempConfigFile.delete();
+        if (tempConfigFile != null)
+            tempConfigFile.delete();
         configLoader = null;
     }
 

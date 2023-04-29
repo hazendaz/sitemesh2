@@ -35,7 +35,8 @@ public class HttpContentType {
             return null;
 
         // Skip over any leading spaces
-        while (startIndex < type.length() && type.charAt(startIndex) == ' ') startIndex++;
+        while (startIndex < type.length() && type.charAt(startIndex) == ' ')
+            startIndex++;
 
         if (startIndex >= type.length()) {
             return null;
@@ -49,14 +50,14 @@ public class HttpContentType {
             if (endIndex == -1)
                 endIndex = type.length();
         } else {
-            // Scan through until we hit either  the end of the string or a
+            // Scan through until we hit either the end of the string or a
             // special character (as defined in RFC-2045). Note that we ignore '/'
             // since we want to capture it as part of the value.
             char ch;
-            while (endIndex < type.length() && (ch = type.charAt(endIndex)) != ' ' && ch != ';'
-                    && ch != '(' && ch != ')' && ch != '[' && ch != ']' && ch != '<' && ch != '>'
-                    && ch != ':' && ch != ',' && ch != '=' && ch != '?' && ch != '@' && ch != '"'
-                    && ch != '\\') endIndex++;
+            while (endIndex < type.length() && (ch = type.charAt(endIndex)) != ' ' && ch != ';' && ch != '('
+                    && ch != ')' && ch != '[' && ch != ']' && ch != '<' && ch != '>' && ch != ':' && ch != ','
+                    && ch != '=' && ch != '?' && ch != '@' && ch != '"' && ch != '\\')
+                endIndex++;
         }
         return type.substring(startIndex, endIndex);
     }

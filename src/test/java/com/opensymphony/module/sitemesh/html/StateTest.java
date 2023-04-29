@@ -21,6 +21,7 @@ public class StateTest extends TestCase {
         public DummyRule(String acceptableTagName) {
             super(acceptableTagName);
         }
+
         public void process(Tag tag) {
             throw new UnsupportedOperationException();
         }

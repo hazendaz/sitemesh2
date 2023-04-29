@@ -13,20 +13,17 @@
  */
 package com.opensymphony.module.sitemesh.html;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.TreeMap;
-
 import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.html.tokenizer.Parser;
 import com.opensymphony.module.sitemesh.html.util.StringSitemeshBuffer;
 
+import java.io.StringWriter;
+import java.util.Arrays;
 
 /**
- * A CustomTag provides a mechanism to manipulate the contents of a Tag. The standard Tag implementations
- * are immutable, however CustomTag allows a copy to be taken of an immutable Tag that can then be manipulated.
+ * A CustomTag provides a mechanism to manipulate the contents of a Tag. The standard Tag implementations are immutable,
+ * however CustomTag allows a copy to be taken of an immutable Tag that can then be manipulated.
  *
  * @see Tag
  *
@@ -38,7 +35,6 @@ public class CustomTag implements Tag {
     private int attributeCount = 0;
     private String name;
     private int type;
-
 
     /**
      * Type of tag: <br/>
@@ -57,28 +53,29 @@ public class CustomTag implements Tag {
     public CustomTag(Tag tag) {
         setName(tag.getName());
         setType(tag.getType());
-        if(tag instanceof Parser.ReusableToken) {
-          Parser.ReusableToken orig = (Parser.ReusableToken)tag;
-          attributeCount = orig.attributeCount;
-          attributes = new String[attributeCount];
-          System.arraycopy(orig.attributes, 0, attributes, 0, attributeCount);
-        } else if(tag instanceof CustomTag) {
-          CustomTag orig = (CustomTag)tag;
-          attributeCount = orig.attributeCount;
-          attributes = new String[attributeCount];
-          System.arraycopy(orig.attributes, 0, attributes, 0, attributeCount);
+        if (tag instanceof Parser.ReusableToken) {
+            Parser.ReusableToken orig = (Parser.ReusableToken) tag;
+            attributeCount = orig.attributeCount;
+            attributes = new String[attributeCount];
+            System.arraycopy(orig.attributes, 0, attributes, 0, attributeCount);
+        } else if (tag instanceof CustomTag) {
+            CustomTag orig = (CustomTag) tag;
+            attributeCount = orig.attributeCount;
+            attributes = new String[attributeCount];
+            System.arraycopy(orig.attributes, 0, attributes, 0, attributeCount);
         } else {
-          int c = tag.getAttributeCount();
-          attributes = new String[c * 2];
-          for (int i = 0; i < c; i++) {
-              attributes[attributeCount++] = tag.getAttributeName(i);
-              attributes[attributeCount++] = tag.getAttributeValue(i);
-          }
+            int c = tag.getAttributeCount();
+            attributes = new String[c * 2];
+            for (int i = 0; i < c; i++) {
+                attributes[attributeCount++] = tag.getAttributeName(i);
+                attributes[attributeCount++] = tag.getAttributeValue(i);
+            }
         }
     }
 
     public String getContents() {
-        SitemeshBufferFragment.Builder buffer = SitemeshBufferFragment.builder().setBuffer(new DefaultSitemeshBuffer(new char[]{}));
+        SitemeshBufferFragment.Builder buffer = SitemeshBufferFragment.builder()
+                .setBuffer(new DefaultSitemeshBuffer(new char[] {}));
         writeTo(buffer, 0);
         return buffer.build().getStringContent();
     }
@@ -113,14 +110,19 @@ public class CustomTag implements Tag {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CustomTag)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof CustomTag))
+            return false;
 
         final CustomTag customTag = (CustomTag) o;
 
-        if (type != customTag.type) return false;
-        if (attributes != null ? !Arrays.equals(attributes, customTag.attributes) : customTag.attributes != null) return false;
-        if (name != null ? !name.equals(customTag.name) : customTag.name != null) return false;
+        if (type != customTag.type)
+            return false;
+        if (attributes != null ? !Arrays.equals(attributes, customTag.attributes) : customTag.attributes != null)
+            return false;
+        if (name != null ? !name.equals(customTag.name) : customTag.name != null)
+            return false;
 
         return true;
     }
@@ -205,9 +207,7 @@ public class CustomTag implements Tag {
     }
 
     /**
-     * Change the type of the tag.
-     *
-     * Type of tag: <br/>
+     * Change the type of the tag. Type of tag: <br/>
      * &lt;blah&gt; - Tag.OPEN<br/>
      * &lt;/blah&gt; - Tag.CLOSE<br/>
      * &lt;blah/&gt; - Tag.EMPTY<br/>
@@ -216,7 +216,8 @@ public class CustomTag implements Tag {
         if (type == Tag.OPEN || type == Tag.CLOSE || type == Tag.EMPTY) {
             this.type = type;
         } else {
-            throw new IllegalArgumentException("CustomTag must be of type Tag.OPEN, Tag.CLOSE or Tag.EMPTY - was " + type);
+            throw new IllegalArgumentException(
+                    "CustomTag must be of type Tag.OPEN, Tag.CLOSE or Tag.EMPTY - was " + type);
         }
     }
 
@@ -226,17 +227,20 @@ public class CustomTag implements Tag {
         System.arraycopy(attributes, 0, newAttributes, 0, attributes.length);
         attributes = newAttributes;
     }
-  
+
     /**
-     * Add a new attribute. This does not check for the existence of an attribute with the same name,
-     * thus allowing duplicate attributes.
+     * Add a new attribute. This does not check for the existence of an attribute with the same name, thus allowing
+     * duplicate attributes.
      *
-     * @param name           Name of attribute to change.
-     * @param value          New value of attribute or null for an HTML style empty attribute.
+     * @param name
+     *            Name of attribute to change.
+     * @param value
+     *            New value of attribute or null for an HTML style empty attribute.
+     *
      * @return Index of new attribute.
      */
     public int addAttribute(String name, String value) {
-        if(attributeCount == attributes.length) {
+        if (attributeCount == attributes.length) {
             growAttributes();
         }
         attributes[attributeCount++] = name;
@@ -247,9 +251,12 @@ public class CustomTag implements Tag {
     /**
      * Change the value of an attribute, or add an attribute if it does not already exist.
      *
-     * @param name           Name of attribute to change.
-     * @param caseSensitive  Whether the name should be treated as case sensitive when searching for an existing value.
-     * @param value          New value of attribute or null for an HTML style empty attribute.
+     * @param name
+     *            Name of attribute to change.
+     * @param caseSensitive
+     *            Whether the name should be treated as case sensitive when searching for an existing value.
+     * @param value
+     *            New value of attribute or null for an HTML style empty attribute.
      */
     public void setAttributeValue(String name, boolean caseSensitive, String value) {
         int attributeIndex = getAttributeIndex(name, caseSensitive);
@@ -278,10 +285,11 @@ public class CustomTag implements Tag {
      * Remove an attribute.
      */
     public void removeAttribute(int attributeIndex) {
-        if(attributeIndex > attributeCount / 2) {
-            throw new ArrayIndexOutOfBoundsException("Cannot remove attribute at index " + attributeIndex + ", max index is " + attributeCount/2);
+        if (attributeIndex > attributeCount / 2) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Cannot remove attribute at index " + attributeIndex + ", max index is " + attributeCount / 2);
         }
-        //shift everything down one and null the last two
+        // shift everything down one and null the last two
         String[] newAttributes = new String[attributes.length - 2];
         System.arraycopy(attributes, 0, newAttributes, 0, attributeIndex * 2);
         int next = (attributeIndex * 2) + 2;
@@ -293,8 +301,10 @@ public class CustomTag implements Tag {
     /**
      * Change the value of an attribute, or add an attribute if it does not already exist.
      *
-     * @param name           Name of attribute to remove.
-     * @param caseSensitive  Whether the name should be treated as case sensitive.
+     * @param name
+     *            Name of attribute to remove.
+     * @param caseSensitive
+     *            Whether the name should be treated as case sensitive.
      */
     public void removeAttribute(String name, boolean caseSensitive) {
         int attributeIndex = getAttributeIndex(name, caseSensitive);
