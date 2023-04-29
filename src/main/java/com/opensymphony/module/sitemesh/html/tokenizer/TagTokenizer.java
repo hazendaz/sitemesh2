@@ -15,11 +15,9 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 
 /**
  * Splits a chunk of HTML into 'text' and 'tag' tokens, for easy processing. Is VERY tolerant to badly formed HTML.
- * <p/>
  * <h3>Usage</h3>
- * <p/>
+ * <p>
  * You need to supply a custom {@link TokenHandler} that will receive callbacks as text and tags are processed.
- * <p/>
  *
  * <pre>
  * char[] input = ...;

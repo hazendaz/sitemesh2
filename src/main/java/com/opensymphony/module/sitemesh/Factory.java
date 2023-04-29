@@ -38,7 +38,6 @@ import javax.rmi.PortableRemoteObject;
  * <p>
  * The actual Factory method used is determined by the enviroment entry <code>sitemesh.factory</code>. If this doesn't
  * exist, it defaults to {@link com.opensymphony.module.sitemesh.factory.DefaultFactory} .
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */

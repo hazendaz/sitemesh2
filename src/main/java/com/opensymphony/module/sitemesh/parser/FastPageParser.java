@@ -38,7 +38,6 @@ import java.util.Map;
  * Very fast PageParser implementation for parsing HTML.
  * <p>
  * Produces FastPage.
- * </p>
  *
  * @author <a href="mailto:salaman@qoretech.com">Victor Salaman</a>
  *

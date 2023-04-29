@@ -29,7 +29,6 @@ import java.util.Iterator;
  * <p>
  * A Decorator is infact a Servlet/JSP, and this is a wrapper to reference it. An implementation is returned by the
  * {@link com.opensymphony.module.sitemesh.DecoratorMapper}.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */

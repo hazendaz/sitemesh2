@@ -38,7 +38,6 @@ import javax.servlet.http.HttpSession;
  * spider, crawler, ferret) of a search engine.
  * <p>
  * The name of this decorator should be supplied in the <code>decorator</code> property.
- * </p>
  *
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
  *

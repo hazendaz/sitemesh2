@@ -38,11 +38,9 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * The exact 'printable=true' request criteria can be overriden with the <code>parameter.name</code> and
  * <code>parameter.value</code> properties.
- * </p>
  * <p>
  * Although this DecoratorMapper was designed for creating printable versions of a page, it can be used for much more
  * imaginative purposes.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *

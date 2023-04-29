@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
  * identify and, if a match is found, routes the request accordingly. Configuration is done using the sitemesh.xml file.
  * The param name is a string literal (operating system name) you would like to match in the UA-OS header, and the value
  * is what will be appended to the decorator name if the user is using that operating system
- * </p>
  *
  * @author <a href="mailto:schepdawg@yahoo.com">Adam P. Schepis</a>
  *

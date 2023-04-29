@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * Implementations of this are returned by the {@link com.opensymphony.module.sitemesh.Factory}, and should be
  * thread-safe.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */

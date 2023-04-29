@@ -52,7 +52,6 @@ import org.xml.sax.SAXException;
  *      &lt;param-value&gt;/WEB-INF/etc/sitemesh.xml&lt;/param-value&gt;
  *  &lt;/context-param&gt;
  * </pre>
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>

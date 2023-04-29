@@ -41,21 +41,17 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * This can be useful for supplying different versions of the same content for different browsers (e.g. vanilla HTML for
  * Lynx, complex tables and frames for Netscape, extra stuff for IE5, etc).
- * </p>
  * <p>
  * This can also be used to enhance search-engine ratings by using a 'bait and switch' system - this involves showing a
  * search-engine friendly of the content to spiders only.
- * </p>
  * <p>
  * When AgentDecoratorMapper is in the chain, it will request the appropriate Decorator from its parent. It will then
  * add an extention to the filename of the Decorator, and if that file exists it shall be used as the Decorator instead.
  * For example, if the Decorator path is <code>/blah.jsp</code> and the detected user-agent is <code>ie</code>, the path
  * <code>/blah-ie.jsp</code> shall be used.
- * </p>
  * <p>
  * The agent mappings are configured by passing properties with <code>match.</code> as a prefix. For example:
  * 'match.MSIE'=ie , 'match.Lynx'=plain .
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *

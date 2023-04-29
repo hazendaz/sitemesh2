@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
  * It will check the request attribute value defined by the key
  * {@link com.opensymphony.module.sitemesh.RequestConstants#DECORATOR} and use the appropriate named Decorator. This is
  * passed across from the page:applyDecorator tag.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *

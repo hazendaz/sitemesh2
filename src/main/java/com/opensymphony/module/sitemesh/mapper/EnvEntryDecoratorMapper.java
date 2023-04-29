@@ -37,10 +37,8 @@ import javax.servlet.http.HttpServletRequest;
  * this can be very difficult, since decorator mappings are specified in <code>decorators.xml</code> (more or less).
  * This mapper corrects that by allowing two types of mapping. If the decorator name is found in an
  * <code>&lt;env-entry&gt;</code>, the entry's value is used as the decorator reference.
- * </p>
  * <p>
  * Known Issues:
- * </p>
  * <ol>
  * <li>It still uses the decorator path (from <code>decorators.xml</code>). This needs to be corrected for full
  * functionality. If anyone has a suggestion on how...</li>

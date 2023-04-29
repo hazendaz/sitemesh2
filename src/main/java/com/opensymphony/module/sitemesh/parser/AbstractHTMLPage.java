@@ -33,7 +33,6 @@ import java.io.Writer;
  * <p>
  * Adds to {@link com.opensymphony.module.sitemesh.parser.AbstractPage} some HTML methods. To implement, follow
  * guidelines of super-class, and implement the 2 abstract methods states below.
- * </p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *

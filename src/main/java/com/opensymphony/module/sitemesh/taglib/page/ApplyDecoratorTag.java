@@ -49,20 +49,16 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * The page attribute should point to the panel resource which should expose an entire page (e.g. another JSP file
  * producing HTML). This attribute can be relative to the page it is being called from or an absolute path from the
  * context-root.
- * </p>
  * <p>
  * <strong>OR</strong>
- * </p>
  * <p>
  * If the page attribute is not specified, the body content is parsed into the
  * {@link com.opensymphony.module.sitemesh.Page} object and has the {@link com.opensymphony.module.sitemesh.Decorator}
  * applied.
- * </p>
  * <p>
  * The (optional) decorator attribute is the name of the {@link com.opensymphony.module.sitemesh.Decorator} to apply to
  * the included page. Note that the implementation of {@link com.opensymphony.module.sitemesh.DecoratorMapper} can
  * overide this.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */

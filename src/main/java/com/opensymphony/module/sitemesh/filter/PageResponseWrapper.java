@@ -29,10 +29,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * Implementation of HttpServletResponseWrapper that captures page data instead of sending to the writer.
- * <p/>
  * <p>
  * Should be used in filter-chains or when forwarding/including pages using a RequestDispatcher.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>

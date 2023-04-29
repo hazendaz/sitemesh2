@@ -36,17 +36,14 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * The 'meta.decorator' and 'decorator' properties of the page are accessed and if any of them contain the name of a
  * valid Decorator, that Decorator shall be applied.
- * </p>
  * <p>
  * As an example, if HTML is being used, the Decorator could be chosen by using a
  * <code>&lt;html decorator="mydecorator"&gt;</code> root tag <i>or</i> by using a
  * <code>&lt;meta name="decorator" content="mydecorator"&gt;</code> tag in the header.
- * </p>
  * <p>
  * The actual properties to query are specified by passing properties to the mapper using the <code>property.?</code>
  * prefix. As the properties are stored in a Map, each key has to be unique. Example: property.1=decorator,
  * property.2=meta.decorator .
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *

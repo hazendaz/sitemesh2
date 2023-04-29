@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * Typically, an implementation would override getNamedDecorator() <b>or</b> getDecorator(). If a Decorator cannot be
  * returned from either of these, then they should delegate to their superclass.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *

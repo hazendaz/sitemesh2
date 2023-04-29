@@ -31,10 +31,8 @@ import java.io.IOException;
  * The implementation of this can be switched to parse different kind of data (<i>e.g.</i> HTML, WML, FOP, images) or
  * for performance enhancements. An implementation is obtained through the
  * {@link com.opensymphony.module.sitemesh.Factory} .
- * </p>
  * <p>
  * A single PageParser is reused, therefore the parse() methods need to be thread-safe.
- * </p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  */

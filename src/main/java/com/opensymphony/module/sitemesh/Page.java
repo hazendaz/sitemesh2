@@ -33,14 +33,12 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * The original data in its entirity can be written using the writePage() methods. It may also contain a set of
  * properties - these vary among different {@link com.opensymphony.module.sitemesh.PageParser} implementations.
- * </p>
  * <p>
  * Typically a Page is no use to a {@link com.opensymphony.module.sitemesh.Decorator} as it needs specific details
  * relevant to the content-type of that page (<i>e.g.</i> HTML pages). The appropriate
  * {@link com.opensymphony.module.sitemesh.PageParser} is responsible for returning extended implementations of pages
  * such as {@link com.opensymphony.module.sitemesh.HTMLPage} which are of more use to the Decorator. New media types
  * (<i>e.g.</i> WML) could be added to the system by extending Page and implementing an appropriate PageParser.
- * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */

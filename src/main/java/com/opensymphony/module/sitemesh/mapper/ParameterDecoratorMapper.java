@@ -35,25 +35,20 @@ import javax.servlet.http.HttpServletRequest;
  * The ParameterDecoratorMapper will map a suitable decorator based on request parameters.
  * <p>
  * The ParameterDecoratorMapper is configured via three properties.
- * </p>
  * <p>
  * <code>decorator.parameter</code> - the parameter which contains the name of the decorator which will be mapped. The
  * default is "decorator".
- * </p>
  * <p>
  * For example if <code>decorator.parameter</code> is "foobar" then myurl.jsp?foobar=mydecorator will map to the
  * decorator named "mydecorator".
- * </p>
  * <p>
  * You can also supply an optional 'confirmation parameter'. The decorator will only be mapped if the parameter named
  * <code>parameter.name</code> is in the request URI and the value of that parameter is equal to the
  * <code>parameter.value</code> property.
- * </p>
  * <p>
  * For example assuming parameter.name=confirm and parameter.value=true the URI
  * myurl.jsp?decorator=mydecorator&confirm=true will map the decorator mydecorator. where as the URIs
  * myurl.jsp?decorator=mydecorator and myurl.jsp?decorator=mydecorator&confirm=false will not return any decorator.
- * </p>
  *
  * @author <a href="mailto:mcannon@internet.com">Mike Cannon-Brookes</a>
  *

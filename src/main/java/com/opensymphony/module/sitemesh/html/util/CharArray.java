@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 
 /**
  * A leaner, meaner version of StringBuffer.
- * <p/>
+ * <p>
  * It provides basic functionality to handle dynamically-growing char arrays as quickly as possible. This class is not
  * threadsafe.
  *

@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * The CookieDecoratorMapper is configured via one properties. <code>cookie.name</code> - the cookie which contains the
  * name of the decorator which will be mapped.
- * </p>
  *
  * @author Paul Hammant
  *

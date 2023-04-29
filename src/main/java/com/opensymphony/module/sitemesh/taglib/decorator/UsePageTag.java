@@ -32,7 +32,6 @@ import javax.servlet.jsp.PageContext;
  * <p>
  * Depending on the TEI used, the object will be {@link com.opensymphony.module.sitemesh.Page} or
  * {@link com.opensymphony.module.sitemesh.HTMLPage}.
- * </p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
