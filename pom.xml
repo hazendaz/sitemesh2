@@ -167,15 +167,6 @@
                   </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <additionalOptions combine.children="append">
-                        <option>--allow-script-in-comments</option>
-                    </additionalOptions>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
