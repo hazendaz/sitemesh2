@@ -124,8 +124,8 @@ public class CharArray {
     }
 
     /**
-     * Appends the supplied string to the end of this character array. Passing in a <code>null</code> string will result in
-     * a <code>NullPointerException</code>.
+     * Appends the supplied string to the end of this character array. Passing in a <code>null</code> string will result
+     * in a <code>NullPointerException</code>.
      */
     public CharArray append(String str) {
         int requiredSize = str.length() + size;
@@ -188,8 +188,8 @@ public class CharArray {
 
     /**
      * Returns the hashcode for a <em>lowercase</em> version of the array's substring (as set by the
-     * {@link #setSubstr(int, int)} method). This uses the same calculation as the <code>String.hashCode()</code> method so
-     * that it remains compatible with the hashcodes of normal strings.
+     * {@link #setSubstr(int, int)} method). This uses the same calculation as the <code>String.hashCode()</code> method
+     * so that it remains compatible with the hashcodes of normal strings.
      */
     public int substrHashCode() {
         int hash = 0;
