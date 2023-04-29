@@ -570,9 +570,9 @@ public final class FastPageParser implements PageParser {
      * Populates a {@link Tag} object using data from the supplied {@link CharArray}. The supplied tag parameter is
      * reset and reused - this avoids excess object creation which hwlps performance.
      *
-     * @return the same tag instance that was passed in, except it will be populated with a new <tt>name</tt> value (and
-     *         the corresponding <tt>nameEndIdx</tt> value). However if the tag contained nathing but whitespace, this
-     *         method will return <tt>null</tt>.
+     * @return the same tag instance that was passed in, except it will be populated with a new <code>name</code> value (and
+     *         the corresponding <code>nameEndIdx</code> value). However if the tag contained nathing but whitespace, this
+     *         method will return <code>null</code>.
      */
     private Tag parseTag(Tag tag, CharArray buf) {
         int len = buf.length();
@@ -607,11 +607,11 @@ public final class FastPageParser implements PageParser {
      *
      * @param tag
      *            the tag that is currently being processed. This should be the tag that was returned as a result of a
-     *            call to {@link #parseTag(FastPageParser.Tag, CharArray)} (ie, it has the <tt>name</tt> and
-     *            <tt>nameEndIdx</tt> fields set correctly for the tag in question. The <tt>properties</tt> field can be
+     *            call to {@link #parseTag(FastPageParser.Tag, CharArray)} (ie, it has the <code>name</code> and
+     *            <code>nameEndIdx</code> fields set correctly for the tag in question. The <code>properties</code> field can be
      *            in an undefined state - it will get replaced regardless).
      * @param buffer
-     *            a <tt>CharArray</tt> containing the entire tag that is being parsed.
+     *            a <code>CharArray</code> containing the entire tag that is being parsed.
      *
      * @return the same tag instance that was passed in, only it will now be populated with any properties that were
      *         specified in the tag's HTML.

@@ -61,7 +61,7 @@ public class CharArray {
      * Changes the size of the character array to the value specified. If the new size is less than the current size,
      * the data in the internal array will be truncated. If the new size is &lt;= 0, the array will be reset to empty
      * (but, unlike StringBuffer, the internal array will NOT be shrunk). If the new size is &gt the current size, the
-     * array will be padded out with null characters (<tt>'&#92;u0000'</tt>).
+     * array will be padded out with null characters (<code>'&#92;u0000'</code>).
      *
      * @param newSize
      *            the new size of the character array
@@ -90,8 +90,8 @@ public class CharArray {
     }
 
     /**
-     * Appends an existing CharArray on to this one. Passing in a <tt>null</tt> CharArray will result in a
-     * <tt>NullPointerException</tt>.
+     * Appends an existing CharArray on to this one. Passing in a <code>null</code> CharArray will result in a
+     * <code>NullPointerException</code>.
      */
     public CharArray append(CharArray chars) {
         return append(chars.buffer, 0, chars.size);
@@ -124,8 +124,8 @@ public class CharArray {
     }
 
     /**
-     * Appends the supplied string to the end of this character array. Passing in a <tt>null</tt> string will result in
-     * a <tt>NullPointerException</tt>.
+     * Appends the supplied string to the end of this character array. Passing in a <code>null</code> string will result in
+     * a <code>NullPointerException</code>.
      */
     public CharArray append(String str) {
         int requiredSize = str.length() + size;
@@ -188,7 +188,7 @@ public class CharArray {
 
     /**
      * Returns the hashcode for a <em>lowercase</em> version of the array's substring (as set by the
-     * {@link #setSubstr(int, int)} method). This uses the same calculation as the <tt>String.hashCode()</tt> method so
+     * {@link #setSubstr(int, int)} method). This uses the same calculation as the <code>String.hashCode()</code> method so
      * that it remains compatible with the hashcodes of normal strings.
      */
     public int substrHashCode() {
@@ -208,7 +208,7 @@ public class CharArray {
      * the character array that the comparison should start from.
      * <p>
      * If (and only if) the supplied string and the relevant portion of the character array are considered equal, this
-     * method will return <tt>true</tt>.
+     * method will return <code>true</code>.
      */
     public boolean compareLower(String lowerStr, int offset) {
         // Range check
