@@ -12,6 +12,8 @@
    the end body tag, and treats everything in between as the body.  Does not allow many of the advanced
    features of Sitemesh to be used, such as filters and and <content> tags.  To use the partial page
    parser, set the the pageParser in sitemesh.xml to be com.opensymphony.module.sitemesh.parser.PartialPageParser
+ * Relicense project as apache 2
+ * Move ownership from sitemesh to hazendaz
 
 --------------------------
 -- Changes in 2.4.2     --
