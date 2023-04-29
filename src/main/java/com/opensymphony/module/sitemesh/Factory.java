@@ -42,12 +42,18 @@ import javax.rmi.PortableRemoteObject;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public abstract class Factory implements PageParserSelector {
-    /** Web context lookup key */
+
+    /** Web context lookup key. */
     private static final String SITEMESH_FACTORY = "sitemesh.factory";
 
     /**
      * Entry-point for obtaining singleton instance of Factory. The default factory class that will be instantiated can
      * be overridden with the environment entry <code>sitemesh.factory</code>.
+     *
+     * @param config
+     *            the config
+     *
+     * @return single instance of Factory
      */
     public static Factory getInstance(Config config) {
         Factory instance = (Factory) config.getServletContext().getAttribute(SITEMESH_FACTORY);
@@ -70,9 +76,16 @@ public abstract class Factory implements PageParserSelector {
         return instance;
     }
 
+    /**
+     * Refresh.
+     */
     public abstract void refresh();
 
-    /** Return instance of DecoratorMapper. */
+    /**
+     * Return instance of DecoratorMapper.
+     *
+     * @return the decorator mapper
+     */
     public abstract DecoratorMapper getDecoratorMapper();
 
     /**
@@ -95,10 +108,24 @@ public abstract class Factory implements PageParserSelector {
 
     /**
      * Determine whether the given path should be excluded from decoration or not.
+     *
+     * @param path
+     *            the path
+     *
+     * @return true, if is path excluded
      */
     public abstract boolean isPathExcluded(String path);
 
-    /** Find String environment entry, or return default if not found. */
+    /**
+     * Find String environment entry, or return default if not found.
+     *
+     * @param envEntry
+     *            the env entry
+     * @param defaultValue
+     *            the default value
+     *
+     * @return the env entry
+     */
     private static String getEnvEntry(String envEntry, String defaultValue) {
         String result = null;
         try {

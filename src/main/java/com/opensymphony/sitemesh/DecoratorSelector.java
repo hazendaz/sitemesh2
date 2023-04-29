@@ -24,6 +24,16 @@ package com.opensymphony.sitemesh;
  */
 public interface DecoratorSelector {
 
+    /**
+     * Select decorator.
+     *
+     * @param content
+     *            the content
+     * @param context
+     *            the context
+     *
+     * @return the decorator
+     */
     Decorator selectDecorator(Content content, SiteMeshContext context);
 
 }

@@ -14,12 +14,19 @@
 package com.opensymphony.module.sitemesh;
 
 /**
+ * The Interface PageParserSelector.
+ *
  * @author Joe Walnes
  */
 public interface PageParserSelector {
 
     /**
      * Determine whether a Page of given content-type should be parsed or not.
+     *
+     * @param contentType
+     *            the content type
+     *
+     * @return true, if successful
      */
     boolean shouldParsePage(String contentType);
 

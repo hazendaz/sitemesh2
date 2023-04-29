@@ -32,10 +32,22 @@ import javax.servlet.ServletContext;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class Config {
+
+    /** The servlet config. */
     private ServletConfig servletConfig;
+
+    /** The filter config. */
     private FilterConfig filterConfig;
+
+    /** The config file. */
     private String configFile;
 
+    /**
+     * Instantiates a new config.
+     *
+     * @param servletConfig
+     *            the servlet config
+     */
     public Config(ServletConfig servletConfig) {
         if (servletConfig == null)
             throw new NullPointerException("ServletConfig cannot be null");
@@ -43,6 +55,12 @@ public class Config {
         this.configFile = servletConfig.getInitParameter("configFile");
     }
 
+    /**
+     * Instantiates a new config.
+     *
+     * @param filterConfig
+     *            the filter config
+     */
     public Config(FilterConfig filterConfig) {
         if (filterConfig == null)
             throw new NullPointerException("FilterConfig cannot be null");
@@ -50,10 +68,20 @@ public class Config {
         this.configFile = filterConfig.getInitParameter("configFile");
     }
 
+    /**
+     * Gets the servlet context.
+     *
+     * @return the servlet context
+     */
     public ServletContext getServletContext() {
         return servletConfig != null ? servletConfig.getServletContext() : filterConfig.getServletContext();
     }
 
+    /**
+     * Gets the config file.
+     *
+     * @return the config file
+     */
     public String getConfigFile() {
         return configFile;
     }

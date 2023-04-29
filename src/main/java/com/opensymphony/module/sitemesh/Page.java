@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public interface Page {
+
     /**
      * Write the entire contents of the <code>Page</code>, in the format before it was parsed, to the
      * <code>Writer</code>.
@@ -50,36 +51,48 @@ public interface Page {
      * @param out
      *            Writer to write to.
      *
-     * @exception java.io.IOException
-     *                Rethrown if cannot write to writer.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     void writePage(Writer out) throws IOException;
 
     /**
      * Convenience method to return the contents of the <code>Page</code> in its original format.
      *
-     * @since 2.1.1
+     * @return the page
      *
      * @see #writePage(java.io.Writer)
+     *
+     * @since 2.1.1
      */
     String getPage();
 
     /**
      * Write the contents of the <code>&lt;body&gt;</code> tag.
+     *
+     * @param out
+     *            the out
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     void writeBody(Writer out) throws IOException;
 
     /**
      * Convenience method to return the contents of the <code>&lt;body&gt;</code> tag.
      *
-     * @since 2.1.1
+     * @return the body
      *
      * @see #writeBody(java.io.Writer)
+     *
+     * @since 2.1.1
      */
     String getBody();
 
     /**
-     * Get the Title of the document
+     * Get the Title of the document.
+     *
+     * @return the title
      */
     String getTitle();
 
@@ -153,6 +166,8 @@ public interface Page {
     /**
      * Return the request of the original page.
      *
+     * @return the request
+     *
      * @deprecated Since Servlet 2.4 API, this is unnecessary - just use the stand HttpServletRequest instance.
      */
     HttpServletRequest getRequest();
@@ -160,11 +175,19 @@ public interface Page {
     /**
      * Create snapshot of Request. Subsequent modifications to the request by the servlet container will not be returned
      * by {@link #getRequest()}
+     *
+     * @param request
+     *            the new request
      */
     void setRequest(HttpServletRequest request);
 
     /**
      * Manually add a property to page.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
      */
     void addProperty(String name, String value);
 }

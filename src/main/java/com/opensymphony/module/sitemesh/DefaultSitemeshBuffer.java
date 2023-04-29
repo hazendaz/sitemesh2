@@ -18,22 +18,51 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * The default implementation of sitemesh buffer
+ * The default implementation of sitemesh buffer.
  */
 public class DefaultSitemeshBuffer implements SitemeshBuffer {
 
+    /** The buffer. */
     private final char[] buffer;
+
+    /** The length. */
     private final int length;
+
+    /** The buffer fragments. */
     private final TreeMap<Integer, SitemeshBufferFragment> bufferFragments;
 
+    /**
+     * Instantiates a new default sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     */
     public DefaultSitemeshBuffer(char[] buffer) {
         this(buffer, buffer.length);
     }
 
+    /**
+     * Instantiates a new default sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     * @param length
+     *            the length
+     */
     public DefaultSitemeshBuffer(char[] buffer, int length) {
         this(buffer, length, new TreeMap<Integer, SitemeshBufferFragment>());
     }
 
+    /**
+     * Instantiates a new default sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     * @param length
+     *            the length
+     * @param bufferFragments
+     *            the buffer fragments
+     */
     public DefaultSitemeshBuffer(char[] buffer, int length, TreeMap<Integer, SitemeshBufferFragment> bufferFragments) {
         this.buffer = buffer;
         this.length = length;
@@ -95,10 +124,23 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         return !bufferFragments.isEmpty();
     }
 
+    /**
+     * Builder.
+     *
+     * @return the builder
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     *
+     * @return the builder
+     */
     public static Builder builder(SitemeshBuffer sitemeshBuffer) {
         if (sitemeshBuffer instanceof DefaultSitemeshBuffer) {
             return new Builder((DefaultSitemeshBuffer) sitemeshBuffer);
@@ -107,42 +149,97 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         }
     }
 
+    /**
+     * The Class Builder.
+     */
     public static class Builder {
+
+        /** The buffer. */
         private char[] buffer;
+
+        /** The length. */
         private int length;
+
+        /** The fragments. */
         private final TreeMap<Integer, SitemeshBufferFragment> fragments;
 
+        /**
+         * Instantiates a new builder.
+         */
         private Builder() {
             this.fragments = new TreeMap<Integer, SitemeshBufferFragment>();
         }
 
+        /**
+         * Instantiates a new builder.
+         *
+         * @param buffer
+         *            the buffer
+         */
         private Builder(DefaultSitemeshBuffer buffer) {
             this.buffer = buffer.buffer;
             this.length = buffer.length;
             this.fragments = new TreeMap<Integer, SitemeshBufferFragment>(buffer.bufferFragments);
         }
 
+        /**
+         * Instantiates a new builder.
+         *
+         * @param buffer
+         *            the buffer
+         */
         private Builder(SitemeshBuffer buffer) {
             this.buffer = buffer.getCharArray();
             this.length = buffer.getBufferLength();
             this.fragments = new TreeMap<Integer, SitemeshBufferFragment>();
         }
 
+        /**
+         * Sets the buffer.
+         *
+         * @param buffer
+         *            the buffer
+         *
+         * @return the builder
+         */
         public Builder setBuffer(char[] buffer) {
             this.buffer = buffer;
             return this;
         }
 
+        /**
+         * Sets the length.
+         *
+         * @param length
+         *            the length
+         *
+         * @return the builder
+         */
         public Builder setLength(int length) {
             this.length = length;
             return this;
         }
 
+        /**
+         * Insert.
+         *
+         * @param position
+         *            the position
+         * @param fragment
+         *            the fragment
+         *
+         * @return the builder
+         */
         public Builder insert(int position, SitemeshBufferFragment fragment) {
             this.fragments.put(position, fragment);
             return this;
         }
 
+        /**
+         * Builds the.
+         *
+         * @return the sitemesh buffer
+         */
         public SitemeshBuffer build() {
             return new DefaultSitemeshBuffer(buffer, length, fragments);
         }

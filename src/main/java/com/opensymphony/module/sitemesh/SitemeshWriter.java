@@ -35,7 +35,7 @@ public interface SitemeshWriter {
     boolean writeSitemeshBufferFragment(SitemeshBufferFragment bufferFragment) throws IOException;
 
     /**
-     * Get the underlying buffer for the writer
+     * Get the underlying buffer for the writer.
      *
      * @return The underlying buffer
      */

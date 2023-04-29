@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public interface DecoratorMapper {
+
     /**
      * Initialize the mapper. This is always called before the other methods.
      *
@@ -43,9 +44,11 @@ public interface DecoratorMapper {
      *            Config supplied by Servlet or Filter.
      * @param properties
      *            Any initialization properties (specific to implementation).
+     * @param parent
+     *            the parent
      *
-     * @exception java.lang.InstantiationException
-     *                should be thrown if the implementation cannot be initialized properly.
+     * @throws InstantiationException
+     *             the instantiation exception
      */
     void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException;
 
@@ -55,9 +58,25 @@ public interface DecoratorMapper {
      * The implementation can determine the result based on the actual request or the data of the parsed page. Typically
      * this would call <code>getNamedDecorator()</code> which would delegate to a parent DecoratorMapper.
      * </p>
+     *
+     * @param request
+     *            the request
+     * @param page
+     *            the page
+     *
+     * @return the decorator
      */
     Decorator getDecorator(HttpServletRequest request, Page page);
 
-    /** Return a {@link com.opensymphony.module.sitemesh.Decorator} with given name. */
+    /**
+     * Return a {@link com.opensymphony.module.sitemesh.Decorator} with given name.
+     *
+     * @param request
+     *            the request
+     * @param name
+     *            the name
+     *
+     * @return the named decorator
+     */
     Decorator getNamedDecorator(HttpServletRequest request, String name);
 }

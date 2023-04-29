@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * A potentially chained sitemesh buffer
+ * A potentially chained sitemesh buffer.
  */
 public interface SitemeshBuffer {
 
@@ -44,7 +44,7 @@ public interface SitemeshBuffer {
     int getTotalLength();
 
     /**
-     * Get the total length of the buffered content, including chained buffers from start to length
+     * Get the total length of the buffered content, including chained buffers from start to length.
      *
      * @param start
      *            Where to start counting the length from
@@ -56,14 +56,14 @@ public interface SitemeshBuffer {
     int getTotalLength(int start, int length);
 
     /**
-     * Write this buffer, and any chained sub buffers in the given range, out to the given writer
+     * Write this buffer, and any chained sub buffers in the given range, out to the given writer.
      *
+     * @param writer
+     *            The writer to write to
      * @param start
      *            The position to start writing from
      * @param length
      *            The length to write
-     * @param writer
-     *            The writer to write to
      *
      * @throws IOException
      *             If an error occurred
@@ -71,7 +71,7 @@ public interface SitemeshBuffer {
     void writeTo(Writer writer, int start, int length) throws IOException;
 
     /**
-     * Whether the buffer has fragments or not
+     * Whether the buffer has fragments or not.
      *
      * @return True if it has fragments
      */

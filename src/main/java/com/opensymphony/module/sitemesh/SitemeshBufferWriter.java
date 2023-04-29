@@ -24,11 +24,21 @@ import java.util.TreeMap;
  */
 public class SitemeshBufferWriter extends CharArrayWriter implements SitemeshWriter {
 
+    /** The fragments. */
     private final TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<Integer, SitemeshBufferFragment>();
 
+    /**
+     * Instantiates a new sitemesh buffer writer.
+     */
     public SitemeshBufferWriter() {
     }
 
+    /**
+     * Instantiates a new sitemesh buffer writer.
+     *
+     * @param initialSize
+     *            the initial size
+     */
     public SitemeshBufferWriter(int initialSize) {
         super(initialSize);
     }

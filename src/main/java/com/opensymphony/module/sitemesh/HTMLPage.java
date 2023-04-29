@@ -81,29 +81,42 @@ public interface HTMLPage extends Page {
 
     /**
      * Write the contents of the <code>&lt;head&gt;</code> tag.
+     *
+     * @param out
+     *            the out
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     void writeHead(Writer out) throws IOException;
 
     /**
      * Convenience method to return the contents of the <code>&lt;head&gt;</code> tag as a String.
      *
-     * @since 2.1.1
+     * @return the head
      *
      * @see #writeHead(java.io.Writer)
+     *
+     * @since 2.1.1
      */
     String getHead();
 
     /**
      * Check to see if this page contains an <a href="http://www.w3.org/TR/html4/present/frames.html">HTML frameset</a>.
+     *
+     * @return true, if is frame set
      */
     boolean isFrameSet();
 
     /**
      * Marks this page as a frameset.
      *
-     * @since 2.3
+     * @param frameset
+     *            the new frame set
      *
      * @see #isFrameSet()
+     *
+     * @since 2.3
      */
     void setFrameSet(boolean frameset);
 

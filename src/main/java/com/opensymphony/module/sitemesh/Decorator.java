@@ -33,18 +33,33 @@ import java.util.Iterator;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public interface Decorator {
+
     /**
      * URI of the Servlet/JSP to dispatch the request to (relative to the web-app context).
+     *
+     * @return the page
      */
     String getPage();
 
-    /** Name of the Decorator. For informational purposes only. */
+    /**
+     * Name of the Decorator. For informational purposes only.
+     *
+     * @return the name
+     */
     String getName();
 
-    /** URI path of the Decorator. Enables support for decorators defined in seperate web-apps. */
+    /**
+     * URI path of the Decorator. Enables support for decorators defined in seperate web-apps.
+     *
+     * @return the URI path
+     */
     String getURIPath();
 
-    /** Role the user has to be in to get this decorator applied. */
+    /**
+     * Role the user has to be in to get this decorator applied.
+     *
+     * @return the role
+     */
     String getRole();
 
     /**
@@ -61,6 +76,8 @@ public interface Decorator {
     /**
      * Returns the names of the Decorator's initialization parameters as an Iterator of String objects, or an empty
      * Iterator if the Decorator has no initialization parameters.
+     *
+     * @return the inits the parameter names
      */
     Iterator getInitParameterNames();
 }

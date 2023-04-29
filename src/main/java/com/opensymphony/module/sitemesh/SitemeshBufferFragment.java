@@ -25,17 +25,35 @@ import java.util.*;
  * the buffer.
  */
 public class SitemeshBufferFragment {
+
+    /** The buffer. */
     private final SitemeshBuffer buffer;
+
+    /** The start. */
     private final int start;
+
+    /** The length. */
     private final int length;
+
+    /** The deletions. */
     private final TreeMap<Integer, Integer> deletions;
 
+    /**
+     * Instantiates a new sitemesh buffer fragment.
+     *
+     * @param buffer
+     *            the buffer
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     */
     public SitemeshBufferFragment(SitemeshBuffer buffer, int start, int length) {
         this(buffer, start, length, new TreeMap<Integer, Integer>());
     }
 
     /**
-     * Create a sitemesh buffer fragment
+     * Create a sitemesh buffer fragment.
      *
      * @param buffer
      *            The buffer that this is a fragment of
@@ -54,7 +72,7 @@ public class SitemeshBufferFragment {
     }
 
     /**
-     * Write the fragment to the given writer
+     * Write the fragment to the given writer.
      *
      * @param writer
      *            The writer to write the fragment to
@@ -78,7 +96,7 @@ public class SitemeshBufferFragment {
     }
 
     /**
-     * Get the total length of the fragment, taking deletions and chained buffers of the buffer
+     * Get the total length of the fragment, taking deletions and chained buffers of the buffer.
      *
      * @return The total length of the fragment
      */
@@ -99,6 +117,11 @@ public class SitemeshBufferFragment {
         return total;
     }
 
+    /**
+     * Gets the string content.
+     *
+     * @return the string content
+     */
     public String getStringContent() {
         StringWriter writer = new StringWriter();
         try {
@@ -118,18 +141,41 @@ public class SitemeshBufferFragment {
                 + ", length=" + length + ", deletions=" + deletions + '}';
     }
 
+    /**
+     * Gets the start.
+     *
+     * @return the start
+     */
     public int getStart() {
         return start;
     }
 
+    /**
+     * Gets the length.
+     *
+     * @return the length
+     */
     public int getLength() {
         return length;
     }
 
+    /**
+     * Builder.
+     *
+     * @return the builder
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder.
+     *
+     * @param fragment
+     *            the fragment
+     *
+     * @return the builder
+     */
     public static Builder builder(SitemeshBufferFragment fragment) {
         return new Builder(fragment);
     }
@@ -138,17 +184,35 @@ public class SitemeshBufferFragment {
      * A builder for fragments.
      */
     public static class Builder {
+
+        /** The buffer. */
         private DefaultSitemeshBuffer.Builder buffer;
+
+        /** The start. */
         private int start;
+
+        /** The length. */
         private int length;
+
+        /** The deletions. */
         private final TreeMap<Integer, Integer> deletions;
 
+        /** The start delete. */
         private Integer startDelete;
 
+        /**
+         * Instantiates a new builder.
+         */
         private Builder() {
             this.deletions = new TreeMap<Integer, Integer>();
         }
 
+        /**
+         * Instantiates a new builder.
+         *
+         * @param fragment
+         *            the fragment
+         */
         private Builder(SitemeshBufferFragment fragment) {
             this.buffer = DefaultSitemeshBuffer.builder(fragment.buffer);
             this.start = fragment.start;
@@ -156,18 +220,34 @@ public class SitemeshBufferFragment {
             this.deletions = new TreeMap<Integer, Integer>(fragment.deletions);
         }
 
+        /**
+         * Sets the start.
+         *
+         * @param start
+         *            the start
+         *
+         * @return the builder
+         */
         public Builder setStart(int start) {
             this.start = start;
             return this;
         }
 
+        /**
+         * Sets the length.
+         *
+         * @param length
+         *            the length
+         *
+         * @return the builder
+         */
         public Builder setLength(int length) {
             this.length = length;
             return this;
         }
 
         /**
-         * Delete length characters from pos in this buffer fragment
+         * Delete length characters from pos in this buffer fragment.
          *
          * @param pos
          *            The position to delete from
@@ -182,7 +262,7 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * Mark the start of the fragment
+         * Mark the start of the fragment.
          *
          * @param pos
          *            The start of the fragment
@@ -196,7 +276,7 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * End the fragment
+         * End the fragment.
          *
          * @param pos
          *            The position of the end of the fragment
@@ -228,7 +308,7 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * End the current deletion
+         * End the current deletion.
          *
          * @param pos
          *            The position to delete to
@@ -248,7 +328,7 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * Insert the given fragment to the given position
+         * Insert the given fragment to the given position.
          *
          * @param position
          *            The position to insert the fragment to
@@ -263,7 +343,7 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * Insert the given string fragment to the given position
+         * Insert the given string fragment to the given position.
          *
          * @param position
          *            The position to insert at
@@ -293,7 +373,7 @@ public class SitemeshBufferFragment {
         }
 
         /**
-         * Build the fragment
+         * Build the fragment.
          *
          * @return The built fragment
          */
