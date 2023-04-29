@@ -64,7 +64,7 @@ public class DefaultFactory extends BaseFactory {
     long configLastModified;
     private long configLastCheck = 0L;
     public static long configCheckMillis = 3000L;
-    Map configProps = new HashMap();
+    Map<Object, Object> configProps = new HashMap<>();
 
     String excludesFileName;
     File excludesFile;
@@ -303,8 +303,8 @@ public class DefaultFactory extends BaseFactory {
      * @return the same string but with any properties expanded out to their actual values
      */
     private String replaceProperties(String str) {
-        Set props = configProps.entrySet();
-        for (Iterator it = props.iterator(); it.hasNext();) {
+        Set<?> props = configProps.entrySet();
+        for (Iterator<?> it = props.iterator(); it.hasNext();) {
             Map.Entry entry = (Map.Entry) it.next();
             String key = (String) entry.getKey();
             int idx;

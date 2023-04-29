@@ -137,7 +137,7 @@ public abstract class BaseFactory extends Factory {
 
     /** Clear all PageParser mappings. */
     protected void clearParserMappings() {
-        pageParsers = new HashMap();
+        pageParsers = new HashMap<>();
     }
 
     /**
