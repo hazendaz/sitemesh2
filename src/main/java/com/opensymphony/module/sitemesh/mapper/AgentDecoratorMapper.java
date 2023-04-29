@@ -60,14 +60,16 @@ import javax.servlet.http.HttpServletRequest;
 public class AgentDecoratorMapper extends AbstractDecoratorMapper {
 
     /** The map. */
-    private Map map = null;
+    private Map<Object, Object> map;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
-        map = new HashMap();
+        map = new HashMap<>();
         initMap(properties);
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         try {
             Decorator result = null;
@@ -98,7 +100,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
      * @return the ext
      */
     private String getExt(String userAgent) {
-        Iterator i = map.entrySet().iterator();
+        Iterator<?> i = map.entrySet().iterator();
         while (i.hasNext()) {
             Map.Entry entry = (Map.Entry) i.next();
             String curr = (String) entry.getKey();
@@ -134,7 +136,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
      *            the props
      */
     private void initMap(Properties props) {
-        Iterator i = props.entrySet().iterator();
+        Iterator<?> i = props.entrySet().iterator();
         while (i.hasNext()) {
             Map.Entry entry = (Map.Entry) i.next();
             String key = (String) entry.getKey();

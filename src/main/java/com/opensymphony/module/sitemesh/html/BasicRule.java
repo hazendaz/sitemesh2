@@ -53,10 +53,12 @@ public abstract class BasicRule implements TagRule {
         this.acceptableTagNames = null;
     }
 
+    @Override
     public void setContext(HTMLProcessorContext context) {
         this.context = context;
     }
 
+    @Override
     public boolean shouldProcess(String name) {
         if (acceptableTagNames == null || acceptableTagNames.length < 1) {
             throw new UnsupportedOperationException(getClass().getName()
@@ -69,8 +71,6 @@ public abstract class BasicRule implements TagRule {
         }
         return false;
     }
-
-    public abstract void process(Tag tag);
 
     /**
      * Current buffer.
