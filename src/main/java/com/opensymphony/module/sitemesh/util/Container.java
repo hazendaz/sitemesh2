@@ -53,13 +53,13 @@ public final class Container {
     static {
         // initialize the classes that can be searched for
         classMappings = new HashMap(6);
-        classMappings.put("org.apache.jasper.runtime.JspFactoryImpl", new Integer(TOMCAT));
-        classMappings.put("com.caucho.jsp.JspServlet", new Integer(RESIN));
-        classMappings.put("com.evermind.server.http.JSPServlet", new Integer(ORION));
-        classMappings.put("weblogic.servlet.JSPServlet", new Integer(WEBLOGIC));
-        classMappings.put("com.hp.mwlabs.j2ee.containers.servlet.jsp.JspServlet", new Integer(HPAS));
-        classMappings.put("jrun.servlet.WebApplicationService", new Integer(JRUN));
-        classMappings.put("com.ibm.ws.webcontainer.jsp.servlet.JspServlet", new Integer(WEBSPHERE));
+        classMappings.put("org.apache.jasper.runtime.JspFactoryImpl", Integer.valueOf(TOMCAT));
+        classMappings.put("com.caucho.jsp.JspServlet", Integer.valueOf(RESIN));
+        classMappings.put("com.evermind.server.http.JSPServlet", Integer.valueOf(ORION));
+        classMappings.put("weblogic.servlet.JSPServlet", Integer.valueOf(WEBLOGIC));
+        classMappings.put("com.hp.mwlabs.j2ee.containers.servlet.jsp.JspServlet", Integer.valueOf(HPAS));
+        classMappings.put("jrun.servlet.WebApplicationService", Integer.valueOf(JRUN));
+        classMappings.put("com.ibm.ws.webcontainer.jsp.servlet.JspServlet", Integer.valueOf(WEBSPHERE));
     }
 
     /** Get the current container. */
