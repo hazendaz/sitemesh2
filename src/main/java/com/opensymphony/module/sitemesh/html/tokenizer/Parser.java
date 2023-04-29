@@ -1,4 +1,17 @@
 /*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
  * IF YOU ARE HAVING TROUBLE COMPILING THIS CLASS, IT IS PROBABLY BECAUSE Lexer.java IS MISSING.
  *
  * Use 'ant jflex' to generate the file, which will reside in build/java
