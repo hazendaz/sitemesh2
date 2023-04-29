@@ -33,6 +33,25 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class NoDecorator extends BaseWebAppDecorator {
 
+    /**
+     * Render.
+     *
+     * @param content
+     *            the content
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param servletContext
+     *            the servlet context
+     * @param webAppContext
+     *            the web app context
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws ServletException
+     *             the servlet exception
+     */
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
 

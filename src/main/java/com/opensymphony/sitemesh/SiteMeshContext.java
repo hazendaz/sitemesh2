@@ -36,4 +36,5 @@ public interface SiteMeshContext {
      * @return the content type
      */
     String getContentType();
+
 }

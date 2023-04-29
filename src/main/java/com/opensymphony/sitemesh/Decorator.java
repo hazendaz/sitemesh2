@@ -31,4 +31,5 @@ public interface Decorator {
      *            the context
      */
     void render(Content content, SiteMeshContext context);
+
 }

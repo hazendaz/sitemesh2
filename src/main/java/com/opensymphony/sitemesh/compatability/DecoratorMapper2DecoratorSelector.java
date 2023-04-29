@@ -49,4 +49,5 @@ public class DecoratorMapper2DecoratorSelector implements DecoratorSelector {
             return new OldDecorator2NewDecorator(decorator);
         }
     }
+
 }

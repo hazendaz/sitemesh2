@@ -38,8 +38,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SiteMeshFilter implements Filter {
 
+    /** The filter config. */
     private FilterConfig filterConfig;
+
+    /** The container tweaks. */
     private ContainerTweaks containerTweaks;
+
+    /** The Constant ALREADY_APPLIED_KEY. */
     private static final String ALREADY_APPLIED_KEY = "com.opensymphony.sitemesh.APPLIED_ONCE";
 
     public void init(FilterConfig filterConfig) {
@@ -120,6 +125,14 @@ public class SiteMeshFilter implements Filter {
 
     }
 
+    /**
+     * Inits the content processor.
+     *
+     * @param webAppContext
+     *            the web app context
+     *
+     * @return the content processor
+     */
     protected ContentProcessor initContentProcessor(SiteMeshWebAppContext webAppContext) {
         // TODO: Remove heavy coupling on horrible SM2 Factory
         Factory factory = Factory.getInstance(new Config(filterConfig));
@@ -127,6 +140,14 @@ public class SiteMeshFilter implements Filter {
         return new PageParser2ContentProcessor(factory);
     }
 
+    /**
+     * Inits the decorator selector.
+     *
+     * @param webAppContext
+     *            the web app context
+     *
+     * @return the decorator selector
+     */
     protected DecoratorSelector initDecoratorSelector(SiteMeshWebAppContext webAppContext) {
         // TODO: Remove heavy coupling on horrible SM2 Factory
         Factory factory = Factory.getInstance(new Config(filterConfig));
@@ -138,6 +159,24 @@ public class SiteMeshFilter implements Filter {
      * Continue in filter-chain, writing all content to buffer and parsing into returned
      * {@link com.opensymphony.module.sitemesh.Page} object. If {@link com.opensymphony.module.sitemesh.Page} is not
      * parseable, null is returned.
+     *
+     * @param contentProcessor
+     *            the content processor
+     * @param webAppContext
+     *            the web app context
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param chain
+     *            the chain
+     *
+     * @return the content
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws ServletException
+     *             the servlet exception
      */
     private Content obtainContent(ContentProcessor contentProcessor, SiteMeshWebAppContext webAppContext,
             HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -156,6 +195,14 @@ public class SiteMeshFilter implements Filter {
         return contentBufferingResponse.getContent();
     }
 
+    /**
+     * Filter already applied for request.
+     *
+     * @param request
+     *            the request
+     *
+     * @return true, if successful
+     */
     private boolean filterAlreadyAppliedForRequest(HttpServletRequest request) {
         if (request.getAttribute(ALREADY_APPLIED_KEY) == Boolean.TRUE) {
             return true;

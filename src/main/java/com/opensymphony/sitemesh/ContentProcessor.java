@@ -60,4 +60,5 @@ public interface ContentProcessor {
      *             Signals that an I/O exception has occurred.
      */
     Content build(SitemeshBuffer buffer, SiteMeshContext context) throws IOException;
+
 }

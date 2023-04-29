@@ -33,17 +33,40 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class PageParser2ContentProcessor implements ContentProcessor {
 
+    /** The factory. */
     private final Factory factory;
 
+    /**
+     * Instantiates a new page parser 2 content processor.
+     *
+     * @param factory
+     *            the factory
+     */
     public PageParser2ContentProcessor(Factory factory) {
         this.factory = factory;
     }
 
+    /**
+     * Handles.
+     *
+     * @param context
+     *            the context
+     *
+     * @return true, if successful
+     */
     public boolean handles(SiteMeshContext context) {
         SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;
         return !factory.isPathExcluded(extractRequestPath(webAppContext.getRequest()));
     }
 
+    /**
+     * Extract request path.
+     *
+     * @param request
+     *            the request
+     *
+     * @return the string
+     */
     private String extractRequestPath(HttpServletRequest request) {
         String servletPath = request.getServletPath();
         String pathInfo = request.getPathInfo();
@@ -56,10 +79,24 @@ public class PageParser2ContentProcessor implements ContentProcessor {
         return factory.shouldParsePage(contentType);
     }
 
+    /**
+     * Builds the.
+     *
+     * @param buffer
+     *            the buffer
+     * @param context
+     *            the context
+     *
+     * @return the content
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public Content build(SitemeshBuffer buffer, SiteMeshContext context) throws IOException {
         HttpContentType httpContentType = new HttpContentType(context.getContentType());
         PageParser pageParser = factory.getPageParser(httpContentType.getType());
         Page page = pageParser.parse(buffer);
         return new HTMLPage2Content((HTMLPage) page);
     }
+
 }

@@ -33,9 +33,20 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Content2HTMLPage implements HTMLPage {
 
+    /** The content. */
     private final Content content;
+
+    /** The request. */
     private HttpServletRequest request;
 
+    /**
+     * Instantiates a new content 2 HTML page.
+     *
+     * @param content
+     *            the content
+     * @param request
+     *            the request
+     */
     public Content2HTMLPage(Content content, HttpServletRequest request) {
         this.content = content;
         this.request = request;
@@ -107,6 +118,14 @@ public class Content2HTMLPage implements HTMLPage {
         }
     }
 
+    /**
+     * No null.
+     *
+     * @param property
+     *            the property
+     *
+     * @return the string
+     */
     private String noNull(String property) {
         return property == null ? "" : property;
     }

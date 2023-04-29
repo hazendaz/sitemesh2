@@ -27,18 +27,35 @@ public class ContainerTweaks {
     // TODO: Externalize these into a config file (optional of course!), allowing users to change them at runtime if
     // needed.
 
+    /** The container. */
     private final int container = Container.get();
 
+    /**
+     * Should auto create session.
+     *
+     * @return true, if successful
+     */
     public boolean shouldAutoCreateSession() {
         return false;
         // return container == Container.TOMCAT; - this is removed due to SIM-151.
     }
 
+    /**
+     * Should log unhandled exceptions.
+     *
+     * @return true, if successful
+     */
     public boolean shouldLogUnhandledExceptions() {
         return container == Container.TOMCAT;
     }
 
+    /**
+     * Should ignore illegal state exception on error page.
+     *
+     * @return true, if successful
+     */
     public boolean shouldIgnoreIllegalStateExceptionOnErrorPage() {
         return container == Container.WEBLOGIC;
     }
+
 }

@@ -60,4 +60,5 @@ public class HTMLPage2Content implements Content {
     public void addProperty(String name, String value) {
         page.addProperty(name, value);
     }
+
 }

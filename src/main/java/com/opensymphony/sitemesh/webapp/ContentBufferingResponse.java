@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
+ * The Class ContentBufferingResponse.
+ *
  * @author Joe Walnes
  *
  * @since SiteMesh 3
@@ -35,10 +37,25 @@ public class ContentBufferingResponse extends HttpServletResponseWrapper {
     // TODO: Temporary SM3 migration implementation! Wraps SM2 PageResponseWrapper. This class is an evil stopgap.
     // Eventually PageResponseWrapper will go away and the functionality will be rolled into this class.
 
+    /** The page response wrapper. */
     private final PageResponseWrapper pageResponseWrapper;
+
+    /** The content processor. */
     private final ContentProcessor contentProcessor;
+
+    /** The web app context. */
     private final SiteMeshWebAppContext webAppContext;
 
+    /**
+     * Instantiates a new content buffering response.
+     *
+     * @param response
+     *            the response
+     * @param contentProcessor
+     *            the content processor
+     * @param webAppContext
+     *            the web app context
+     */
     public ContentBufferingResponse(HttpServletResponse response, final ContentProcessor contentProcessor,
             final SiteMeshWebAppContext webAppContext) {
         super(new PageResponseWrapper(response, new PageParserSelector() {
@@ -61,10 +78,23 @@ public class ContentBufferingResponse extends HttpServletResponseWrapper {
         pageResponseWrapper = (PageResponseWrapper) getResponse();
     }
 
+    /**
+     * Checks if is using stream.
+     *
+     * @return true, if is using stream
+     */
     public boolean isUsingStream() {
         return pageResponseWrapper.isUsingStream();
     }
 
+    /**
+     * Gets the content.
+     *
+     * @return the content
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public Content getContent() throws IOException {
         SitemeshBuffer content = pageResponseWrapper.getContents();
         if (content != null) {

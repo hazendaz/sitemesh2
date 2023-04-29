@@ -30,8 +30,17 @@ import javax.servlet.ServletContext;
  */
 public class ExternalDispatchedDecorator extends DispatchedDecorator {
 
+    /** The web app. */
     private final String webApp;
 
+    /**
+     * Instantiates a new external dispatched decorator.
+     *
+     * @param path
+     *            the path
+     * @param webApp
+     *            the web app
+     */
     public ExternalDispatchedDecorator(String path, String webApp) {
         super(path);
         this.webApp = webApp;

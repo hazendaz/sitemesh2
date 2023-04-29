@@ -38,15 +38,44 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DispatchedDecorator extends BaseWebAppDecorator {
 
+    /** The Constant CONTENT_KEY. */
     public static final String CONTENT_KEY = "com.opensymphony.sitemesh.CONTENT";
+
+    /** The Constant CONTEXT_KEY. */
     public static final String CONTEXT_KEY = "com.opensymphony.sitemesh.CONTEXT";
 
+    /** The path. */
     private final String path;
 
+    /**
+     * Instantiates a new dispatched decorator.
+     *
+     * @param path
+     *            the path
+     */
     public DispatchedDecorator(String path) {
         this.path = path;
     }
 
+    /**
+     * Render.
+     *
+     * @param content
+     *            the content
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param servletContext
+     *            the servlet context
+     * @param webAppContext
+     *            the web app context
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws ServletException
+     *             the servlet exception
+     */
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
         Object oldContent = request.getAttribute(CONTENT_KEY);
@@ -64,8 +93,17 @@ public class DispatchedDecorator extends BaseWebAppDecorator {
         }
     }
 
+    /**
+     * Locate web app.
+     *
+     * @param context
+     *            the context
+     *
+     * @return the servlet context
+     */
     protected ServletContext locateWebApp(ServletContext context) {
         // Overriden by ExternalDispatchedDecorator, which finds the context of another web-app.
         return context;
     }
+
 }

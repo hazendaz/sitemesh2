@@ -42,6 +42,15 @@ public abstract class BaseWebAppDecorator implements Decorator {
     protected abstract void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException;
 
+    /**
+     * Render.
+     *
+     * @param content
+     *            the content
+     * @param context
+     *            the context
+     */
+    @Override
     public void render(Content content, SiteMeshContext context) {
         SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;
         try {
@@ -53,4 +62,5 @@ public abstract class BaseWebAppDecorator implements Decorator {
             throw new RuntimeException("Unexpected exception during rendering", e);
         }
     }
+
 }
