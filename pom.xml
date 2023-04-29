@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    sitemesh2 (https://github.com/hazendaz/sitemesh2)
+
+    Copyright 2011-2023 Hazendaz.
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of The Apache Software License,
+    Version 2.0 which accompanies this distribution, and is available at
+    https://www.apache.org/licenses/LICENSE-2.0.txt
+
+    Contributors:
+        Hazendaz (Jeremy Landis).
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.hazendaz</groupId>
+        <artifactId>base-parent</artifactId>
+        <version>39</version>
+        <relativePath />
+    </parent>
+
+    <groupId>com.github.hazendaz</groupId>
+    <artifactId>sitemesh</artifactId>
+    <version>2.5.0-SNAPSHOT</version>
+
+    <name>sitemesh</name>
+    <description>Sitemesh web-page layout system.</description>
+    <url>https://hazendaz.github.io/sitemesh/</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>manual</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</developerConnection>
+        <url>https://github.com/hazendaz/sitemesh</url>
+        <tag>HEAD</tag>
+    </scm>
+    <distributionManagement>
+        <site>
+            <id>gh-pages-scm</id>
+            <name>sitemesh Distribution Wrapper GitHub Pages</name>
+            <url>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</url>
+        </site>
+    </distributionManagement>
+
+    <properties>
+        <!-- Automatic Module Name -->
+        <module.name>com.github.hazendaz.sitemesh</module.name>
+
+        <!-- Reproducible Builds -->
+        <project.build.outputTimestamp>1757561022</project.build.outputTimestamp>
+    </properties>
+
+    <dependencies>
+        <!-- TODO: To update to 4.0.4, need to update code -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>2.3.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>tapestry</groupId>
+            <artifactId>tapestry</artifactId>
+            <version>4.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>velocity-tools</groupId>
+            <artifactId>velocity-tools-view</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eluder.freemarker</groupId>
+            <artifactId>freemarker-ext</artifactId>
+            <version>0.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.jflex</groupId>
+                <artifactId>jflex-maven-plugin</artifactId>
+                <version>1.8.2</version>
+                <configuration>
+                    <lexDefinitions>
+                        <lexDefinition>${project.basedir}/src/main/resources/com/opensymphony/module/sitemesh/html/tokenizer/lexer.flex</lexDefinition>
+                    </lexDefinitions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <id>add-source</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                      <goal>add-source</goal>
+                    </goals>
+                    <configuration>
+                      <sources>
+                        <source>${project.build.directory}/generated-sources/jflex</source>
+                      </sources>
+                    </configuration>
+                  </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalOptions combine.children="append">
+                        <option>--allow-script-in-comments</option>
+                    </additionalOptions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
