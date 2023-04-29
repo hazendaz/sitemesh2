@@ -41,11 +41,8 @@ import freemarker.template.TemplateModel;
  * @author <a href="mailto:richard.hallier@freesbee.fr">Richard HALLIER</a>
  */
 public class FreemarkerDecoratorServlet extends FreemarkerServlet {
-    /*
-     * (non-Javadoc)
-     * @see freemarker.ext.servlet.FreemarkerServlet#preTemplateProcess(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse, freemarker.template.Template, freemarker.template.TemplateModel)
-     */
+
+    @Override
     protected boolean preTemplateProcess(HttpServletRequest request, HttpServletResponse response, Template template,
             TemplateModel templateModel) throws ServletException, IOException {
         boolean result = super.preTemplateProcess(request, response, template, templateModel);
@@ -71,7 +68,7 @@ public class FreemarkerDecoratorServlet extends FreemarkerServlet {
             htmlPage.writeHead(buffer);
             head = buffer.toString();
 
-            hash.put("page", htmlPage);
+            hash.put("page", (TemplateModel) htmlPage);
         }
 
         hash.put("title", title);
