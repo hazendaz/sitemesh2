@@ -731,7 +731,7 @@ public final class FastPageParser implements PageParser {
         int idx = tag.nameEndIdx;
 
         // Start with an empty hashmap. A new HashMap is lazy-created if we happen to find any properties
-        tag.properties = Collections.EMPTY_MAP;
+        tag.properties = Collections.emptyMap();
         int begin;
         while (idx < len) {
             // Skip forward to the next non-whitespace character
@@ -833,7 +833,7 @@ public final class FastPageParser implements PageParser {
         // This holds a map of the various properties for a particular tag.
         /** The properties. */
         // This map is only populated when required - normally it will remain empty
-        public Map properties = Collections.EMPTY_MAP;
+        public Map properties = Collections.emptyMap();
 
         /**
          * Adds a name/value property pair to this tag. Each property that is added represents a property that was
@@ -845,7 +845,7 @@ public final class FastPageParser implements PageParser {
          *            the value
          */
         public void addProperty(String name, String value) {
-            if (properties == Collections.EMPTY_MAP) {
+            if (properties == Collections.emptyMap()) {
                 properties = new HashMap(8);
             }
             properties.put(name, value);

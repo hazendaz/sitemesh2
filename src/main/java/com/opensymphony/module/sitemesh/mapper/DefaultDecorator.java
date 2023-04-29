@@ -170,7 +170,7 @@ public class DefaultDecorator implements Decorator {
     public Iterator getInitParameterNames() {
         if (parameters == null) {
             // make sure we always return an empty iterator
-            return Collections.EMPTY_MAP.keySet().iterator();
+            return Collections.emptyMap().keySet().iterator();
         }
 
         return parameters.keySet().iterator();

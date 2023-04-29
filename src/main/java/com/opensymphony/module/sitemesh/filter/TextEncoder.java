@@ -88,7 +88,7 @@ public class TextEncoder {
         InputStreamReader reader;
         out = new CharArrayWriter();
         if (encoding != null) {
-            reader = new InputStreamReader(new ByteArrayInputStream(data), encoding);
+            reader = new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(encoding));
         } else {
             reader = new InputStreamReader(new ByteArrayInputStream(data));
         }

@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -75,6 +76,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         buffer = new byte[blockSize];
     }
 
+    @Override
     public void writeTo(OutputStream out) throws IOException {
         // check if we have a list of buffers
         if (buffers != null) {
@@ -89,10 +91,12 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         out.write(buffer, 0, index);
     }
 
+    @Override
     public int size() {
         return size + index;
     }
 
+    @Override
     public byte[] toByteArray() {
         byte[] data = new byte[size()];
 
@@ -113,6 +117,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         return data;
     }
 
+    @Override
     public void write(int datum) {
         if (index == blockSize) {
             // Create new buffer and store current in linked list
@@ -130,6 +135,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         buffer[index++] = (byte) datum;
     }
 
+    @Override
     public void write(byte[] data, int offset, int length) {
         if (data == null) {
             throw new NullPointerException();
@@ -149,23 +155,28 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         }
     }
 
+    @Override
     public synchronized void reset() {
         buffer = new byte[blockSize];
         buffers = null;
     }
 
+    @Override
     public String toString(String enc) throws UnsupportedEncodingException {
-        return new String(toByteArray(), enc);
+        return new String(toByteArray(), Charset.forName(enc));
     }
 
+    @Override
     public String toString() {
         return new String(toByteArray());
     }
 
+    @Override
     public void flush() throws IOException {
         // does nothing
     }
 
+    @Override
     public void close() throws IOException {
         // does nothing
     }
