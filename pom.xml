@@ -135,7 +135,7 @@
             <plugin>
                 <groupId>de.jflex</groupId>
                 <artifactId>jflex-maven-plugin</artifactId>
-                <version>1.8.2</version>
+                <version>1.9.1</version>
                 <configuration>
                     <lexDefinitions>
                         <lexDefinition>${project.basedir}/src/main/resources/com/opensymphony/module/sitemesh/html/tokenizer/lexer.flex</lexDefinition>
