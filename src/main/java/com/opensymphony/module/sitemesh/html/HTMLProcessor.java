@@ -20,30 +20,61 @@ import com.opensymphony.module.sitemesh.html.tokenizer.TokenHandler;
 
 import java.io.IOException;
 
+/**
+ * The Class HTMLProcessor.
+ */
 public class HTMLProcessor {
 
+    /** The sitemesh buffer. */
     private final SitemeshBuffer sitemeshBuffer;
+
+    /** The body. */
     private final SitemeshBufferFragment.Builder body;
+
+    /** The default state. */
     private final State defaultState = new State();
 
+    /** The current state. */
     private State currentState = defaultState;
 
+    /**
+     * Instantiates a new HTML processor.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     * @param body
+     *            the body
+     */
     public HTMLProcessor(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment.Builder body) {
         this.sitemeshBuffer = sitemeshBuffer;
         this.body = body;
     }
 
+    /**
+     * Default state.
+     *
+     * @return the state
+     */
     public State defaultState() {
         return defaultState;
     }
 
     /**
      * Equivalent of htmlProcessor.defaultState().addRule()
+     *
+     * @param rule
+     *            the rule
      */
     public void addRule(TagRule rule) {
         defaultState.addRule(rule);
     }
 
+    /**
+     * Process.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void process() throws IOException {
         TagTokenizer tokenizer = new TagTokenizer(sitemeshBuffer.getCharArray(), sitemeshBuffer.getBufferLength());
         final HTMLProcessorContext context = new HTMLProcessorContext() {
@@ -108,6 +139,12 @@ public class HTMLProcessor {
         defaultState.endOfState();
     }
 
+    /**
+     * Adds the text filter.
+     *
+     * @param textFilter
+     *            the text filter
+     */
     public void addTextFilter(TextFilter textFilter) {
         currentState.addTextFilter(textFilter);
     }

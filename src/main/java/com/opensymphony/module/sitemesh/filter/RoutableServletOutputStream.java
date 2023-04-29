@@ -29,20 +29,46 @@ import javax.servlet.ServletOutputStream;
  */
 public class RoutableServletOutputStream extends ServletOutputStream {
 
+    /** The destination. */
     private ServletOutputStream destination;
+
+    /** The factory. */
     private DestinationFactory factory;
 
     /**
      * Factory to lazily instantiate the destination.
      */
     public static interface DestinationFactory {
+
+        /**
+         * Creates the.
+         *
+         * @return the servlet output stream
+         *
+         * @throws IOException
+         *             Signals that an I/O exception has occurred.
+         */
         ServletOutputStream create() throws IOException;
     }
 
+    /**
+     * Instantiates a new routable servlet output stream.
+     *
+     * @param factory
+     *            the factory
+     */
     public RoutableServletOutputStream(DestinationFactory factory) {
         this.factory = factory;
     }
 
+    /**
+     * Gets the destination.
+     *
+     * @return the destination
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private ServletOutputStream getDestination() throws IOException {
         if (destination == null) {
             destination = factory.create();
@@ -50,6 +76,12 @@ public class RoutableServletOutputStream extends ServletOutputStream {
         return destination;
     }
 
+    /**
+     * Update destination.
+     *
+     * @param factory
+     *            the factory
+     */
     public void updateDestination(DestinationFactory factory) {
         destination = null;
         this.factory = factory;

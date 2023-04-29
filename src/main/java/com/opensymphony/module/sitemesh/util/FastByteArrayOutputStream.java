@@ -38,21 +38,38 @@ import java.util.LinkedList;
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
  */
 public class FastByteArrayOutputStream extends ByteArrayOutputStream {
+
+    /** The Constant DEFAULT_BLOCK_SIZE. */
     private static final int DEFAULT_BLOCK_SIZE = 8192;
 
     /** Internal buffer. */
     private byte[] buffer;
 
+    /** The buffers. */
     private LinkedList buffers;
 
+    /** The index. */
     private int index;
+
+    /** The size. */
     private int size;
+
+    /** The block size. */
     private int blockSize;
 
+    /**
+     * Instantiates a new fast byte array output stream.
+     */
     public FastByteArrayOutputStream() {
         this(DEFAULT_BLOCK_SIZE);
     }
 
+    /**
+     * Instantiates a new fast byte array output stream.
+     *
+     * @param aSize
+     *            the a size
+     */
     public FastByteArrayOutputStream(int aSize) {
         blockSize = aSize;
         buffer = new byte[blockSize];

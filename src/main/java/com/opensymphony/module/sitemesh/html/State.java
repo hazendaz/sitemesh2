@@ -19,13 +19,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * The Class State.
+ */
 public final class State {
 
+    /** The rules. */
     private TagRule[] rules = new TagRule[16]; // List is too slow, according to profiler
+
+    /** The rule count. */
     private int ruleCount = 0;
+
+    /** The listeners. */
     private List listeners = null;
+
+    /** The text filters. */
     private List textFilters = null; // lazily instantiated to reduce overhead for most cases where it's not needed.
 
+    /**
+     * Adds the rule.
+     *
+     * @param rule
+     *            the rule
+     */
     public void addRule(TagRule rule) {
         if (ruleCount == rules.length) {
             // grow array if necessary
@@ -36,6 +52,12 @@ public final class State {
         rules[ruleCount++] = rule;
     }
 
+    /**
+     * Adds the text filter.
+     *
+     * @param textFilter
+     *            the text filter
+     */
     public void addTextFilter(TextFilter textFilter) {
         if (textFilters == null) {
             textFilters = new ArrayList(); // lazy instantiation
@@ -43,6 +65,14 @@ public final class State {
         textFilters.add(textFilter);
     }
 
+    /**
+     * Should process tag.
+     *
+     * @param tagName
+     *            the tag name
+     *
+     * @return true, if successful
+     */
     public boolean shouldProcessTag(String tagName) {
         for (int i = ruleCount - 1; i >= 0; i--) { // reverse iteration to so most recently added rule matches
             if (rules[i].shouldProcess(tagName)) {
@@ -52,6 +82,14 @@ public final class State {
         return false;
     }
 
+    /**
+     * Gets the rule.
+     *
+     * @param tagName
+     *            the tag name
+     *
+     * @return the rule
+     */
     public TagRule getRule(String tagName) {
         for (int i = ruleCount - 1; i >= 0; i--) { // reverse iteration to so most recently added rule matches
             if (rules[i].shouldProcess(tagName)) {
@@ -61,12 +99,21 @@ public final class State {
         return null;
     }
 
+    /**
+     * Adds the listener.
+     *
+     * @param listener
+     *            the listener
+     */
     public void addListener(StateChangeListener listener) {
         if (listeners == null)
             listeners = new ArrayList();
         listeners.add(listener);
     }
 
+    /**
+     * End of state.
+     */
     public void endOfState() {
         if (listeners == null)
             return;
@@ -76,6 +123,14 @@ public final class State {
         }
     }
 
+    /**
+     * Handle text.
+     *
+     * @param text
+     *            the text
+     * @param context
+     *            the context
+     */
     public void handleText(Text text, HTMLProcessorContext context) {
         if (textFilters != null && !textFilters.isEmpty()) {
             String original = text.getContents();

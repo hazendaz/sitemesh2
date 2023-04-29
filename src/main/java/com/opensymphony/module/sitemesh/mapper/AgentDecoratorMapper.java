@@ -58,6 +58,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class AgentDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The map. */
     private Map map = null;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
@@ -87,7 +89,14 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         }
     }
 
-    /** Get extention for user-agent. */
+    /**
+     * Get extention for user-agent.
+     *
+     * @param userAgent
+     *            the user agent
+     *
+     * @return the ext
+     */
     private String getExt(String userAgent) {
         Iterator i = map.entrySet().iterator();
         while (i.hasNext()) {
@@ -99,7 +108,16 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         return null;
     }
 
-    /** Change /abc/def.jsp into /abc/def-XYZ.jsp */
+    /**
+     * Change /abc/def.jsp into /abc/def-XYZ.jsp
+     *
+     * @param path
+     *            the path
+     * @param ext
+     *            the ext
+     *
+     * @return the string
+     */
     private static String modifyPath(String path, String ext) {
         int dot = path.indexOf('.');
         if (dot > -1) {
@@ -109,7 +127,12 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         }
     }
 
-    /** Initialize user-agent mappings. */
+    /**
+     * Initialize user-agent mappings.
+     *
+     * @param props
+     *            the props
+     */
     private void initMap(Properties props) {
         Iterator i = props.entrySet().iterator();
         while (i.hasNext()) {

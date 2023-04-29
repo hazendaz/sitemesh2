@@ -44,6 +44,8 @@ import javax.servlet.http.HttpSession;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class RobotDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The decorator name. */
     private String decoratorName = null;
 
     /** All known robot hosts (list can be found <a href="http://www.spiderhunter.com">here</a>). */
@@ -108,7 +110,14 @@ public class RobotDecoratorMapper extends AbstractDecoratorMapper {
         return result == null ? super.getDecorator(request, page) : result;
     }
 
-    /** Check if the current request came from a robot (also known as spider, crawler, ferret) */
+    /**
+     * Check if the current request came from a robot (also known as spider, crawler, ferret).
+     *
+     * @param request
+     *            the request
+     *
+     * @return true, if is bot
+     */
     private static boolean isBot(HttpServletRequest request) {
         if (request == null)
             return false;

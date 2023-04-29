@@ -19,10 +19,12 @@ package com.opensymphony.module.sitemesh.filter;
 import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 
 /**
- * @deprecated Use {@link com.opensymphony.sitemesh.webapp.SiteMeshFilter} instead.
+ * The Class PageFilter.
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  * @author <a href="scott@atlassian.com">Scott Farquhar</a>
+ *
+ * @deprecated Use {@link com.opensymphony.sitemesh.webapp.SiteMeshFilter} instead.
  */
 public class PageFilter extends SiteMeshFilter {
 

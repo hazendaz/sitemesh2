@@ -22,15 +22,32 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+/**
+ * The Class PartialPageParserHtmlPage.
+ */
 public class PartialPageParserHtmlPage extends PartialPageParserPage implements HTMLPage {
+
+    /** The head. */
     private final SitemeshBufferFragment head;
 
+    /**
+     * Instantiates a new partial page parser html page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     * @param body
+     *            the body
+     * @param bodyProperties
+     *            the body properties
+     */
     public PartialPageParserHtmlPage(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment body,
             Map<String, String> bodyProperties) {
         this(sitemeshBuffer, body, bodyProperties, null, null, null, null);
     }
 
     /**
+     * Instantiates a new partial page parser html page.
+     *
      * @param sitemeshBuffer
      *            The buffer for the page
      * @param body
@@ -60,6 +77,14 @@ public class PartialPageParserHtmlPage extends PartialPageParserPage implements 
         addProperties(pageProperties, "page.");
     }
 
+    /**
+     * Adds the properties.
+     *
+     * @param properties
+     *            the properties
+     * @param prefix
+     *            the prefix
+     */
     private void addProperties(Map<String, String> properties, String prefix) {
         if (properties != null) {
             for (Map.Entry<String, String> property : properties.entrySet()) {

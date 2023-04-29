@@ -23,6 +23,12 @@ import org.apache.tapestry.BaseComponent;
  * @author Erik Hatcher
  */
 public class SiteMeshBase extends BaseComponent {
+
+    /**
+     * Gets the site mesh page.
+     *
+     * @return the site mesh page
+     */
     public Page getSiteMeshPage() {
         return Util.getPage(getPage().getRequestCycle());
     }

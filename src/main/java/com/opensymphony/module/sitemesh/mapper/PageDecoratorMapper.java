@@ -50,6 +50,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class PageDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The page props. */
     private List pageProps = null;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
@@ -77,6 +79,18 @@ public class PageDecoratorMapper extends AbstractDecoratorMapper {
         return result == null ? super.getDecorator(request, page) : result;
     }
 
+    /**
+     * Gets the by property.
+     *
+     * @param request
+     *            the request
+     * @param p
+     *            the p
+     * @param name
+     *            the name
+     *
+     * @return the by property
+     */
     private Decorator getByProperty(HttpServletRequest request, Page p, String name) {
         if (p.isPropertySet(name)) {
             return getNamedDecorator(request, p.getProperty(name));

@@ -22,12 +22,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * A sitemesh print writer
+ * A sitemesh print writer.
  */
 public class SitemeshPrintWriter extends PrintWriter implements SitemeshWriter {
 
+    /** The sitemesh writer. */
     private final SitemeshWriter sitemeshWriter;
 
+    /**
+     * Instantiates a new sitemesh print writer.
+     *
+     * @param sitemeshWriter
+     *            the sitemesh writer
+     */
     public SitemeshPrintWriter(SitemeshBufferWriter sitemeshWriter) {
         super(sitemeshWriter);
         this.sitemeshWriter = sitemeshWriter;

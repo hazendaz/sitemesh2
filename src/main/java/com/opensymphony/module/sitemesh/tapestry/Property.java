@@ -36,10 +36,25 @@ import org.apache.tapestry.Tapestry;
  */
 public abstract class Property extends SiteMeshBase {
 
+    /**
+     * Gets the property.
+     *
+     * @return the property
+     */
     public abstract String getProperty();
 
+    /**
+     * Gets the default.
+     *
+     * @return the default
+     */
     public abstract String getDefault();
 
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public String getValue() {
         String propertyName = getProperty();
         String propertyValue = getSiteMeshPage().getProperty(propertyName);

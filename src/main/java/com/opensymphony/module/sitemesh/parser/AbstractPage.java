@@ -54,6 +54,12 @@ public abstract class AbstractPage implements Page {
     /** RequestURI of original Page. */
     private HttpServletRequest request;
 
+    /**
+     * Instantiates a new abstract page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     */
     protected AbstractPage(SitemeshBuffer sitemeshBuffer) {
         this.sitemeshBuffer = sitemeshBuffer;
     }
@@ -173,7 +179,14 @@ public abstract class AbstractPage implements Page {
         properties.put(name, value);
     }
 
-    /** Return String as is, or "" if null. (Prevents NullPointerExceptions) */
+    /**
+     * Return String as is, or "" if null. (Prevents NullPointerExceptions)
+     *
+     * @param in
+     *            the in
+     *
+     * @return the string
+     */
     protected static String noNull(String in) {
         return in == null ? "" : in;
     }

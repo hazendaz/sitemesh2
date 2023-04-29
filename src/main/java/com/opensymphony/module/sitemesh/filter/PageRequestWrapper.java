@@ -26,8 +26,16 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  */
 public class PageRequestWrapper extends HttpServletRequestWrapper {
+
+    /** The Constant SUPPRESS_IF_MODIFIED_HEADER. */
     private static final boolean SUPPRESS_IF_MODIFIED_HEADER = true; // todo - pull this from a config file
 
+    /**
+     * Instantiates a new page request wrapper.
+     *
+     * @param request
+     *            the request
+     */
     public PageRequestWrapper(HttpServletRequest request) {
         super(request);
     }

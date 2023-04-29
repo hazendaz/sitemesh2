@@ -20,10 +20,22 @@ import com.opensymphony.module.sitemesh.SitemeshWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+/**
+ * The Class PartialPageParserPage.
+ */
 public class PartialPageParserPage extends AbstractPage {
 
+    /** The body. */
     private final SitemeshBufferFragment body;
 
+    /**
+     * Instantiates a new partial page parser page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     * @param body
+     *            the body
+     */
     public PartialPageParserPage(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment body) {
         super(sitemeshBuffer);
         this.body = body;

@@ -27,14 +27,24 @@ import javax.servlet.ServletResponse;
  * Special request dispatcher that will include when an inline decorator includes a resource that uses an internal
  * forward.
  *
- * @see com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag
- *
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
+ *
+ * @see com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag
  */
 public class RequestDispatcherWrapper implements RequestDispatcher {
+
+    /** The rd. */
     private RequestDispatcher rd;
+
+    /** The done. */
     private boolean done;
 
+    /**
+     * Instantiates a new request dispatcher wrapper.
+     *
+     * @param rd
+     *            the rd
+     */
     public RequestDispatcherWrapper(RequestDispatcher rd) {
         this.rd = rd;
     }

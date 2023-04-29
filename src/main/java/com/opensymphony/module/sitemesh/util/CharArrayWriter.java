@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Unsynced version of the JDK's CharArrayWriter
+ * Unsynced version of the JDK's CharArrayWriter.
  */
 public class CharArrayWriter extends Writer {
     /**
@@ -120,8 +120,8 @@ public class CharArrayWriter extends Writer {
      * @param out
      *            the output stream to write to
      *
-     * @throws java.io.IOException
-     *             If an I/O error occurs.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     public void writeTo(Writer out) throws IOException {
         out.write(buf, 0, count);

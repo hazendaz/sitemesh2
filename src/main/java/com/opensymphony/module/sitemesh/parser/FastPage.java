@@ -35,9 +35,35 @@ import java.util.Map;
  * @author <a href="mailto:salaman@qoretech.com">Victor Salaman</a>
  */
 public final class FastPage extends AbstractHTMLPage {
+
+    /** The head. */
     private String head;
+
+    /** The body. */
     private String body;
 
+    /**
+     * Instantiates a new fast page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     * @param sitemeshProps
+     *            the sitemesh props
+     * @param htmlProps
+     *            the html props
+     * @param metaProps
+     *            the meta props
+     * @param bodyProps
+     *            the body props
+     * @param title
+     *            the title
+     * @param head
+     *            the head
+     * @param body
+     *            the body
+     * @param frameSet
+     *            the frame set
+     */
     public FastPage(SitemeshBuffer sitemeshBuffer, Map sitemeshProps, Map htmlProps, Map metaProps, Map bodyProps,
             String title, String head, String body, boolean frameSet) {
         super(sitemeshBuffer);
@@ -59,6 +85,14 @@ public final class FastPage extends AbstractHTMLPage {
         out.write(body);
     }
 
+    /**
+     * Adds the attribute list.
+     *
+     * @param prefix
+     *            the prefix
+     * @param attributes
+     *            the attributes
+     */
     private void addAttributeList(String prefix, Map attributes) {
         if (attributes == null || attributes.isEmpty())
             return;

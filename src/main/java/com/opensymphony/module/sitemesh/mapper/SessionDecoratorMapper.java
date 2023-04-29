@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SessionDecoratorMapper extends AbstractDecoratorMapper {
 
+    /** The decorator parameter. */
     private String decoratorParameter = null;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {

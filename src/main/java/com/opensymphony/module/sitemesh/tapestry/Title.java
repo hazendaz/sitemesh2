@@ -15,10 +15,23 @@ package com.opensymphony.module.sitemesh.tapestry;
 
 import org.apache.tapestry.Tapestry;
 
+/**
+ * The Class Title.
+ */
 public abstract class Title extends SiteMeshBase {
 
+    /**
+     * Gets the default.
+     *
+     * @return the default
+     */
     public abstract String getDefault();
 
+    /**
+     * Gets the title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         String title = getSiteMeshPage().getTitle();
         return Tapestry.isBlank(title) ? getDefault() : title;

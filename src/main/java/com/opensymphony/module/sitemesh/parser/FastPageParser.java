@@ -44,31 +44,77 @@ import java.util.Map;
  * @deprecated Use HTMLPageParser instead - it performs better and is more extensible.
  */
 public final class FastPageParser implements PageParser {
+
+    /** The Constant TOKEN_NONE. */
     private static final int TOKEN_NONE = -0;
+
+    /** The Constant TOKEN_EOF. */
     private static final int TOKEN_EOF = -1;
+
+    /** The Constant TOKEN_TEXT. */
     private static final int TOKEN_TEXT = -2;
+
+    /** The Constant TOKEN_TAG. */
     private static final int TOKEN_TAG = -3;
+
+    /** The Constant TOKEN_COMMENT. */
     private static final int TOKEN_COMMENT = -4;
+
+    /** The Constant TOKEN_CDATA. */
     private static final int TOKEN_CDATA = -5;
+
+    /** The Constant TOKEN_SCRIPT. */
     private static final int TOKEN_SCRIPT = -6;
+
+    /** The Constant TOKEN_DOCTYPE. */
     private static final int TOKEN_DOCTYPE = -7;
+
+    /** The Constant TOKEN_EMPTYTAG. */
     private static final int TOKEN_EMPTYTAG = -8;
 
+    /** The Constant STATE_EOF. */
     private static final int STATE_EOF = -1;
+
+    /** The Constant STATE_TEXT. */
     private static final int STATE_TEXT = -2;
+
+    /** The Constant STATE_TAG. */
     private static final int STATE_TAG = -3;
+
+    /** The Constant STATE_COMMENT. */
     private static final int STATE_COMMENT = -4;
+
+    /** The Constant STATE_TAG_QUOTE. */
     private static final int STATE_TAG_QUOTE = -5;
+
+    /** The Constant STATE_CDATA. */
     private static final int STATE_CDATA = -6;
+
+    /** The Constant STATE_SCRIPT. */
     private static final int STATE_SCRIPT = -7;
+
+    /** The Constant STATE_DOCTYPE. */
     private static final int STATE_DOCTYPE = -8;
 
+    /** The Constant TAG_STATE_NONE. */
     private static final int TAG_STATE_NONE = 0;
+
+    /** The Constant TAG_STATE_HTML. */
     private static final int TAG_STATE_HTML = -1;
+
+    /** The Constant TAG_STATE_HEAD. */
     private static final int TAG_STATE_HEAD = -2;
+
+    /** The Constant TAG_STATE_TITLE. */
     private static final int TAG_STATE_TITLE = -3;
+
+    /** The Constant TAG_STATE_BODY. */
     private static final int TAG_STATE_BODY = -4;
+
+    /** The Constant TAG_STATE_XML. */
     private static final int TAG_STATE_XML = -6;
+
+    /** The Constant TAG_STATE_XMP. */
     private static final int TAG_STATE_XMP = -7;
 
     // These hashcodes are hardcoded because swtich statements can only
@@ -78,22 +124,55 @@ public final class FastPageParser implements PageParser {
     // tags are generally only a few characters long and hence are likely
     // to produce unique values.
 
+    /** The Constant SLASH_XML_HASH. */
     private static final int SLASH_XML_HASH = 1518984; // "/xml".hashCode();
+
+    /** The Constant XML_HASH. */
     private static final int XML_HASH = 118807; // "xml".hashCode();
+
+    /** The Constant SLASH_XMP_HASH. */
     private static final int SLASH_XMP_HASH = 1518988; // "/xmp".hashCode();
+
+    /** The Constant XMP_HASH. */
     private static final int XMP_HASH = 118811; // "xmp".hashCode();
+
+    /** The Constant HTML_HASH. */
     private static final int HTML_HASH = 3213227; // "html".hashCode();
+
+    /** The Constant SLASH_HTML_HASH. */
     private static final int SLASH_HTML_HASH = 46618714; // "/html".hashCode();
+
+    /** The Constant HEAD_HASH. */
     private static final int HEAD_HASH = 3198432; // "head".hashCode();
+
+    /** The Constant TITLE_HASH. */
     private static final int TITLE_HASH = 110371416; // "title".hashCode();
+
+    /** The Constant SLASH_TITLE_HASH. */
     private static final int SLASH_TITLE_HASH = 1455941513; // "/title".hashCode();
+
+    /** The Constant PARAMETER_HASH. */
     private static final int PARAMETER_HASH = 1954460585; // "parameter".hashCode();
+
+    /** The Constant META_HASH. */
     private static final int META_HASH = 3347973; // "meta".hashCode();
+
+    /** The Constant SLASH_HEAD_HASH. */
     private static final int SLASH_HEAD_HASH = 46603919; // "/head".hashCode();
+
+    /** The Constant FRAMESET_HASH. */
     private static final int FRAMESET_HASH = -1644953643; // "frameset".hashCode();
+
+    /** The Constant FRAME_HASH. */
     private static final int FRAME_HASH = 97692013; // "frame".hashCode();
+
+    /** The Constant BODY_HASH. */
     private static final int BODY_HASH = 3029410; // "body".hashCode();
+
+    /** The Constant SLASH_BODY_HASH. */
     private static final int SLASH_BODY_HASH = 46434897; // "/body".hashCode();
+
+    /** The Constant CONTENT_HASH. */
     private static final int CONTENT_HASH = 951530617; // "content".hashCode();
 
     public Page parse(char[] buffer) throws IOException {
@@ -550,6 +629,22 @@ public final class FastPageParser implements PageParser {
                 _title.toString().trim(), _head.toString().trim(), _body.toString().trim(), _frameSet);
     }
 
+    /**
+     * Write tag.
+     *
+     * @param state
+     *            the state
+     * @param laststate
+     *            the laststate
+     * @param hide
+     *            the hide
+     * @param _head
+     *            the head
+     * @param _buffer
+     *            the buffer
+     * @param _body
+     *            the body
+     */
     private static void writeTag(int state, int laststate, boolean hide, CharArray _head, CharArray _buffer,
             CharArray _body) {
         if (!hide) {
@@ -561,6 +656,16 @@ public final class FastPageParser implements PageParser {
         }
     }
 
+    /**
+     * Should write to head.
+     *
+     * @param state
+     *            the state
+     * @param laststate
+     *            the laststate
+     *
+     * @return true, if successful
+     */
     private static boolean shouldWriteToHead(int state, int laststate) {
         return state == TAG_STATE_HEAD
                 || (laststate == TAG_STATE_HEAD && (state == TAG_STATE_XML || state == TAG_STATE_XMP));
@@ -569,6 +674,11 @@ public final class FastPageParser implements PageParser {
     /**
      * Populates a {@link Tag} object using data from the supplied {@link CharArray}. The supplied tag parameter is
      * reset and reused - this avoids excess object creation which hwlps performance.
+     *
+     * @param tag
+     *            the tag
+     * @param buf
+     *            the buf
      *
      * @return the same tag instance that was passed in, except it will be populated with a new <code>name</code> value
      *         (and the corresponding <code>nameEndIdx</code> value). However if the tag contained nathing but
@@ -711,18 +821,28 @@ public final class FastPageParser implements PageParser {
         return tag;
     }
 
+    /**
+     * The Class Tag.
+     */
     private class Tag {
         // The index where the name string ends. This is used as the starting
+        /** The name end idx. */
         // offet if we need to continue processing to find the tag's properties
         public int nameEndIdx = 0;
 
         // This holds a map of the various properties for a particular tag.
+        /** The properties. */
         // This map is only populated when required - normally it will remain empty
         public Map properties = Collections.EMPTY_MAP;
 
         /**
          * Adds a name/value property pair to this tag. Each property that is added represents a property that was
          * parsed from the tag's HTML.
+         *
+         * @param name
+         *            the name
+         * @param value
+         *            the value
          */
         public void addProperty(String name, String value) {
             if (properties == Collections.EMPTY_MAP) {

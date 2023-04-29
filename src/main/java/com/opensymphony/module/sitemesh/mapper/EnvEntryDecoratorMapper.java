@@ -64,6 +64,11 @@ public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {
 
     /**
      * This pulls a value out of the web-app environment. If the value isn't there, returns null.
+     *
+     * @param name
+     *            the name
+     *
+     * @return the string resource
      */
     public static String getStringResource(String name) {
         String value = null;

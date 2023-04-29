@@ -44,6 +44,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.mapper.ConfigLoader
  */
 public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The config loader. */
     private ConfigLoader configLoader = null;
 
     /** Create new ConfigLoader using '/WEB-INF/decorators.xml' file. */

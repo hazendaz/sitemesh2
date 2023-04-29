@@ -25,15 +25,22 @@ import java.util.Arrays;
  * A CustomTag provides a mechanism to manipulate the contents of a Tag. The standard Tag implementations are immutable,
  * however CustomTag allows a copy to be taken of an immutable Tag that can then be manipulated.
  *
- * @see Tag
- *
  * @author Joe Walnes
+ *
+ * @see Tag
  */
 public class CustomTag implements Tag {
 
+    /** The attributes. */
     private String[] attributes = new String[10]; // name1, value1, name2, value2...
+
+    /** The attribute count. */
     private int attributeCount = 0;
+
+    /** The name. */
     private String name;
+
+    /** The type. */
     private int type;
 
     /**
@@ -41,6 +48,11 @@ public class CustomTag implements Tag {
      * &lt;blah&gt; - Tag.OPEN<br/>
      * &lt;/blah&gt; - Tag.CLOSE<br/>
      * &lt;blah/&gt; - Tag.EMPTY<br/>
+     *
+     * @param name
+     *            the name
+     * @param type
+     *            the type
      */
     public CustomTag(String name, int type) {
         setName(name);
@@ -49,6 +61,9 @@ public class CustomTag implements Tag {
 
     /**
      * Create a CustomTag based on an existing Tag - this takes a copy of the Tag.
+     *
+     * @param tag
+     *            the tag
      */
     public CustomTag(Tag tag) {
         setName(tag.getName());
@@ -197,6 +212,9 @@ public class CustomTag implements Tag {
 
     /**
      * Change the name of the attribute.
+     *
+     * @param name
+     *            the new name
      */
     public void setName(String name) {
         if (name == null || name.length() == 0) {
@@ -211,6 +229,9 @@ public class CustomTag implements Tag {
      * &lt;blah&gt; - Tag.OPEN<br/>
      * &lt;/blah&gt; - Tag.CLOSE<br/>
      * &lt;blah/&gt; - Tag.EMPTY<br/>
+     *
+     * @param type
+     *            the new type
      */
     public void setType(int type) {
         if (type == Tag.OPEN || type == Tag.CLOSE || type == Tag.EMPTY) {
@@ -221,6 +242,9 @@ public class CustomTag implements Tag {
         }
     }
 
+    /**
+     * Grow attributes.
+     */
     private void growAttributes() {
         int newSize = attributes.length == 0 ? 4 : attributes.length * 2;
         String[] newAttributes = new String[newSize];
@@ -269,6 +293,11 @@ public class CustomTag implements Tag {
 
     /**
      * Change the name of an existing attribute.
+     *
+     * @param attributeIndex
+     *            the attribute index
+     * @param name
+     *            the name
      */
     public void setAttributeName(int attributeIndex, String name) {
         attributes[attributeIndex * 2] = name;
@@ -276,6 +305,11 @@ public class CustomTag implements Tag {
 
     /**
      * Change the value of an existing attribute. The value may be null for an HTML style empty attribute.
+     *
+     * @param attributeIndex
+     *            the attribute index
+     * @param value
+     *            the value
      */
     public void setAttributeValue(int attributeIndex, String value) {
         attributes[(attributeIndex * 2) + 1] = value;
@@ -283,6 +317,9 @@ public class CustomTag implements Tag {
 
     /**
      * Remove an attribute.
+     *
+     * @param attributeIndex
+     *            the attribute index
      */
     public void removeAttribute(int attributeIndex) {
         if (attributeIndex > attributeCount / 2) {

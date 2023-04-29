@@ -32,20 +32,48 @@ import javax.servlet.ServletOutputStream;
  */
 public class Buffer {
 
+    /** The page parser. */
     private final PageParser pageParser;
+
+    /** The encoding. */
     private final String encoding;
+
+    /** The Constant TEXT_ENCODER. */
     private static final TextEncoder TEXT_ENCODER = new TextEncoder();
 
+    /** The buffered writer. */
     private SitemeshBufferWriter bufferedWriter;
+
+    /** The buffered stream. */
     private FastByteArrayOutputStream bufferedStream;
+
+    /** The exposed writer. */
     private PrintWriter exposedWriter;
+
+    /** The exposed stream. */
     private ServletOutputStream exposedStream;
 
+    /**
+     * Instantiates a new buffer.
+     *
+     * @param pageParser
+     *            the page parser
+     * @param encoding
+     *            the encoding
+     */
     public Buffer(PageParser pageParser, String encoding) {
         this.pageParser = pageParser;
         this.encoding = encoding;
     }
 
+    /**
+     * Gets the contents.
+     *
+     * @return the contents
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public SitemeshBuffer getContents() throws IOException {
         if (bufferedWriter != null) {
             return bufferedWriter.getSitemeshBuffer();
@@ -56,10 +84,23 @@ public class Buffer {
         }
     }
 
+    /**
+     * Parses the.
+     *
+     * @return the page
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public Page parse() throws IOException {
         return pageParser.parse(getContents());
     }
 
+    /**
+     * Gets the writer.
+     *
+     * @return the writer
+     */
     public PrintWriter getWriter() {
         if (bufferedWriter == null) {
             if (bufferedStream != null) {
@@ -71,6 +112,11 @@ public class Buffer {
         return exposedWriter;
     }
 
+    /**
+     * Gets the output stream.
+     *
+     * @return the output stream
+     */
     public ServletOutputStream getOutputStream() {
         if (bufferedStream == null) {
             if (bufferedWriter != null) {
@@ -86,6 +132,11 @@ public class Buffer {
         return exposedStream;
     }
 
+    /**
+     * Checks if is using stream.
+     *
+     * @return true, if is using stream
+     */
     public boolean isUsingStream() {
         return bufferedStream != null;
     }

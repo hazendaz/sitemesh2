@@ -57,18 +57,40 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
  */
 public class DefaultFactory extends BaseFactory {
+
+    /** The config file name. */
     String configFileName;
+
+    /** The Constant DEFAULT_CONFIG_FILENAME. */
     private static final String DEFAULT_CONFIG_FILENAME = "/WEB-INF/sitemesh.xml";
 
+    /** The config file. */
     File configFile;
+
+    /** The config last modified. */
     long configLastModified;
+
+    /** The config last check. */
     private long configLastCheck = 0L;
+
+    /** The config check millis. */
     public static long configCheckMillis = 3000L;
+
+    /** The config props. */
     Map<Object, Object> configProps = new HashMap<>();
 
+    /** The excludes file name. */
     String excludesFileName;
+
+    /** The excludes file. */
     File excludesFile;
 
+    /**
+     * Instantiates a new default factory.
+     *
+     * @param config
+     *            the config
+     */
     public DefaultFactory(Config config) {
         super(config);
 
@@ -139,6 +161,18 @@ public class DefaultFactory extends BaseFactory {
         }
     }
 
+    /**
+     * Load sitemesh XML.
+     *
+     * @return the element
+     *
+     * @throws ParserConfigurationException
+     *             the parser configuration exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws SAXException
+     *             the SAX exception
+     */
     private Element loadSitemeshXML() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -177,6 +211,16 @@ public class DefaultFactory extends BaseFactory {
         return root;
     }
 
+    /**
+     * Load excludes.
+     *
+     * @throws ParserConfigurationException
+     *             the parser configuration exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws SAXException
+     *             the SAX exception
+     */
     private void loadExcludes() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -211,6 +255,9 @@ public class DefaultFactory extends BaseFactory {
 
     /**
      * Loop through children of 'page-parsers' element and add all 'parser' mappings.
+     *
+     * @param nodes
+     *            the nodes
      */
     private void loadPageParsers(NodeList nodes) {
         clearParserMappings();
@@ -227,6 +274,12 @@ public class DefaultFactory extends BaseFactory {
         }
     }
 
+    /**
+     * Load decorator mappers.
+     *
+     * @param nodes
+     *            the nodes
+     */
     private void loadDecoratorMappers(NodeList nodes) {
         clearDecoratorMappers();
         Properties emptyProps = new Properties();
@@ -262,6 +315,9 @@ public class DefaultFactory extends BaseFactory {
 
     /**
      * Reads in all the url patterns to exclude from decoration.
+     *
+     * @param nodes
+     *            the nodes
      */
     private void loadExcludeUrls(NodeList nodes) {
         clearExcludeUrls();
@@ -295,7 +351,7 @@ public class DefaultFactory extends BaseFactory {
     }
 
     /**
-     * Replaces any properties that appear in the supplied string with their actual values
+     * Replaces any properties that appear in the supplied string with their actual values.
      *
      * @param str
      *            the string to replace the properties in

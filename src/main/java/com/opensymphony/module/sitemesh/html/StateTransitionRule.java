@@ -13,17 +13,42 @@
  */
 package com.opensymphony.module.sitemesh.html;
 
+/**
+ * The Class StateTransitionRule.
+ */
 public class StateTransitionRule extends BasicRule {
 
+    /** The new state. */
     private final State newState;
+
+    /** The write enclosing tag. */
     private final boolean writeEnclosingTag;
 
+    /** The last state. */
     private State lastState;
 
+    /**
+     * Instantiates a new state transition rule.
+     *
+     * @param tagName
+     *            the tag name
+     * @param newState
+     *            the new state
+     */
     public StateTransitionRule(String tagName, State newState) {
         this(tagName, newState, true);
     }
 
+    /**
+     * Instantiates a new state transition rule.
+     *
+     * @param tagName
+     *            the tag name
+     * @param newState
+     *            the new state
+     * @param writeEnclosingTag
+     *            the write enclosing tag
+     */
     public StateTransitionRule(String tagName, State newState, boolean writeEnclosingTag) {
         super(tagName);
         this.newState = newState;

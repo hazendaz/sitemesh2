@@ -48,16 +48,32 @@ import java.util.Map;
  * @author <a href="mailto:hani@formicary.net">Hani Suleiman</a>
  */
 public class PathMapper {
+
+    /** The mappings. */
     private Map mappings = new HashMap();
 
-    /** Add a key and appropriate matching pattern. */
+    /**
+     * Add a key and appropriate matching pattern.
+     *
+     * @param key
+     *            the key
+     * @param pattern
+     *            the pattern
+     */
     public void put(String key, String pattern) {
         if (key != null) {
             mappings.put(pattern, key);
         }
     }
 
-    /** Retrieve appropriate key by matching patterns with supplied path. */
+    /**
+     * Retrieve appropriate key by matching patterns with supplied path.
+     *
+     * @param path
+     *            the path
+     *
+     * @return the string
+     */
     public String get(String path) {
         if (path == null)
             path = "/";
@@ -67,7 +83,16 @@ public class PathMapper {
         return (String) mappings.get(mapped);
     }
 
-    /** Find exact key in mappings. */
+    /**
+     * Find exact key in mappings.
+     *
+     * @param path
+     *            the path
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
     private static String findKey(String path, Map mappings) {
         String result = findExactKey(path, mappings);
         if (result == null)
@@ -77,13 +102,32 @@ public class PathMapper {
         return result;
     }
 
-    /** Check if path matches exact pattern ( /blah/blah.jsp ). */
+    /**
+     * Check if path matches exact pattern ( /blah/blah.jsp ).
+     *
+     * @param path
+     *            the path
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
     private static String findExactKey(String path, Map mappings) {
         if (mappings.containsKey(path))
             return path;
         return null;
     }
 
+    /**
+     * Find complex key.
+     *
+     * @param path
+     *            the path
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
     private static String findComplexKey(String path, Map mappings) {
         Iterator i = mappings.keySet().iterator();
         String result = null, key = null;
@@ -99,7 +143,14 @@ public class PathMapper {
         return result;
     }
 
-    /** Look for root pattern ( / ). */
+    /**
+     * Look for root pattern ( / ).
+     *
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
     private static String findDefaultKey(Map mappings) {
         String[] defaultKeys = { "/", "*", "/*" };
         for (int i = 0; i < defaultKeys.length; i++) {
@@ -109,6 +160,18 @@ public class PathMapper {
         return null;
     }
 
+    /**
+     * Match.
+     *
+     * @param pattern
+     *            the pattern
+     * @param str
+     *            the str
+     * @param isCaseSensitive
+     *            the is case sensitive
+     *
+     * @return true, if successful
+     */
     private static boolean match(String pattern, String str, boolean isCaseSensitive) {
         char[] patArr = pattern.toCharArray();
         char[] strArr = str.toCharArray();

@@ -88,7 +88,10 @@ public class ConfigLoader {
          */
         boolean checking = false;
 
+        /** The decorators. */
         Map decorators = new HashMap();
+
+        /** The path mapper. */
         PathMapper pathMapper = new PathMapper();
     }
 
@@ -97,13 +100,23 @@ public class ConfigLoader {
      */
     private volatile State state;
 
+    /** The config file. */
     private File configFile = null;
+
+    /** The config file name. */
     private String configFileName = null;
 
+    /** The config. */
     private Config config = null;
 
     /**
      * Create new ConfigLoader using supplied File.
+     *
+     * @param configFile
+     *            the config file
+     *
+     * @throws ServletException
+     *             the servlet exception
      */
     public ConfigLoader(File configFile) throws ServletException {
         this.configFile = configFile;
@@ -113,6 +126,14 @@ public class ConfigLoader {
 
     /**
      * Create new ConfigLoader using supplied filename and config.
+     *
+     * @param configFileName
+     *            the config file name
+     * @param config
+     *            the config
+     *
+     * @throws ServletException
+     *             the servlet exception
      */
     public ConfigLoader(String configFileName, Config config) throws ServletException {
         this.config = config;
@@ -125,18 +146,41 @@ public class ConfigLoader {
 
     /**
      * Retrieve Decorator based on name specified in configuration file.
+     *
+     * @param name
+     *            the name
+     *
+     * @return the decorator by name
+     *
+     * @throws ServletException
+     *             the servlet exception
      */
     public Decorator getDecoratorByName(String name) throws ServletException {
         return (Decorator) refresh().decorators.get(name);
     }
 
-    /** Get name of Decorator mapped to given path. */
+    /**
+     * Get name of Decorator mapped to given path.
+     *
+     * @param path
+     *            the path
+     *
+     * @return the mapped name
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
     public String getMappedName(String path) throws ServletException {
         return refresh().pathMapper.get(path);
     }
 
     /**
      * Load configuration from file.
+     *
+     * @return the state
+     *
+     * @throws ServletException
+     *             the servlet exception
      */
     private State loadConfig() throws ServletException {
         // The new state which we build up and atomically replace the old state
@@ -171,6 +215,14 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Parses the config.
+     *
+     * @param newState
+     *            the new state
+     * @param document
+     *            the document
+     */
     private void parseConfig(State newState, Document document) {
         Element root = document.getDocumentElement();
 
@@ -245,6 +297,18 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Populate path mapper.
+     *
+     * @param newState
+     *            the new state
+     * @param patternNodes
+     *            the pattern nodes
+     * @param role
+     *            the role
+     * @param name
+     *            the name
+     */
     private void populatePathMapper(State newState, NodeList patternNodes, String role, String name) {
         for (int j = 0; j < patternNodes.getLength(); j++) {
             Element p = (Element) patternNodes.item(j);
@@ -264,6 +328,16 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Gets the attribute.
+     *
+     * @param element
+     *            the element
+     * @param name
+     *            the name
+     *
+     * @return the attribute
+     */
     private static String getAttribute(Element element, String name) {
         if (element != null && element.getAttribute(name) != null && element.getAttribute(name).trim() != "") {
             return element.getAttribute(name).trim();
@@ -272,6 +346,16 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Gets the contained text.
+     *
+     * @param parent
+     *            the parent
+     * @param childTagName
+     *            the child tag name
+     *
+     * @return the contained text
+     */
     private static String getContainedText(Node parent, String childTagName) {
         try {
             Node tag = ((Element) parent).getElementsByTagName(childTagName).item(0);
@@ -281,6 +365,14 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Store decorator.
+     *
+     * @param newState
+     *            the new state
+     * @param d
+     *            the d
+     */
     private void storeDecorator(State newState, Decorator d) {
         if (d.getRole() != null) {
             newState.decorators.put(d.getName() + d.getRole(), d);
@@ -291,6 +383,11 @@ public class ConfigLoader {
 
     /**
      * Check if configuration file has been updated, and if so, reload.
+     *
+     * @return the state
+     *
+     * @throws ServletException
+     *             the servlet exception
      */
     private State refresh() throws ServletException {
         // Read the current state just once since another thread can swap

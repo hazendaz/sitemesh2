@@ -44,6 +44,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class FrameSetDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The decorator. */
     private String decorator = null;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {

@@ -44,6 +44,8 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class AbstractDecoratorMapper implements DecoratorMapper {
     /** Parent DecoratorMapper. */
     protected DecoratorMapper parent = null;
+
+    /** The config. */
     protected Config config = null;
 
     /** Set parent. */

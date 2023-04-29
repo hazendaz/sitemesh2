@@ -42,6 +42,7 @@ import freemarker.template.TemplateModel;
  */
 public class FreemarkerDecoratorServlet extends FreemarkerServlet {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
     @Override

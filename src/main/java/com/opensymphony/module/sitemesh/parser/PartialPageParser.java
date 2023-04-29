@@ -51,6 +51,16 @@ public class PartialPageParser implements PageParser {
         return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, 0, length), null);
     }
 
+    /**
+     * Parses the html page.
+     *
+     * @param buffer
+     *            the buffer
+     * @param position
+     *            the position
+     *
+     * @return the page
+     */
     private Page parseHtmlPage(SitemeshBuffer buffer, int position) {
         char[] data = buffer.getCharArray();
         int length = buffer.getBufferLength();
@@ -148,6 +158,20 @@ public class PartialPageParser implements PageParser {
         }
     }
 
+    /**
+     * Compare lower case.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the data end
+     * @param position
+     *            the position
+     * @param token
+     *            the token
+     *
+     * @return true, if successful
+     */
     private static boolean compareLowerCase(final char[] data, final int dataEnd, int position, String token) {
         int l = position + token.length();
         if (l > dataEnd) {
@@ -164,6 +188,20 @@ public class PartialPageParser implements PageParser {
         return true;
     }
 
+    /**
+     * Find end of.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the data end
+     * @param position
+     *            the position
+     * @param token
+     *            the token
+     *
+     * @return the int
+     */
     private static int findEndOf(final char[] data, final int dataEnd, int position, String token) {
         for (int i = position; i < dataEnd - token.length(); i++) {
             if (compareLowerCase(data, dataEnd, i, token)) {
@@ -173,6 +211,20 @@ public class PartialPageParser implements PageParser {
         return dataEnd;
     }
 
+    /**
+     * Find start of.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the data end
+     * @param position
+     *            the position
+     * @param token
+     *            the token
+     *
+     * @return the int
+     */
     private static int findStartOf(final char[] data, final int dataEnd, int position, String token) {
         for (int i = position; i < dataEnd - token.length(); i++) {
             if (compareLowerCase(data, dataEnd, i, token)) {
@@ -183,7 +235,7 @@ public class PartialPageParser implements PageParser {
     }
 
     /**
-     * Parse the properties of the current tag
+     * Parse the properties of the current tag.
      *
      * @param data
      *            the data
@@ -273,12 +325,31 @@ public class PartialPageParser implements PageParser {
         }
     }
 
+    /**
+     * The Interface SimpleMap.
+     */
     public static interface SimpleMap {
+
+        /**
+         * Put.
+         *
+         * @param key
+         *            the key
+         * @param value
+         *            the value
+         */
         public void put(String key, String value);
     }
 
+    /**
+     * The Class MetaTagSimpleMap.
+     */
     public static class MetaTagSimpleMap implements SimpleMap {
+
+        /** The name. */
         private String name;
+
+        /** The content. */
         private String content;
 
         public void put(String key, String value) {
@@ -289,16 +360,31 @@ public class PartialPageParser implements PageParser {
             }
         }
 
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Gets the content.
+         *
+         * @return the content
+         */
         public String getContent() {
             return content;
         }
     }
 
+    /**
+     * The Class ContentTagSimpleMap.
+     */
     public static class ContentTagSimpleMap implements SimpleMap {
+
+        /** The tag. */
         private String tag;
 
         public void put(String key, String value) {
@@ -307,18 +393,33 @@ public class PartialPageParser implements PageParser {
             }
         }
 
+        /**
+         * Gets the tag.
+         *
+         * @return the tag
+         */
         public String getTag() {
             return tag;
         }
     }
 
+    /**
+     * The Class HashSimpleMap.
+     */
     public static class HashSimpleMap implements SimpleMap {
+
+        /** The map. */
         private final Map<String, String> map = new HashMap<String, String>();
 
         public void put(String key, String value) {
             map.put(key, value);
         }
 
+        /**
+         * Gets the map.
+         *
+         * @return the map
+         */
         public Map<String, String> getMap() {
             return map;
         }

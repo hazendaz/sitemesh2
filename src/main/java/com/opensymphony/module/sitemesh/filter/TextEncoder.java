@@ -36,10 +36,26 @@ import java.nio.charset.CodingErrorAction;
  */
 public class TextEncoder {
 
+    /** The Constant DEFAULT_ENCODING. */
     private static final String DEFAULT_ENCODING = System.getProperty("file.encoding");
+
+    /** The Constant JDK14. */
     private static final boolean JDK14 = System.getProperty("java.version").startsWith("1.4")
             || System.getProperty("java.version").startsWith("1.5");
 
+    /**
+     * Encode.
+     *
+     * @param data
+     *            the data
+     * @param encoding
+     *            the encoding
+     *
+     * @return the char[]
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public char[] encode(byte[] data, String encoding) throws IOException {
         if (encoding == null) {
             encoding = DEFAULT_ENCODING;
@@ -51,6 +67,19 @@ public class TextEncoder {
         }
     }
 
+    /**
+     * Gets the 13 buffer.
+     *
+     * @param data
+     *            the data
+     * @param encoding
+     *            the encoding
+     *
+     * @return the 13 buffer
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private char[] get13Buffer(byte[] data, String encoding) throws IOException {
         CharArrayWriter out = null;
         // Why all this indirection? Because we are being given bytes, and we have to then write
@@ -71,6 +100,19 @@ public class TextEncoder {
         return out.toCharArray();
     }
 
+    /**
+     * Gets the 14 buffer.
+     *
+     * @param data
+     *            the data
+     * @param encoding
+     *            the encoding
+     *
+     * @return the 14 buffer
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private char[] get14Buffer(byte[] data, String encoding) throws IOException {
         if (!Charset.isSupported(encoding))
             throw new IOException("Unsupported encoding " + encoding);
@@ -92,6 +134,16 @@ public class TextEncoder {
         return trim(ca, cb.position());
     }
 
+    /**
+     * Trim.
+     *
+     * @param ca
+     *            the ca
+     * @param len
+     *            the len
+     *
+     * @return the char[]
+     */
     private char[] trim(char[] ca, int len) {
         if (len == ca.length) {
             return ca;

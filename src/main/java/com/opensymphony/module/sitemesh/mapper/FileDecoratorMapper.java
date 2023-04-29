@@ -40,6 +40,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.mapper.DefaultDecorator
  */
 public class FileDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The path not available. */
     private boolean pathNotAvailable = false;
 
     public Decorator getNamedDecorator(HttpServletRequest req, String name) {

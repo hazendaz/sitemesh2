@@ -39,22 +39,59 @@ import org.apache.tapestry.valid.RenderString;
  */
 public final class Util {
 
+    /**
+     * Gets the title.
+     *
+     * @param cycle
+     *            the cycle
+     *
+     * @return the title
+     */
     public static String getTitle(IRequestCycle cycle) {
         return getPage(cycle).getTitle();
     }
 
+    /**
+     * Gets the property.
+     *
+     * @param name
+     *            the name
+     * @param cycle
+     *            the cycle
+     *
+     * @return the property
+     */
     public static String getProperty(String name, IRequestCycle cycle) {
         return getPage(cycle).getProperty(name);
     }
 
+    /**
+     * Gets the page.
+     *
+     * @param cycle
+     *            the cycle
+     *
+     * @return the page
+     */
     public static Page getPage(IRequestCycle cycle) {
         return (Page) cycle.getRequestContext().getRequest().getAttribute(RequestConstants.PAGE);
     }
 
+    /**
+     * Gets the head renderer.
+     *
+     * @param cycle
+     *            the cycle
+     *
+     * @return the head renderer
+     */
     public static IRender getHeadRenderer(IRequestCycle cycle) {
         return new RenderString(((HTMLPage) getPage(cycle)).getHead(), true);
     }
 
+    /**
+     * Instantiates a new util.
+     */
     private Util() {
         // Do not allow instantiation
     }

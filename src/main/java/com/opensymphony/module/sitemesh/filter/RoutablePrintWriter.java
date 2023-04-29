@@ -32,21 +32,44 @@ import java.io.Writer;
  */
 public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
 
+    /** The destination. */
     private PrintWriter destination;
+
+    /** The factory. */
     private DestinationFactory factory;
 
     /**
      * Factory to lazily instantiate the destination.
      */
     public static interface DestinationFactory {
+
+        /**
+         * Activate destination.
+         *
+         * @return the prints the writer
+         *
+         * @throws IOException
+         *             Signals that an I/O exception has occurred.
+         */
         PrintWriter activateDestination() throws IOException;
     }
 
+    /**
+     * Instantiates a new routable print writer.
+     *
+     * @param factory
+     *            the factory
+     */
     public RoutablePrintWriter(DestinationFactory factory) {
         super(new NullWriter());
         this.factory = factory;
     }
 
+    /**
+     * Gets the destination.
+     *
+     * @return the destination
+     */
     private PrintWriter getDestination() {
         if (destination == null) {
             try {
@@ -58,6 +81,12 @@ public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
         return destination;
     }
 
+    /**
+     * Update destination.
+     *
+     * @param factory
+     *            the factory
+     */
     public void updateDestination(DestinationFactory factory) {
         destination = null;
         this.factory = factory;
@@ -176,6 +205,9 @@ public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
      */
     private static class NullWriter extends Writer {
 
+        /**
+         * Instantiates a new null writer.
+         */
         protected NullWriter() {
             super();
         }

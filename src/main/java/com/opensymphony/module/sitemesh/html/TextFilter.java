@@ -29,6 +29,14 @@ package com.opensymphony.module.sitemesh.html;
  */
 public interface TextFilter {
 
+    /**
+     * Filter.
+     *
+     * @param content
+     *            the content
+     *
+     * @return the string
+     */
     String filter(String content);
 
 }

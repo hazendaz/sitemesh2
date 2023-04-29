@@ -43,6 +43,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class CookieDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The cookie name. */
     private String cookieName;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {

@@ -26,10 +26,25 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * The Class MultipassReplacementPageParser.
+ */
 public class MultipassReplacementPageParser implements PageParser {
+
+    /** The page. */
     private final Page page;
+
+    /** The response. */
     private final HttpServletResponse response;
 
+    /**
+     * Instantiates a new multipass replacement page parser.
+     *
+     * @param page
+     *            the page
+     * @param response
+     *            the response
+     */
     public MultipassReplacementPageParser(Page page, HttpServletResponse response) {
         this.page = page;
         this.response = response;

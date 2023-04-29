@@ -14,6 +14,8 @@
 package com.opensymphony.module.sitemesh.parser;
 
 /**
+ * The Class SuperFastSimplePageParser.
+ *
  * @deprecated Renamed to PartialPageParser
  */
 @Deprecated

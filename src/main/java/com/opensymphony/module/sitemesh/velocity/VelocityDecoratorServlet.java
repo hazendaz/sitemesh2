@@ -78,6 +78,11 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         return getTemplate(template);
     }
 
+    /**
+     * Gets the decorator mapper.
+     *
+     * @return the decorator mapper
+     */
     private DecoratorMapper getDecoratorMapper() {
         Factory factory = Factory.getInstance(new Config(getServletConfig()));
         DecoratorMapper decoratorMapper = factory.getDecoratorMapper();

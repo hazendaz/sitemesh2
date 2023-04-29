@@ -55,6 +55,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class ParameterDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The param value. */
     private String decoratorParameter = null, paramName = null, paramValue = null;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {

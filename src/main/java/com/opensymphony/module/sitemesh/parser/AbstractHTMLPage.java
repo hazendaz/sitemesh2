@@ -41,6 +41,12 @@ import java.io.Writer;
  */
 public abstract class AbstractHTMLPage extends AbstractPage implements HTMLPage {
 
+    /**
+     * Instantiates a new abstract HTML page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     */
     protected AbstractHTMLPage(SitemeshBuffer sitemeshBuffer) {
         super(sitemeshBuffer);
     }

@@ -26,12 +26,24 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
+ * The Class DebugResponseWrapper.
+ *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  */
 public class DebugResponseWrapper extends HttpServletResponseWrapper {
+
+    /** The last count. */
     private static int lastCount = 0;
+
+    /** The count. */
     private int count = 0;
 
+    /**
+     * Instantiates a new debug response wrapper.
+     *
+     * @param response
+     *            the response
+     */
     public DebugResponseWrapper(HttpServletResponse response) {
         super(response);
         if (enabled()) {
@@ -197,10 +209,25 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
         super.setLocale(locale);
     }
 
+    /**
+     * Enabled.
+     *
+     * @return true, if successful
+     */
     private boolean enabled() {
         return true;
     }
 
+    /**
+     * Debug.
+     *
+     * @param methodName
+     *            the method name
+     * @param arg1
+     *            the arg 1
+     * @param arg2
+     *            the arg 2
+     */
     private void debug(String methodName, String arg1, String arg2) {
         StringBuilder s = new StringBuilder();
         s.append("[debug ");

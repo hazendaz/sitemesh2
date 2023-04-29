@@ -37,14 +37,32 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class PageResponseWrapper extends HttpServletResponseWrapper {
 
+    /** The routable print writer. */
     private final RoutablePrintWriter routablePrintWriter;
+
+    /** The routable servlet output stream. */
     private final RoutableServletOutputStream routableServletOutputStream;
+
+    /** The parser selector. */
     private final PageParserSelector parserSelector;
 
+    /** The buffer. */
     private Buffer buffer;
+
+    /** The aborted. */
     private boolean aborted = false;
+
+    /** The parseable page. */
     private boolean parseablePage = false;
 
+    /**
+     * Instantiates a new page response wrapper.
+     *
+     * @param response
+     *            the response
+     * @param parserSelector
+     *            the parser selector
+     */
     public PageResponseWrapper(final HttpServletResponse response, PageParserSelector parserSelector) {
         super(response);
         this.parserSelector = parserSelector;
@@ -82,6 +100,14 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
 
     }
 
+    /**
+     * Activate site mesh.
+     *
+     * @param contentType
+     *            the content type
+     * @param encoding
+     *            the encoding
+     */
     public void activateSiteMesh(String contentType, String encoding) {
         if (parseablePage) {
             return; // already activated
@@ -100,6 +126,9 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         parseablePage = true;
     }
 
+    /**
+     * Deactivate site mesh.
+     */
     private void deactivateSiteMesh() {
         parseablePage = false;
         buffer = null;
@@ -173,6 +202,14 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         return routablePrintWriter;
     }
 
+    /**
+     * Gets the page.
+     *
+     * @return the page
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public Page getPage() throws IOException {
         if (aborted || !parseablePage) {
             return null;
@@ -196,10 +233,23 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         super.sendRedirect(location);
     }
 
+    /**
+     * Checks if is using stream.
+     *
+     * @return true, if is using stream
+     */
     public boolean isUsingStream() {
         return buffer != null && buffer.isUsingStream();
     }
 
+    /**
+     * Gets the contents.
+     *
+     * @return the contents
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public SitemeshBuffer getContents() throws IOException {
         if (aborted || !parseablePage) {
             return null;

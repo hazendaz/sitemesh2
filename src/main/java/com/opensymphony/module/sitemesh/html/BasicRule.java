@@ -15,20 +15,40 @@ package com.opensymphony.module.sitemesh.html;
 
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 
+/**
+ * The Class BasicRule.
+ */
 public abstract class BasicRule implements TagRule {
 
+    /** The acceptable tag names. */
     private final String[] acceptableTagNames;
 
+    /** The context. */
     protected HTMLProcessorContext context;
 
+    /**
+     * Instantiates a new basic rule.
+     *
+     * @param acceptableTagNames
+     *            the acceptable tag names
+     */
     protected BasicRule(String[] acceptableTagNames) {
         this.acceptableTagNames = acceptableTagNames;
     }
 
+    /**
+     * Instantiates a new basic rule.
+     *
+     * @param acceptableTagName
+     *            the acceptable tag name
+     */
     protected BasicRule(String acceptableTagName) {
         this.acceptableTagNames = new String[] { acceptableTagName };
     }
 
+    /**
+     * Instantiates a new basic rule.
+     */
     protected BasicRule() {
         this.acceptableTagNames = null;
     }
@@ -52,10 +72,20 @@ public abstract class BasicRule implements TagRule {
 
     public abstract void process(Tag tag);
 
+    /**
+     * Current buffer.
+     *
+     * @return the sitemesh buffer fragment. builder
+     */
     protected SitemeshBufferFragment.Builder currentBuffer() {
         return context.currentBuffer();
     }
 
+    /**
+     * Gets the current buffer content.
+     *
+     * @return the current buffer content
+     */
     protected String getCurrentBufferContent() {
         return context.currentBuffer().build().getStringContent();
     }

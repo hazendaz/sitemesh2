@@ -36,32 +36,86 @@ import java.util.Map;
  * @see com.opensymphony.module.sitemesh.Decorator
  */
 public class DefaultDecorator implements Decorator {
-    /** @see #getPage() */
+
+    /**
+     * The page.
+     *
+     * @see #getPage()
+     */
     protected String page = null;
 
-    /** @see #getName() */
+    /**
+     * The name.
+     *
+     * @see #getName()
+     */
     protected String name = null;
 
-    /** @see #getURIPath() */
+    /**
+     * The uri path.
+     *
+     * @see #getURIPath()
+     */
     protected String uriPath = null;
 
-    /** @see #getRole() */
+    /**
+     * The role.
+     *
+     * @see #getRole()
+     */
     protected String role = null;
 
-    /** @see #getInitParameter(java.lang.String) */
+    /**
+     * The parameters.
+     *
+     * @see #getInitParameter(java.lang.String)
+     */
     protected Map parameters = null;
 
-    /** Constructor to set name, page and parameters. */
+    /**
+     * Constructor to set name, page and parameters.
+     *
+     * @param name
+     *            the name
+     * @param page
+     *            the page
+     * @param parameters
+     *            the parameters
+     */
     public DefaultDecorator(String name, String page, Map parameters) {
         this(name, page, null, null, parameters);
     }
 
-    /** Constructor to set all properties. */
+    /**
+     * Constructor to set all properties.
+     *
+     * @param name
+     *            the name
+     * @param page
+     *            the page
+     * @param uriPath
+     *            the uri path
+     * @param parameters
+     *            the parameters
+     */
     public DefaultDecorator(String name, String page, String uriPath, Map parameters) {
         this(name, page, uriPath, null, parameters);
     }
 
-    /** Constructor to set all properties. */
+    /**
+     * Constructor to set all properties.
+     *
+     * @param name
+     *            the name
+     * @param page
+     *            the page
+     * @param uriPath
+     *            the uri path
+     * @param role
+     *            the role
+     * @param parameters
+     *            the parameters
+     */
     public DefaultDecorator(String name, String page, String uriPath, String role, Map parameters) {
         this.name = name;
         this.page = page;

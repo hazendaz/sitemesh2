@@ -73,8 +73,8 @@ public class OutputConverter {
 
     private static void resinConvert(String inputString, Writer writer) throws IOException {
         // does this need to be made configurable? Or are these two always correct?
-        InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8)),
-                "ISO-8859-1");
+        InputStreamReader reader = new InputStreamReader(
+                new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8)), "ISO-8859-1");
         int i;
         while ((i = reader.read()) != -1) {
             writer.write(i);

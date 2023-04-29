@@ -57,6 +57,8 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The map. */
     private Map map = null;
 
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
@@ -86,7 +88,14 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
         }
     }
 
-    /** Get extention for the language. */
+    /**
+     * Get extention for the language.
+     *
+     * @param acceptLanguage
+     *            the accept language
+     *
+     * @return the ext
+     */
     private String getExt(String acceptLanguage) {
         Iterator i = map.entrySet().iterator();
         while (i.hasNext()) {
@@ -109,7 +118,16 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
         return null;
     }
 
-    /** Change /abc/def.jsp into /abc/def-XYZ.jsp */
+    /**
+     * Change /abc/def.jsp into /abc/def-XYZ.jsp
+     *
+     * @param path
+     *            the path
+     * @param ext
+     *            the ext
+     *
+     * @return the string
+     */
     private static String modifyPath(String path, String ext) {
         int dot = path.indexOf('.');
         if (dot > -1) {
@@ -119,7 +137,12 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
         }
     }
 
-    /** Initialize language mappings. */
+    /**
+     * Initialize language mappings.
+     *
+     * @param props
+     *            the props
+     */
     private void initMap(Properties props) {
         Iterator i = props.entrySet().iterator();
         while (i.hasNext()) {

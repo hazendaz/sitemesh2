@@ -26,8 +26,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * The Class MultipassFilter.
+ */
 public class MultipassFilter extends SiteMeshFilter {
 
+    /**
+     * Write decorator.
+     *
+     * @param response
+     *            the response
+     * @param page
+     *            the page
+     * @param dispatcher
+     *            the dispatcher
+     * @param request
+     *            the request
+     *
+     * @throws ServletException
+     *             the servlet exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     protected void writeDecorator(final HttpServletResponse response, final Page page, RequestDispatcher dispatcher,
             HttpServletRequest request) throws ServletException, IOException {
         PageResponseWrapper pageResponse = new PageResponseWrapper(response, new PageParserSelector() {

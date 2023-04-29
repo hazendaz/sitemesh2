@@ -34,15 +34,32 @@ import java.util.Map;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public final class Container {
+
+    /** The Constant UNKNOWN. */
     public static final int UNKNOWN = 0;
+
+    /** The Constant TOMCAT. */
     public static final int TOMCAT = 1;
+
+    /** The Constant RESIN. */
     public static final int RESIN = 2;
+
+    /** The Constant ORION. */
     public static final int ORION = 3; // Orion or OC4J
+
+    /** The Constant WEBLOGIC. */
     public static final int WEBLOGIC = 4;
+
+    /** The Constant HPAS. */
     public static final int HPAS = 5;
+
+    /** The Constant JRUN. */
     public static final int JRUN = 6;
+
+    /** The Constant WEBSPHERE. */
     public static final int WEBSPHERE = 7;
 
+    /** The result. */
     private static int result = -1;
 
     /**
@@ -62,7 +79,11 @@ public final class Container {
         classMappings.put("com.ibm.ws.webcontainer.jsp.servlet.JspServlet", Integer.valueOf(WEBSPHERE));
     }
 
-    /** Get the current container. */
+    /**
+     * Get the current container.
+     *
+     * @return the int
+     */
     public static int get() {
         if (result == -1) {
             final String classMatch = searchForClosestClass(classMappings);
@@ -78,6 +99,9 @@ public final class Container {
 
     /**
      * Walk up the classloader hierachy and attempt to find a class in the classMappings Map that can be loaded.
+     *
+     * @param classMappings
+     *            the class mappings
      *
      * @return Name of the match class, or null if not found.
      */

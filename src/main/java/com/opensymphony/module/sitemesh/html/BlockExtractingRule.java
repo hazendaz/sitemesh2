@@ -16,19 +16,38 @@ package com.opensymphony.module.sitemesh.html;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 
+/**
+ * The Class BlockExtractingRule.
+ */
 public abstract class BlockExtractingRule extends BasicRule {
 
+    /** The keep in buffer. */
     private boolean keepInBuffer;
 
     // we should only handle tags that have been opened previously.
+    /** The seen opening tag. */
     // else the parser throws a NoSuchElementException (SIM-216)
     private boolean seenOpeningTag;
 
+    /**
+     * Instantiates a new block extracting rule.
+     *
+     * @param keepInBuffer
+     *            the keep in buffer
+     * @param acceptableTagName
+     *            the acceptable tag name
+     */
     protected BlockExtractingRule(boolean keepInBuffer, String acceptableTagName) {
         super(acceptableTagName);
         this.keepInBuffer = keepInBuffer;
     }
 
+    /**
+     * Instantiates a new block extracting rule.
+     *
+     * @param keepInBuffer
+     *            the keep in buffer
+     */
     protected BlockExtractingRule(boolean keepInBuffer) {
         this.keepInBuffer = keepInBuffer;
     }
@@ -55,12 +74,32 @@ public abstract class BlockExtractingRule extends BasicRule {
         }
     }
 
+    /**
+     * Start.
+     *
+     * @param tag
+     *            the tag
+     */
     protected void start(Tag tag) {
     }
 
+    /**
+     * End.
+     *
+     * @param tag
+     *            the tag
+     */
     protected void end(Tag tag) {
     }
 
+    /**
+     * Creates the buffer.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     *
+     * @return the sitemesh buffer fragment. builder
+     */
     protected SitemeshBufferFragment.Builder createBuffer(SitemeshBuffer sitemeshBuffer) {
         return SitemeshBufferFragment.builder().setBuffer(sitemeshBuffer);
     }

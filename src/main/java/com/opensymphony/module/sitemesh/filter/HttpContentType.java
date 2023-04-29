@@ -20,9 +20,18 @@ package com.opensymphony.module.sitemesh.filter;
  */
 public class HttpContentType {
 
+    /** The type. */
     private final String type;
+
+    /** The encoding. */
     private final String encoding;
 
+    /**
+     * Instantiates a new http content type.
+     *
+     * @param fullValue
+     *            the full value
+     */
     public HttpContentType(String fullValue) {
         // this is the content type + charset. eg: text/html;charset=UTF-8
         int offset = fullValue.lastIndexOf("charset=");
@@ -30,6 +39,16 @@ public class HttpContentType {
         type = extractContentTypeValue(fullValue, 0);
     }
 
+    /**
+     * Extract content type value.
+     *
+     * @param type
+     *            the type
+     * @param startIndex
+     *            the start index
+     *
+     * @return the string
+     */
     private String extractContentTypeValue(String type, int startIndex) {
         if (startIndex < 0)
             return null;
@@ -62,10 +81,20 @@ public class HttpContentType {
         return type.substring(startIndex, endIndex);
     }
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Gets the encoding.
+     *
+     * @return the encoding
+     */
     public String getEncoding() {
         return encoding;
     }

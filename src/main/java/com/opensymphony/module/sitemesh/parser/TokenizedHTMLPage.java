@@ -25,25 +25,46 @@ import java.io.Writer;
  * HTMLPage implementation that builds itself based on the incoming 'tag' and 'text' tokens fed to it from the
  * HTMLTagTokenizer.
  *
+ * @author Joe Walnes
+ *
  * @see com.opensymphony.module.sitemesh.parser.HTMLPageParser
  * @see com.opensymphony.module.sitemesh.html.tokenizer.TagTokenizer
- *
- * @author Joe Walnes
  */
 public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
 
+    /** The body. */
     private SitemeshBufferFragment body;
+
+    /** The head. */
     private SitemeshBufferFragment head;
 
+    /**
+     * Instantiates a new tokenized HTML page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     */
     public TokenizedHTMLPage(SitemeshBuffer sitemeshBuffer) {
         super(sitemeshBuffer);
         addProperty("title", "");
     }
 
+    /**
+     * Sets the body.
+     *
+     * @param body
+     *            the new body
+     */
     public void setBody(SitemeshBufferFragment body) {
         this.body = body;
     }
 
+    /**
+     * Sets the head.
+     *
+     * @param head
+     *            the new head
+     */
     public void setHead(SitemeshBufferFragment head) {
         this.head = head;
     }

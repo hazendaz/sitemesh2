@@ -75,6 +75,14 @@ public class HTMLPageParser implements PageParser {
         return page;
     }
 
+    /**
+     * Adds the user defined rules.
+     *
+     * @param html
+     *            the html
+     * @param page
+     *            the page
+     */
     protected void addUserDefinedRules(State html, PageBuilder page) {
         // Ensure that while in <xml> tag, none of the other rules kick in.
         // For example <xml><book><title>hello</title></book></xml> should not change the affect the title of the page.

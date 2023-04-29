@@ -36,6 +36,8 @@ public class ClassLoaderUtil {
      *            The name of the resource to load
      * @param callingClass
      *            The Class object of the calling object
+     *
+     * @return the resource
      */
     public static URL getResource(String resourceName, Class callingClass) {
         URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
@@ -67,6 +69,8 @@ public class ClassLoaderUtil {
      *            The name of the resource to load
      * @param callingClass
      *            The Class object of the calling object
+     *
+     * @return the resource as stream
      */
     public static InputStream getResourceAsStream(String resourceName, Class callingClass) {
         URL url = getResource(resourceName, callingClass);
@@ -91,6 +95,8 @@ public class ClassLoaderUtil {
      *            The name of the class to load
      * @param callingClass
      *            The Class object of the calling object
+     *
+     * @return the class
      *
      * @throws ClassNotFoundException
      *             If the class cannot be found anywhere.

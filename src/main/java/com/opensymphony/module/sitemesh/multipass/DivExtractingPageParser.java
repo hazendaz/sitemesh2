@@ -20,6 +20,9 @@ import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
 import com.opensymphony.module.sitemesh.parser.HTMLPageParser;
 
+/**
+ * The Class DivExtractingPageParser.
+ */
 public class DivExtractingPageParser extends HTMLPageParser {
 
     protected void addUserDefinedRules(State html, final PageBuilder page) {
@@ -27,11 +30,26 @@ public class DivExtractingPageParser extends HTMLPageParser {
         html.addRule(new TopLevelDivExtractingRule(page));
     }
 
+    /**
+     * The Class TopLevelDivExtractingRule.
+     */
     private static class TopLevelDivExtractingRule extends BasicRule {
+
+        /** The block id. */
         private String blockId;
+
+        /** The depth. */
         private int depth;
+
+        /** The page. */
         private final PageBuilder page;
 
+        /**
+         * Instantiates a new top level div extracting rule.
+         *
+         * @param page
+         *            the page
+         */
         public TopLevelDivExtractingRule(PageBuilder page) {
             super("div");
             this.page = page;
