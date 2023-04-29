@@ -30,7 +30,7 @@ import java.util.Map;
  * The PathMapper is used to map file patterns to keys, and find an approriate key for a given file path. The pattern
  * rules are consistent with those defined in the Servlet 2.3 API on the whole. Wildcard patterns are also supported,
  * using any combination of * and ?.
- * <h3>Example</h3> <blockquote><code>
+ * <h2>Example</h2> <blockquote><code>
  * PathMapper pm = new PathMapper();<br>
  * <br>
  * pm.put("one","/");<br>

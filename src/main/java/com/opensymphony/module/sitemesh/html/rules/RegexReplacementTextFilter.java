@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 /**
  * TextFilter that substitutes content using a JDK 1.4 regular expression.
- * <h3>Example</h3> This will substitute 'Google:Blah' for a link to a google search.
+ * <h2>Example</h2> This will substitute 'Google:Blah' for a link to a google search.
  *
  * <pre>
  * HTMLProcessor processor = new HTMLProcessor(in, out);

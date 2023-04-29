@@ -49,7 +49,7 @@ import java.io.Writer;
  * All attributes of the <code>&lt;body&gt;</code> tag shall be added as properties with the <code>body</code> prefix.
  * </li>
  * </ul>
- * <h4>Example</h4>
+ * <h3>Example</h3>
  *
  * <pre>
  *   <xmp>
