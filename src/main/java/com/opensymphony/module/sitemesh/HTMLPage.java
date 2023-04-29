@@ -52,6 +52,7 @@ import java.io.Writer;
  * <h3>Example</h3>
  *
  * <pre>
+ * {@code
  *   <xmp>
  *     <html template="funky">
  *       <head>
@@ -71,6 +72,7 @@ import java.io.Writer;
  * meta.author=Bob
  * body.text=#ff00ff
  * body.bgcolor=green
+ * }
  * </pre>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
