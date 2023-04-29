@@ -85,6 +85,7 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
      * Set the content-type of the request and store it so it can be passed to the
      * {@link com.opensymphony.module.sitemesh.PageParser}.
      */
+    @Override
     public void setContentType(String type) {
         super.setContentType(type);
 
@@ -114,11 +115,13 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         }
         buffer = new Buffer(parserSelector.getPageParser(contentType), encoding);
         routablePrintWriter.updateDestination(new RoutablePrintWriter.DestinationFactory() {
+            @Override
             public PrintWriter activateDestination() {
                 return buffer.getWriter();
             }
         });
         routableServletOutputStream.updateDestination(new RoutableServletOutputStream.DestinationFactory() {
+            @Override
             public ServletOutputStream create() {
                 return buffer.getOutputStream();
             }
@@ -133,11 +136,13 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         parseablePage = false;
         buffer = null;
         routablePrintWriter.updateDestination(new RoutablePrintWriter.DestinationFactory() {
+            @Override
             public PrintWriter activateDestination() throws IOException {
                 return getResponse().getWriter();
             }
         });
         routableServletOutputStream.updateDestination(new RoutableServletOutputStream.DestinationFactory() {
+            @Override
             public ServletOutputStream create() throws IOException {
                 return getResponse().getOutputStream();
             }
@@ -147,6 +152,7 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     /**
      * Prevent content-length being set if page is parseable.
      */
+    @Override
     public void setContentLength(int contentLength) {
         if (!parseablePage)
             super.setContentLength(contentLength);
@@ -155,18 +161,21 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     /**
      * Prevent buffer from being flushed if this is a page being parsed.
      */
+    @Override
     public void flushBuffer() throws IOException {
-        if (!parseablePage)
+        if (!parseablePage) {
             super.flushBuffer();
+        }
     }
 
     /**
      * Prevent content-length being set if page is parseable.
      */
+    @Override
     public void setHeader(String name, String value) {
-        if (name.toLowerCase().equals("content-type")) { // ensure ContentType is always set through setContentType()
+        if (name.equalsIgnoreCase("content-type")) { // ensure ContentType is always set through setContentType()
             setContentType(value);
-        } else if (!parseablePage || !name.toLowerCase().equals("content-length")) {
+        } else if (!parseablePage || !name.equalsIgnoreCase("content-length")) {
             super.setHeader(name, value);
         }
     }
@@ -174,10 +183,11 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     /**
      * Prevent content-length being set if page is parseable.
      */
+    @Override
     public void addHeader(String name, String value) {
-        if (name.toLowerCase().equals("content-type")) { // ensure ContentType is always set through setContentType()
+        if (name.equalsIgnoreCase("content-type")) { // ensure ContentType is always set through setContentType()
             setContentType(value);
-        } else if (!parseablePage || !name.toLowerCase().equals("content-length")) {
+        } else if (!parseablePage || !name.equalsIgnoreCase("content-length")) {
             super.addHeader(name, value);
         }
     }
@@ -185,6 +195,7 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     /**
      * If 'not modified' (304) HTTP status is being sent - then abort parsing, as there shouldn't be any body
      */
+    @Override
     public void setStatus(int sc) {
         if (sc == HttpServletResponse.SC_NOT_MODIFIED) {
             aborted = true;
@@ -194,10 +205,12 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         super.setStatus(sc);
     }
 
+    @Override
     public ServletOutputStream getOutputStream() {
         return routableServletOutputStream;
     }
 
+    @Override
     public PrintWriter getWriter() {
         return routablePrintWriter;
     }
@@ -213,21 +226,23 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     public Page getPage() throws IOException {
         if (aborted || !parseablePage) {
             return null;
-        } else {
-            return buffer.parse();
         }
+        return buffer.parse();
     }
 
+    @Override
     public void sendError(int sc) throws IOException {
         aborted = true;
         super.sendError(sc);
     }
 
+    @Override
     public void sendError(int sc, String msg) throws IOException {
         aborted = true;
         super.sendError(sc, msg);
     }
 
+    @Override
     public void sendRedirect(String location) throws IOException {
         aborted = true;
         super.sendRedirect(location);
@@ -253,8 +268,8 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     public SitemeshBuffer getContents() throws IOException {
         if (aborted || !parseablePage) {
             return null;
-        } else {
-            return buffer.getContents();
         }
+        return buffer.getContents();
     }
+
 }

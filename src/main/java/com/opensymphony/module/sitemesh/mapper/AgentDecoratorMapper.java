@@ -80,6 +80,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
 
             if (decFile.isFile()) {
                 result = new DefaultDecorator(d.getName(), path, null) {
+                    @Override
                     public String getInitParameter(String paramName) {
                         return d.getInitParameter(paramName);
                     }

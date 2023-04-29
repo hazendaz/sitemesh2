@@ -42,24 +42,25 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public abstract class AbstractDecoratorMapper implements DecoratorMapper {
+
     /** Parent DecoratorMapper. */
-    protected DecoratorMapper parent = null;
+    protected DecoratorMapper parent;
 
     /** The config. */
-    protected Config config = null;
+    protected Config config;
 
-    /** Set parent. */
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         this.parent = parent;
         this.config = config;
     }
 
-    /** Delegate to parent. */
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         return parent.getDecorator(request, page);
     }
 
-    /** Delegate to parent. */
+    @Override
     public Decorator getNamedDecorator(HttpServletRequest request, String name) {
         return parent.getNamedDecorator(request, name);
     }
