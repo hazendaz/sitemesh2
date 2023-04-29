@@ -47,8 +47,8 @@ import javax.servlet.http.HttpServletRequest;
  * <code>parameter.value</code> property.
  * <p>
  * For example assuming parameter.name=confirm and parameter.value=true the URI
- * myurl.jsp?decorator=mydecorator&confirm=true will map the decorator mydecorator. where as the URIs
- * myurl.jsp?decorator=mydecorator and myurl.jsp?decorator=mydecorator&confirm=false will not return any decorator.
+ * myurl.jsp?decorator=mydecorator&amp;confirm=true will map the decorator mydecorator. where as the URIs
+ * myurl.jsp?decorator=mydecorator and myurl.jsp?decorator=mydecorator&amp;confirm=false will not return any decorator.
  *
  * @author <a href="mailto:mcannon@internet.com">Mike Cannon-Brookes</a>
  *
