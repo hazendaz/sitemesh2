@@ -46,6 +46,7 @@ public class ExternalDispatchedDecorator extends DispatchedDecorator {
         this.webApp = webApp;
     }
 
+    @Override
     protected ServletContext locateWebApp(ServletContext context) {
         ServletContext externalContext = context.getContext(webApp);
         if (externalContext != null) {

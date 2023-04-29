@@ -52,10 +52,12 @@ public class Content2HTMLPage implements HTMLPage {
         this.request = request;
     }
 
+    @Override
     public void writePage(Writer out) throws IOException {
         content.writeOriginal(out);
     }
 
+    @Override
     public String getPage() {
         try {
             StringWriter writer = new StringWriter();
@@ -66,10 +68,12 @@ public class Content2HTMLPage implements HTMLPage {
         }
     }
 
+    @Override
     public void writeBody(Writer out) throws IOException {
         content.writeBody(out);
     }
 
+    @Override
     public String getBody() {
         try {
             StringWriter writer = new StringWriter();
@@ -80,10 +84,12 @@ public class Content2HTMLPage implements HTMLPage {
         }
     }
 
+    @Override
     public void writeHead(Writer out) throws IOException {
         content.writeHead(out);
     }
 
+    @Override
     public String getHead() {
         try {
             StringWriter writer = new StringWriter();
@@ -94,14 +100,17 @@ public class Content2HTMLPage implements HTMLPage {
         }
     }
 
+    @Override
     public String getTitle() {
         return content.getTitle();
     }
 
+    @Override
     public String getProperty(String name) {
         return content.getProperty(name);
     }
 
+    @Override
     public int getIntProperty(String name) {
         try {
             return Integer.parseInt(noNull(getProperty(name)));
@@ -110,6 +119,7 @@ public class Content2HTMLPage implements HTMLPage {
         }
     }
 
+    @Override
     public long getLongProperty(String name) {
         try {
             return Long.parseLong(noNull(getProperty(name)));
@@ -130,6 +140,7 @@ public class Content2HTMLPage implements HTMLPage {
         return property == null ? "" : property;
     }
 
+    @Override
     public boolean getBooleanProperty(String name) {
         String property = getProperty(name);
         if (property == null || property.trim().length() == 0)
@@ -146,14 +157,17 @@ public class Content2HTMLPage implements HTMLPage {
         }
     }
 
+    @Override
     public boolean isPropertySet(String name) {
         return getProperty(name) != null;
     }
 
+    @Override
     public String[] getPropertyKeys() {
         return content.getPropertyKeys();
     }
 
+    @Override
     public Map getProperties() {
         Map result = new HashMap();
         String[] keys = content.getPropertyKeys();
@@ -163,10 +177,12 @@ public class Content2HTMLPage implements HTMLPage {
         return result;
     }
 
+    @Override
     public boolean isFrameSet() {
         return isPropertySet("frameset") && getProperty("frameset").equalsIgnoreCase("true");
     }
 
+    @Override
     public void setFrameSet(boolean frameset) {
         addProperty("frameset", frameset ? "true" : "false");
     }
@@ -187,6 +203,7 @@ public class Content2HTMLPage implements HTMLPage {
         this.request = request;
     }
 
+    @Override
     public void addProperty(String name, String value) {
         content.addProperty(name, value);
     }
