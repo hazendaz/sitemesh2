@@ -99,8 +99,8 @@ public class ContentBufferingResponse extends HttpServletResponseWrapper {
         SitemeshBuffer content = pageResponseWrapper.getContents();
         if (content != null) {
             return contentProcessor.build(content, webAppContext);
-        } else {
-            return null;
         }
+        return null;
     }
+
 }

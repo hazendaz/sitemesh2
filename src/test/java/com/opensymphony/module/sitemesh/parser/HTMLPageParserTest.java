@@ -19,6 +19,7 @@ import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.PageParser;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,7 +137,7 @@ public class HTMLPageParserTest extends TestCase {
     public void testProperties() throws Exception {
         Properties props = new Properties();
         String propsString = (String) blocks.get("PROPERTIES");
-        ByteArrayInputStream input = new ByteArrayInputStream(propsString.trim().getBytes(encoding));
+        ByteArrayInputStream input = new ByteArrayInputStream(propsString.trim().getBytes(Charset.forName(encoding)));
         props.load(input);
 
         String[] pageKeys = page.getPropertyKeys();

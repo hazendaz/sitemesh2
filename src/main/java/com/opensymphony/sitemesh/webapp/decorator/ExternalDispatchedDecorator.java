@@ -51,10 +51,10 @@ public class ExternalDispatchedDecorator extends DispatchedDecorator {
         ServletContext externalContext = context.getContext(webApp);
         if (externalContext != null) {
             return externalContext;
-        } else {
-            // in a security conscious environment, the servlet container
-            // may return null for a given URL
-            throw new SecurityException("Cannot obtain ServletContext for web-app : " + webApp);
         }
+        // in a security conscious environment, the servlet container
+        // may return null for a given URL
+        throw new SecurityException("Cannot obtain ServletContext for web-app: " + webApp);
     }
+
 }
