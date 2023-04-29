@@ -19,14 +19,18 @@ import org.apache.tapestry.Tapestry;
  * Because Tapestry templating works differently than JSP taglibs, the writeEntireProperty feature is not implemented
  * here. The built-in
  *
- * @Body component is most frequently used, to do something like this taglib example:
- *       <p/>
+ * <pre>
+ * {@code
+ *   &#64;Body component is most frequently used, to do something like this taglib example:
+ *       <p>
  *       <body bgcolor="White"<decorator:getProperty property="body.onload" writeEntireProperty="true" />>
- *       <p/>
+ *       <p>
  *       it would be done like this in Tapestry:
- *       <p/>
+ *       <p>
  *       <body jwcid="@Body" bgcolor="White" onload=
  *       "ognl:@org.opensymphony.module.sitemesh.tapestry@Util.getProperty('onload', requestCycle)"/>
+ * }
+ * </pre>
  *
  * @author Erik Hatcher
  */
