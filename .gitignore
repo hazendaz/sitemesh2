@@ -1,8 +1,8 @@
-build
-target
-out
-*.iml
-*.ipr
-*.iws
-.idea
-dist
+/.idea
+/.settings
+/.classpath
+/.project
+/target
+.mvn/wrapper/maven-wrapper.jar
+*.releaseBackup
+release.properties
