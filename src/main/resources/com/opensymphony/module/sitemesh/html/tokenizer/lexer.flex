@@ -27,7 +27,7 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 %{
     // Additional methods to add to generated Lexer to aid in error reporting.
     protected int position() { return (int) yychar; }
-    protected int length()   { return yy_markedPos - yy_startRead; }
+    protected int length()   { return zzMarkedPos - zzStartRead; }
     protected int line()     { return -1; /*yyline;*/ }   // useful for debugging, but adds overhead
     protected int column()   { return -1; /*yycolumn;*/ } // useful for debugging, but adds overhead
     protected void resetLexerState() { yybegin(YYINITIAL); }
