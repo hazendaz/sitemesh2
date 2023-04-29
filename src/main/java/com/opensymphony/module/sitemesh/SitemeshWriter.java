@@ -39,5 +39,5 @@ public interface SitemeshWriter {
      *
      * @return The underlying buffer
      */
-    public SitemeshBuffer getSitemeshBuffer();
+    SitemeshBuffer getSitemeshBuffer();
 }

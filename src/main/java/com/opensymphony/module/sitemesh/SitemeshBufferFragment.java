@@ -18,7 +18,8 @@ import com.opensymphony.module.sitemesh.html.util.StringSitemeshBuffer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * A fragment of a sitemesh buffer. This includes a start and a length, and may contain a list of deleted sections of
@@ -204,7 +205,7 @@ public class SitemeshBufferFragment {
          * Instantiates a new builder.
          */
         private Builder() {
-            this.deletions = new TreeMap<Integer, Integer>();
+            this.deletions = new TreeMap<>();
         }
 
         /**
@@ -217,7 +218,7 @@ public class SitemeshBufferFragment {
             this.buffer = DefaultSitemeshBuffer.builder(fragment.buffer);
             this.start = fragment.start;
             this.length = fragment.length;
-            this.deletions = new TreeMap<Integer, Integer>(fragment.deletions);
+            this.deletions = new TreeMap<>(fragment.deletions);
         }
 
         /**

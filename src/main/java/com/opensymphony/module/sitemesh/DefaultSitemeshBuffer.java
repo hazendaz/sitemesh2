@@ -15,7 +15,8 @@ package com.opensymphony.module.sitemesh;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The default implementation of sitemesh buffer.
@@ -69,6 +70,7 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         this.bufferFragments = bufferFragments;
     }
 
+    @Override
     public void writeTo(Writer writer, int start, int length) throws IOException {
         int pos = start;
         for (Map.Entry<Integer, SitemeshBufferFragment> entry : bufferFragments.entrySet()) {
@@ -88,14 +90,16 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         }
         // Write out the remaining buffer
         if (pos < start + length) {
-            writer.write(buffer, pos, (start + length) - pos);
+            writer.write(buffer, pos, start + length - pos);
         }
     }
 
+    @Override
     public int getTotalLength() {
         return getTotalLength(0, length);
     }
 
+    @Override
     public int getTotalLength(int start, int length) {
         int total = length;
 
@@ -112,14 +116,17 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         return total;
     }
 
+    @Override
     public int getBufferLength() {
         return length;
     }
 
+    @Override
     public char[] getCharArray() {
         return buffer;
     }
 
+    @Override
     public boolean hasFragments() {
         return !bufferFragments.isEmpty();
     }
@@ -144,9 +151,8 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
     public static Builder builder(SitemeshBuffer sitemeshBuffer) {
         if (sitemeshBuffer instanceof DefaultSitemeshBuffer) {
             return new Builder((DefaultSitemeshBuffer) sitemeshBuffer);
-        } else {
-            return new Builder(sitemeshBuffer);
         }
+        return new Builder(sitemeshBuffer);
     }
 
     /**
@@ -167,7 +173,7 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
          * Instantiates a new builder.
          */
         private Builder() {
-            this.fragments = new TreeMap<Integer, SitemeshBufferFragment>();
+            this.fragments = new TreeMap<>();
         }
 
         /**
@@ -179,7 +185,7 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         private Builder(DefaultSitemeshBuffer buffer) {
             this.buffer = buffer.buffer;
             this.length = buffer.length;
-            this.fragments = new TreeMap<Integer, SitemeshBufferFragment>(buffer.bufferFragments);
+            this.fragments = new TreeMap<>(buffer.bufferFragments);
         }
 
         /**
@@ -191,7 +197,7 @@ public class DefaultSitemeshBuffer implements SitemeshBuffer {
         private Builder(SitemeshBuffer buffer) {
             this.buffer = buffer.getCharArray();
             this.length = buffer.getBufferLength();
-            this.fragments = new TreeMap<Integer, SitemeshBufferFragment>();
+            this.fragments = new TreeMap<>();
         }
 
         /**

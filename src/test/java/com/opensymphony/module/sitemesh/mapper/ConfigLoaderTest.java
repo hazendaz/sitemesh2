@@ -81,8 +81,9 @@ public class ConfigLoaderTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        if (tempConfigFile != null)
+        if (tempConfigFile != null) {
             tempConfigFile.delete();
+        }
         configLoader = null;
     }
 

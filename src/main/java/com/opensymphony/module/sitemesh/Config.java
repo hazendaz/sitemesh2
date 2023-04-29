@@ -49,8 +49,9 @@ public class Config {
      *            the servlet config
      */
     public Config(ServletConfig servletConfig) {
-        if (servletConfig == null)
+        if (servletConfig == null) {
             throw new NullPointerException("ServletConfig cannot be null");
+        }
         this.servletConfig = servletConfig;
         this.configFile = servletConfig.getInitParameter("configFile");
     }
@@ -62,8 +63,9 @@ public class Config {
      *            the filter config
      */
     public Config(FilterConfig filterConfig) {
-        if (filterConfig == null)
+        if (filterConfig == null) {
             throw new NullPointerException("FilterConfig cannot be null");
+        }
         this.filterConfig = filterConfig;
         this.configFile = filterConfig.getInitParameter("configFile");
     }

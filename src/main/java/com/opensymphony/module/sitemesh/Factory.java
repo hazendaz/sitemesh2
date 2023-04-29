@@ -62,8 +62,8 @@ public abstract class Factory implements PageParserSelector {
                     "com.opensymphony.module.sitemesh.factory.DefaultFactory");
             try {
                 Class cls = ClassLoaderUtil.loadClass(factoryClass, config.getClass());
-                Constructor con = cls.getConstructor(new Class[] { Config.class });
-                instance = (Factory) con.newInstance(new Config[] { config });
+                Constructor con = cls.getConstructor(Config.class);
+                instance = (Factory) con.newInstance(config);
                 config.getServletContext().setAttribute(SITEMESH_FACTORY, instance);
             } catch (InvocationTargetException e) {
                 throw new FactoryException("Cannot construct Factory : " + factoryClass, e.getTargetException());
@@ -101,9 +101,11 @@ public abstract class Factory implements PageParserSelector {
      *
      * @return Appropriate <code>PageParser</code> for reading data
      */
+    @Override
     public abstract PageParser getPageParser(String contentType);
 
     /** Determine whether a Page of given content-type should be parsed or not. */
+    @Override
     public abstract boolean shouldParsePage(String contentType);
 
     /**
@@ -136,10 +138,10 @@ public abstract class Factory implements PageParserSelector {
                 ctx.close();
                 result = (String) PortableRemoteObject.narrow(o, String.class); // rmi-iiop friendly.
             }
-        } catch (Exception e) {
-        } // failed - don't moan, just return default.
-        catch (NoClassDefFoundError e) {
-        } // to deal with restricted class loaders (i.e. on AppEngine).
+        } catch (Exception | NoClassDefFoundError e) {
+            // failed - don't moan, just return default.
+        }
+        // to deal with restricted class loaders (i.e. on AppEngine).
         return result == null || result.trim().length() == 0 ? defaultValue : result;
     }
 }

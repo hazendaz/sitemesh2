@@ -31,21 +31,45 @@ import java.io.PrintWriter;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class FactoryException extends RuntimeException {
-    protected Throwable exception = null;
 
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
+
+    /** The exception. */
+    protected Throwable exception;
+
+    /**
+     * Instantiates a new factory exception.
+     */
     public FactoryException() {
         super();
     }
 
+    /**
+     * Instantiates a new factory exception.
+     *
+     * @param msg the msg
+     */
     public FactoryException(String msg) {
         super(msg);
     }
 
+    /**
+     * Instantiates a new factory exception.
+     *
+     * @param e the e
+     */
     public FactoryException(Exception e) {
         super();
         exception = e;
     }
 
+    /**
+     * Instantiates a new factory exception.
+     *
+     * @param msg the msg
+     * @param e the e
+     */
     public FactoryException(String msg, Throwable e) {
         super(msg + ": " + e);
         exception = e;
@@ -53,6 +77,8 @@ public class FactoryException extends RuntimeException {
 
     /**
      * Get the original cause of the Exception. Returns null if not known.
+     *
+     * @return the root cause
      */
     public Throwable getRootCause() {
         return exception;

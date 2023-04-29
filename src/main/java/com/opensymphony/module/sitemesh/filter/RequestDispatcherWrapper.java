@@ -32,8 +32,8 @@ import javax.servlet.ServletResponse;
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  */
 public class RequestDispatcherWrapper implements RequestDispatcher {
-    private RequestDispatcher rd = null;
-    private boolean done = false;
+    private RequestDispatcher rd;
+    private boolean done;
 
     public RequestDispatcherWrapper(RequestDispatcher rd) {
         this.rd = rd;

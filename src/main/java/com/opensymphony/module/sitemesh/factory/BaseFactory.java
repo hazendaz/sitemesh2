@@ -39,21 +39,21 @@ import java.util.Properties;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public abstract class BaseFactory extends Factory {
-    /** ServletConfig or FilterConfig. */
-    protected Config config = null;
+    /** The config is of type ServletConfig or FilterConfig. */
+    protected Config config;
 
     /**
      * Instance of {@link com.opensymphony.module.sitemesh.DecoratorMapper}. Because it is thread-safe, it can be shared
      * by multiple clients. This is only the last DecoratorMapper in the chain, and all parents will be automatically
      * delegated to it.
      */
-    protected DecoratorMapper decoratorMapper = null;
+    protected DecoratorMapper decoratorMapper;
 
     /** Map that associates content-types with PageParser instances. */
-    protected Map pageParsers = null;
+    protected Map pageParsers;
 
     /** A map of paths that are excluded from decoration */
-    protected PathMapper excludeUrls = null;
+    protected PathMapper excludeUrls;
 
     /**
      * Constructor for default implementation of Factory. Should never be called by client. Singleton instance should be

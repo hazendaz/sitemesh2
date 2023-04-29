@@ -170,6 +170,7 @@ public interface Page {
      *
      * @deprecated Since Servlet 2.4 API, this is unnecessary - just use the stand HttpServletRequest instance.
      */
+    @Deprecated
     HttpServletRequest getRequest();
 
     /**

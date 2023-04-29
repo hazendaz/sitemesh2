@@ -42,6 +42,8 @@ import freemarker.template.TemplateModel;
  */
 public class FreemarkerDecoratorServlet extends FreemarkerServlet {
 
+    private static final long serialVersionUID = 1L;
+
     @Override
     protected boolean preTemplateProcess(HttpServletRequest request, HttpServletResponse response, Template template,
             TemplateModel templateModel) throws ServletException, IOException {
