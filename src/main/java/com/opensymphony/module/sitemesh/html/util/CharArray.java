@@ -203,10 +203,10 @@ public class CharArray {
     /**
      * Compares the supplied uppercase string with the contents of the character array, starting at the offset
      * specified. This is a specialized method to help speed up the FastPageParser slightly.
-     * <p/>
+     * <p>
      * The supplied string is assumed to contain only uppercase ASCII characters. The offset indicates the offset into
      * the character array that the comparison should start from.
-     * <p/>
+     * <p>
      * If (and only if) the supplied string and the relevant portion of the character array are considered equal, this
      * method will return <tt>true</tt>.
      */

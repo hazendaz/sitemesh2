@@ -24,11 +24,10 @@ import org.apache.tapestry.valid.RenderString;
 /**
  * This utility class gives easy access to the SiteMesh page, with convenience methods for title and property. A common
  * usage would be with OGNL expressions like this:
- * <p/>
  * <html jwcid="@Shell" title="ognl:@com.opensymphony.module.sitemesh.tapestry.Util@getTitle()">
- * <p/>
+ * <p>
  * In future versions of Tapestry, thanks to HiveMind integration, this will become a lot cleaner, probably like this:
- * <p/>
+ * <p>
  * <html jwcid="@Shell" title="sitemesh:title">
  *
  * @author Erik Hatcher

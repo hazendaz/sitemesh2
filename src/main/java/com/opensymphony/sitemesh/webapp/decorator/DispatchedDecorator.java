@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Decorator that dispatches to another path in the Servlet Container (such as a JSP or path mapped to a Servlet).
- * <p/>
+ * <p>
  * The Content and SiteMeshContext objects are passed to the decorator using the HttpServletRequest attributes
  * {@link #CONTENT_KEY} and {@link #CONTEXT_KEY}.
- * <p/>
+ * <p>
  * To dispatch to a decorator in another web-app on the same server, use {@link ExternalDispatchedDecorator}.
  *
  * @author Joe Walnes
