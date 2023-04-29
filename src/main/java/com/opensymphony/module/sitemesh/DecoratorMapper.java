@@ -35,8 +35,6 @@ import javax.servlet.http.HttpServletRequest;
  * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public interface DecoratorMapper {
     /**

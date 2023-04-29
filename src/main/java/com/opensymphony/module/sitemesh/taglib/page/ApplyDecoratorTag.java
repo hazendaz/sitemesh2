@@ -65,8 +65,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.10 $
  */
 public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstants {
     private String page = null;

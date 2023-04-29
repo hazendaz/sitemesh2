@@ -36,8 +36,6 @@ import javax.servlet.jsp.PageContext;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.1 $
- *
  * @see UsePageTEI
  * @see UseHTMLPageTEI
  */

@@ -19,7 +19,6 @@ import testsuite.tester.WebTest;
 
 /**
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
- * @version $Revision: 1.3 $
  */
 public class VelocityDecoratorTest  extends WebTest {
     public void testVelocityDecoratedPage() throws Exception {

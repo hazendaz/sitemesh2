@@ -29,8 +29,6 @@ import com.opensymphony.module.sitemesh.taglib.AbstractTag;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.3 $
- *
  * @see com.opensymphony.module.sitemesh.HTMLPage#getTitle()
  */
 public class TitleTag extends AbstractTag {

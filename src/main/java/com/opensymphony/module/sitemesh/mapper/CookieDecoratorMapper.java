@@ -41,8 +41,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Paul Hammant
  *
- * @version $Revision: 1.2 $
- *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class CookieDecoratorMapper extends AbstractDecoratorMapper {

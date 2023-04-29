@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public class DebugResponseWrapper extends HttpServletResponseWrapper {
     private static int lastCount = 0;

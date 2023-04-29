@@ -33,8 +33,6 @@ import java.util.Map;
  * HTMLPage implementation produced by FastPageParser.
  *
  * @author <a href="mailto:salaman@qoretech.com">Victor Salaman</a>
- *
- * @version $Revision: 1.5 $
  */
 public final class FastPage extends AbstractHTMLPage {
     private String head;

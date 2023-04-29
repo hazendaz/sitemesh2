@@ -33,8 +33,6 @@ import java.nio.charset.CodingErrorAction;
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
  * @author <a href="mailto:hani@formicary.net">Hani Suleiman</a>
  * @author Joe Walnes
- *
- * @version $Revision: 1.1 $
  */
 public class TextEncoder {
 

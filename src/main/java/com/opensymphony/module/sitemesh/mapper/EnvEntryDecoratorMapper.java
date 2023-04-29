@@ -48,8 +48,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  *
- * @version $Revision: 1.3 $
- *
  * @see com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper
  */
 public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {

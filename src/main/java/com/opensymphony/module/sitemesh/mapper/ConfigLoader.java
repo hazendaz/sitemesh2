@@ -65,8 +65,6 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
  *
- * @version $Revision: 1.8 $
- *
  * @see com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper
  * @see com.opensymphony.module.sitemesh.mapper.PathMapper
  */

@@ -33,8 +33,6 @@ import java.util.Map;
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.1 $
- *
  * @see com.opensymphony.module.sitemesh.Decorator
  */
 public class DefaultDecorator implements Decorator {

@@ -41,8 +41,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.2 $
- *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class FrameSetDecoratorMapper extends AbstractDecoratorMapper {

@@ -32,8 +32,6 @@ import java.util.Map;
  * <h3>Usage:</h3> <code>if (Container.get() == Container.TOMCAT) { .... }</code>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public final class Container {
     public static final int UNKNOWN = 0;

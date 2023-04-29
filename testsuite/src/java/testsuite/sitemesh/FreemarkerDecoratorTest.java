@@ -19,7 +19,6 @@ import testsuite.tester.WebTest;
 
 /**
  * @author <a href="mailto:richard.hallier@freesbee.fr">Richard Hallier</a>
- * @version $Revision: 1.2 $
  */
 public class FreemarkerDecoratorTest  extends WebTest {
     public void testFreemarkerDecoratedPage() throws Exception {

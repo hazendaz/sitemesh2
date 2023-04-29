@@ -42,8 +42,6 @@ import javax.servlet.http.HttpSession;
  *
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
  *
- * @version $Revision: 1.3 $
- *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class RobotDecoratorMapper extends AbstractDecoratorMapper {

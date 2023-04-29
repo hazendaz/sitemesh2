@@ -30,8 +30,6 @@ import com.opensymphony.module.sitemesh.taglib.AbstractTag;
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  * @author <a href="scott@atlassian.com">Scott Farquhar</a>
  *
- * @version $Revision: 1.2 $
- *
  * @see com.opensymphony.module.sitemesh.HTMLPage#writeBody(java.io.Writer)
  */
 public class BodyTag extends AbstractTag {

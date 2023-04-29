@@ -56,8 +56,6 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:pathos@pandora.be">Mathias Bogaert</a>
- *
- * @version $Revision: 1.8 $
  */
 public class DefaultFactory extends BaseFactory {
     String configFileName;

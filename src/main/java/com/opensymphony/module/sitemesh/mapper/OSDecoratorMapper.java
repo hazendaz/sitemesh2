@@ -44,8 +44,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author <a href="mailto:schepdawg@yahoo.com">Adam P. Schepis</a>
  *
- * @version $Revision: 1.4 $
- *
  * @see com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper
  */
 public class OSDecoratorMapper extends AbstractDecoratorMapper {

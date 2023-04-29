@@ -32,8 +32,6 @@ import java.io.Writer;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.4 $
- *
  * @see com.opensymphony.module.sitemesh.Page#getProperty(java.lang.String)
  */
 public class PropertyTag extends AbstractTag {

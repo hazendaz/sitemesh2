@@ -38,8 +38,6 @@ import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
  * Servlet that allows Velocity templates to be used as decorators.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.9 $
  */
 public class VelocityDecoratorServlet extends VelocityViewServlet {
     public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context)

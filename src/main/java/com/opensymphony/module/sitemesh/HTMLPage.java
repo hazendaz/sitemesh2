@@ -74,8 +74,6 @@ import java.io.Writer;
  * </pre>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.3 $
  */
 public interface HTMLPage extends Page {
 

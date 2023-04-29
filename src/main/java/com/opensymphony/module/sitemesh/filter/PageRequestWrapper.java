@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * Will wrap a request for the {@link RequestDispatcherWrapper}.
  *
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
- *
- * @version $Revision: 1.4 $
  */
 public class PageRequestWrapper extends HttpServletRequestWrapper {
     private static final boolean SUPPRESS_IF_MODIFIED_HEADER = true; // todo - pull this from a config file

@@ -37,8 +37,6 @@ import java.io.Writer;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.5 $
- *
  * @see com.opensymphony.module.sitemesh.parser.AbstractPage
  * @see com.opensymphony.module.sitemesh.HTMLPage
  */

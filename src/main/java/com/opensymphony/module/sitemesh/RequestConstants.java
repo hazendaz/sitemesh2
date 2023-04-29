@@ -28,8 +28,6 @@ package com.opensymphony.module.sitemesh;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.3 $
- *
  * @see com.opensymphony.sitemesh.webapp.SiteMeshFilter
  * @see com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag
  * @see com.opensymphony.module.sitemesh.mapper.InlineDecoratorMapper

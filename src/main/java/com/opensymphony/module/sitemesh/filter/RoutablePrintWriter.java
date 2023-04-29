@@ -29,8 +29,6 @@ import java.io.Writer;
  * point. The destination can be passed in using a factory, so it will not be created until it's actually needed.
  *
  * @author Joe Walnes
- *
- * @version $Revision: 1.1 $
  */
 public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
 

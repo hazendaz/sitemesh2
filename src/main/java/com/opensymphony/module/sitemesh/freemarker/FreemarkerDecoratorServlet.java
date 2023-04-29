@@ -39,8 +39,6 @@ import freemarker.template.TemplateModel;
  * Servlet that allows Freemarker templates to be used as decorators.
  *
  * @author <a href="mailto:richard.hallier@freesbee.fr">Richard HALLIER</a>
- *
- * @version $Revision: 1.2 $
  */
 public class FreemarkerDecoratorServlet extends FreemarkerServlet {
     /*

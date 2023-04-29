@@ -39,8 +39,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mcannon@internet.com">Mike Cannon-Brookes</a>
  *
- * @version $Revision: 1.2 $
- *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  * @see com.opensymphony.module.sitemesh.mapper.DefaultDecorator
  * @see com.opensymphony.module.sitemesh.mapper.ConfigLoader

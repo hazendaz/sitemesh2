@@ -32,8 +32,6 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.1 $
  */
 public interface Decorator {
     /**

@@ -30,8 +30,6 @@ import javax.servlet.ServletResponse;
  * @see com.opensymphony.module.sitemesh.taglib.page.ApplyDecoratorTag
  *
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
- *
- * @version $Revision: 1.2 $
  */
 public class RequestDispatcherWrapper implements RequestDispatcher {
     private RequestDispatcher rd = null;

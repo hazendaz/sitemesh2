@@ -26,8 +26,6 @@ import javax.servlet.ServletOutputStream;
  * needed.
  *
  * @author Joe Walnes
- *
- * @version $Revision: 1.1 $
  */
 public class RoutableServletOutputStream extends ServletOutputStream {
 

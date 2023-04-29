@@ -30,8 +30,6 @@ import javax.servlet.ServletContext;
  * Common interface to ServletConfig and FilterConfig (since javax.servlet.Config was removed from 2.3 spec).
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public class Config {
     private ServletConfig servletConfig;

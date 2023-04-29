@@ -38,8 +38,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.1 $
- *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class NullDecoratorMapper implements DecoratorMapper {

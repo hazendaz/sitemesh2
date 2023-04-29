@@ -46,8 +46,6 @@ import java.util.Map;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:mcannon@internet.com">Mike Cannon-Brookes</a>
  * @author <a href="mailto:hani@formicary.net">Hani Suleiman</a>
- *
- * @version $Revision: 1.3 $
  */
 public class PathMapper {
     private Map mappings = new HashMap();

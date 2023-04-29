@@ -34,8 +34,6 @@ import javax.servlet.jsp.JspException;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.3 $
- *
  * @see com.opensymphony.module.sitemesh.HTMLPage#writeHead(java.io.Writer)
  */
 public class HeadTag extends AbstractTag {

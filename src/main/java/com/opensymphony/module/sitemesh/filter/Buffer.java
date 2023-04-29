@@ -29,8 +29,6 @@ import javax.servlet.ServletOutputStream;
  * later be accessed as a parsed Page object.
  *
  * @author Joe Walnes
- *
- * @version $Revision: 1.3 $
  */
 public class Buffer {
 

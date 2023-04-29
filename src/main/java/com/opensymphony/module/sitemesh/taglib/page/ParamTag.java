@@ -29,8 +29,6 @@ import javax.servlet.jsp.tagext.Tag;
  * Add a parameter to the inline Decorator, as if specified in the Page.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public class ParamTag extends BodyTagSupport {
     private String name;

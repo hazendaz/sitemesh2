@@ -29,8 +29,6 @@ import java.io.PrintWriter;
  * This RuntimeException is thrown by the Factory if it cannot initialize or perform an appropriate function.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public class FactoryException extends RuntimeException {
     protected Throwable exception = null;

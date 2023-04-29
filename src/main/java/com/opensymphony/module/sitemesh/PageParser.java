@@ -37,8 +37,6 @@ import java.io.IOException;
  * </p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.2 $
  */
 public interface PageParser {
 

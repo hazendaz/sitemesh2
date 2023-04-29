@@ -57,8 +57,6 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author <a href="mailto:mcannon@internet.com">Mike Cannon-Brookes</a>
  *
- * @version $Revision: 1.3 $
- *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class ParameterDecoratorMapper extends AbstractDecoratorMapper {

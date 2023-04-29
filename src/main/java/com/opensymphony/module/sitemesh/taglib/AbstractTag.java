@@ -37,8 +37,6 @@ import javax.servlet.jsp.tagext.Tag;
  * Convenience implementation of Tag containing generice methods required by all (or most) taglibs.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.4 $
  */
 public abstract class AbstractTag extends BodyTagSupport implements RequestConstants {
     protected PageContext pageContext;

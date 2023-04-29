@@ -36,8 +36,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
- *
- * @version $Revision: 1.17 $
  */
 public class PageResponseWrapper extends HttpServletResponseWrapper {
 

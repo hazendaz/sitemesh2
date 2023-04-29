@@ -40,8 +40,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.6 $
- *
  * @see com.opensymphony.module.sitemesh.Page
  */
 public abstract class AbstractPage implements Page {

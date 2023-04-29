@@ -42,8 +42,6 @@ import java.util.Map;
  *
  * @author <a href="mailto:salaman@qoretech.com">Victor Salaman</a>
  *
- * @version $Revision: 1.13 $
- *
  * @deprecated Use HTMLPageParser instead - it performs better and is more extensible.
  */
 public final class FastPageParser implements PageParser {

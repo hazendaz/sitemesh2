@@ -37,8 +37,6 @@ import java.util.Properties;
  * Base Factory implementation. Provides utility methods for implementation.
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- *
- * @version $Revision: 1.9 $
  */
 public abstract class BaseFactory extends Factory {
     /** ServletConfig or FilterConfig. */

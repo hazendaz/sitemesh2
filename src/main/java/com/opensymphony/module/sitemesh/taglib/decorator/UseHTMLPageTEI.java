@@ -27,8 +27,6 @@ package com.opensymphony.module.sitemesh.taglib.decorator;
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  *
- * @version $Revision: 1.1 $
- *
  * @see UsePageTag
  * @see UsePageTEI
  */
