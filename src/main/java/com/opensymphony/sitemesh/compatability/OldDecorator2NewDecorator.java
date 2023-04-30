@@ -58,7 +58,7 @@ public class OldDecorator2NewDecorator extends BaseWebAppDecorator implements Re
         // see if the URI path (webapp) is set
         // in a security conscious environment, the servlet container
         // may return null for a given URL
-        if ((oldDecorator.getURIPath() != null) && (servletContext.getContext(oldDecorator.getURIPath()) != null)) {
+        if (oldDecorator.getURIPath() != null && servletContext.getContext(oldDecorator.getURIPath()) != null) {
             servletContext = servletContext.getContext(oldDecorator.getURIPath());
         }
         // get the dispatcher for the decorator

@@ -183,7 +183,7 @@ public class ChainingBufferTest extends TestCase {
      * @return the sitemesh buffer
      */
     private SitemeshBuffer newSitemeshBuffer(String content, int pos1, SitemeshBufferFragment frag1) {
-        TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<Integer, SitemeshBufferFragment>();
+        TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<>();
         fragments.put(pos1, frag1);
         return new DefaultSitemeshBuffer(content.toCharArray(), content.length(), fragments);
     }
@@ -206,7 +206,7 @@ public class ChainingBufferTest extends TestCase {
      */
     private SitemeshBuffer newSitemeshBuffer(String content, int pos1, SitemeshBufferFragment frag1, int pos2,
             SitemeshBufferFragment frag2) {
-        TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<Integer, SitemeshBufferFragment>();
+        TreeMap<Integer, SitemeshBufferFragment> fragments = new TreeMap<>();
         fragments.put(pos1, frag1);
         fragments.put(pos2, frag2);
         return new DefaultSitemeshBuffer(content.toCharArray(), content.length(), fragments);
@@ -238,22 +238,6 @@ public class ChainingBufferTest extends TestCase {
      */
     private SitemeshBufferFragment newBufferFragment(String content, int start, int length) {
         return new SitemeshBufferFragment(newSitemeshBuffer(content), start, length);
-    }
-
-    /**
-     * New buffer fragment.
-     *
-     * @param content
-     *            the content
-     * @param pos1
-     *            the pos 1
-     * @param frag1
-     *            the frag 1
-     *
-     * @return the sitemesh buffer fragment
-     */
-    private SitemeshBufferFragment newBufferFragment(String content, int pos1, SitemeshBufferFragment frag1) {
-        return new SitemeshBufferFragment(newSitemeshBuffer(content, pos1, frag1), 0, content.length());
     }
 
     /**

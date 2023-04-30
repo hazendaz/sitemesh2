@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * HTML Tokenizer Package.
+ */
 package com.opensymphony.module.sitemesh.html.tokenizer;

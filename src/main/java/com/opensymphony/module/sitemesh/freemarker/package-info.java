@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Freemarker Package.
+ */
 package com.opensymphony.module.sitemesh.freemarker;

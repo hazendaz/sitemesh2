@@ -58,11 +58,7 @@ public class HTMLProcessorTest extends TestCase {
 
         final StringBuilder stateLog = new StringBuilder();
 
-        defaultState.addListener(new StateChangeListener() {
-            public void stateFinished() {
-                stateLog.append("finished");
-            }
-        });
+        defaultState.addListener(() -> stateLog.append("finished"));
 
         htmlProcessor.process();
         assertEquals("finished", stateLog.toString());
@@ -91,6 +87,7 @@ public class HTMLProcessorTest extends TestCase {
     public void testAllowsRulesToModifyAttributes() throws IOException {
         HTMLProcessor processor = createProcessor("<hello><a href=\"modify-me\">world</a></hello>");
         processor.addRule(new BasicRule("a") {
+            @Override
             public void process(Tag tag) {
                 currentBuffer().delete(tag.getPosition(), tag.getLength());
                 CustomTag customTag = new CustomTag(tag);
@@ -115,16 +112,8 @@ public class HTMLProcessorTest extends TestCase {
      */
     public void testSupportsChainedFilteringOfTextContent() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>world</hello>");
-        processor.addTextFilter(new TextFilter() {
-            public String filter(String text) {
-                return text.toUpperCase();
-            }
-        });
-        processor.addTextFilter(new TextFilter() {
-            public String filter(String text) {
-                return text.replaceAll("O", "o");
-            }
-        });
+        processor.addTextFilter(text -> text.toUpperCase());
+        processor.addTextFilter(text -> text.replace('O', 'o'));
 
         processor.process();
         assertEquals("<HELLo>WoRLD</HELLo>", body.build().getStringContent());
@@ -141,11 +130,7 @@ public class HTMLProcessorTest extends TestCase {
         State capsState = new State();
         processor.addRule(new StateTransitionRule("capitalism", capsState, true));
 
-        capsState.addTextFilter(new TextFilter() {
-            public String filter(String text) {
-                return text.toUpperCase();
-            }
-        });
+        capsState.addTextFilter(text -> text.toUpperCase());
 
         processor.process();
         assertEquals("la la<br> la la <capitalism>LAAAA<BR> LAAAA</capitalism> la la", body.build().getStringContent());
@@ -161,10 +146,12 @@ public class HTMLProcessorTest extends TestCase {
         String html = "<h1>Headline</h1>";
         HTMLProcessor htmlProcessor = createProcessor(html);
         htmlProcessor.addRule(new BasicRule() {
+            @Override
             public boolean shouldProcess(String tag) {
                 return tag.equalsIgnoreCase("h1");
             }
 
+            @Override
             public void process(Tag tag) {
                 if (tag.getType() == Tag.OPEN) {
                     currentBuffer().delete(tag.getPosition(), tag.getLength());

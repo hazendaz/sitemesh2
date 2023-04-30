@@ -30,6 +30,7 @@ public class ConfigLoaderTest extends TestCase {
     /** The temp config file. */
     private File tempConfigFile;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -86,6 +87,7 @@ public class ConfigLoaderTest extends TestCase {
         configLoader = new ConfigLoader(tempConfigFile);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         if (tempConfigFile != null) {
             tempConfigFile.delete();

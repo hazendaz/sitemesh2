@@ -18,9 +18,24 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.PageParser;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +68,7 @@ public class HTMLPageParserTest extends TestCase {
         Properties props = new Properties();
         props.load(new FileInputStream("src/parser-tests/parsers.properties"));
 
-        Collection<String> parsers = new ArrayList<String>();
+        Collection<String> parsers = new ArrayList<>();
         for (String key : props.stringPropertyNames()) {
             Matcher matcher = PARSER_PATTERN.matcher(key);
             if (matcher.matches()) {
@@ -67,7 +82,7 @@ public class HTMLPageParserTest extends TestCase {
             PageParser parser = parserClass.newInstance();
 
             String filesPath = props.getProperty("parser." + p + ".tests", "src/parser-tests");
-            List<File> files = new ArrayList<File>(Arrays.asList(listParserTests(new File(filesPath))));
+            List<File> files = new ArrayList<>(Arrays.asList(listParserTests(new File(filesPath))));
             Collections.sort(files);
 
             TestSuite suiteForParser = new TestSuite(name);
@@ -119,6 +134,7 @@ public class HTMLPageParserTest extends TestCase {
         encoding = "UTF8";
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // read blocks from input file.
@@ -199,8 +215,7 @@ public class HTMLPageParserTest extends TestCase {
         assertEquals(file.getName() + " : Unexpected number of page properties [" + join(pageKeys) + "]", props.size(),
                 pageKeys.length);
 
-        for (int i = 0; i < pageKeys.length; i++) {
-            String pageKey = pageKeys[i];
+        for (String pageKey : pageKeys) {
             String blockValue = props.getProperty(pageKey);
             String pageValue = page.getProperty(pageKey);
             assertEquals(file.getName() + ": " + pageKey, blockValue == null ? null : blockValue.trim(),
@@ -233,14 +248,7 @@ public class HTMLPageParserTest extends TestCase {
      * @return the string
      */
     private String join(String[] values) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < values.length; i++) {
-            if (i > 0) {
-                result.append(',');
-            }
-            result.append(values[i]);
-        }
-        return result.toString();
+        return String.join(",", values);
     }
 
     // -------------------------------------------------
@@ -265,11 +273,8 @@ public class HTMLPageParserTest extends TestCase {
                 ignoreFileNames.add(line);
             }
         }
-        return dir.listFiles(new FilenameFilter() {
-            public boolean accept(File currentDir, String name) {
-                return name.startsWith("test") && !ignoreFileNames.contains(name);
-            }
-        });
+        return dir.listFiles(
+                (FilenameFilter) (currentDir, name) -> name.startsWith("test") && !ignoreFileNames.contains(name));
     }
 
     /**
@@ -312,11 +317,9 @@ public class HTMLPageParserTest extends TestCase {
                 }
                 blockName = line.substring(4, line.length() - 4);
                 blockContents = new StringBuilder();
-            } else {
-                if (blockName != null) {
-                    blockContents.append(line);
-                    blockContents.append('\n');
-                }
+            } else if (blockName != null) {
+                blockContents.append(line);
+                blockContents.append('\n');
             }
         }
 

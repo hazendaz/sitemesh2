@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Taglib Decorator Package.
+ */
 package com.opensymphony.module.sitemesh.taglib.decorator;

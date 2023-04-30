@@ -23,6 +23,7 @@ public class PathMapperTest extends TestCase {
     /** The path mapper. */
     private PathMapper pathMapper;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 

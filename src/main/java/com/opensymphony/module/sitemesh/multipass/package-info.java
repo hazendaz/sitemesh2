@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Mutlipass Package.
+ */
 package com.opensymphony.module.sitemesh.multipass;

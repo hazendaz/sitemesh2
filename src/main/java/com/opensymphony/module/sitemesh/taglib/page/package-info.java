@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Taglib Page Package.
+ */
 package com.opensymphony.module.sitemesh.taglib.page;

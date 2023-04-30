@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * HTML Rules Package.
+ */
 package com.opensymphony.module.sitemesh.html.rules;

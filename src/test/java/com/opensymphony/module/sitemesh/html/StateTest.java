@@ -35,6 +35,7 @@ public class StateTest extends TestCase {
             super(acceptableTagName);
         }
 
+        @Override
         public void process(Tag tag) {
             throw new UnsupportedOperationException();
         }

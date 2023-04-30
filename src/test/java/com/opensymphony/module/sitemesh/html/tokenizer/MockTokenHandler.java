@@ -69,11 +69,13 @@ class MockTokenHandler implements TokenHandler {
         expected.append(' ').append(typeAsString(type)).append("}}");
     }
 
+    @Override
     public boolean shouldProcessTag(String name) {
         Assert.assertNotNull("Name should not be null", name);
         return true;
     }
 
+    @Override
     public void tag(Tag tag) {
         actual.append("{{TAG : ").append(tag.getName());
         for (int i = 0; i < tag.getAttributeCount(); i++) {
@@ -83,10 +85,12 @@ class MockTokenHandler implements TokenHandler {
         actual.append(' ').append(typeAsString(tag.getType())).append("}}");
     }
 
+    @Override
     public void text(Text text) {
         actual.append(text.getContents());
     }
 
+    @Override
     public void warning(String message, int line, int column) {
         Assert.fail("Encountered error: " + message);
     }

@@ -26,6 +26,7 @@ public class TagTokenizerTest extends TestCase {
     /** The handler. */
     private MockTokenHandler handler;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         handler = new MockTokenHandler();
@@ -164,19 +165,23 @@ public class TagTokenizerTest extends TestCase {
 
         tokenizer.start(new TokenHandler() {
 
+            @Override
             public boolean shouldProcessTag(String name) {
                 return true;
             }
 
+            @Override
             public void tag(Tag tag) {
                 assertEquals(originalTag, tag.getContents());
                 called[0] = true;
             }
 
+            @Override
             public void text(Text text) {
                 // ignoring text for this test
             }
 
+            @Override
             public void warning(String message, int line, int column) {
                 fail("Encountered error " + message);
             }
@@ -358,6 +363,7 @@ public class TagTokenizerTest extends TestCase {
     public void testDoesNotTryToParseTagsUnlessTheHandlerCares() {
         // setup
         handler = new MockTokenHandler() {
+            @Override
             public boolean shouldProcessTag(String name) {
                 return name.equals("good");
             }
@@ -397,6 +403,7 @@ public class TagTokenizerTest extends TestCase {
     public void testToleratesExtraQuoteClosingAttributeValue() {
         // expectations
         handler = new MockTokenHandler() {
+            @Override
             public void warning(String message, int line, int column) {
                 // warning ok!
             }

@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Util Package.
+ */
 package com.opensymphony.module.sitemesh.util;

@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Tapestry Package.
+ */
 package com.opensymphony.module.sitemesh.tapestry;

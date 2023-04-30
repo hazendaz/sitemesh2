@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Factory Package.
+ */
 package com.opensymphony.module.sitemesh.factory;

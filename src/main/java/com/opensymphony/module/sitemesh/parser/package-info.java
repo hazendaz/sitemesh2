@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Parser Package.
+ */
 package com.opensymphony.module.sitemesh.parser;

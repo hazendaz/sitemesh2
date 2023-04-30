@@ -11,4 +11,7 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
+/**
+ * Filter Package.
+ */
 package com.opensymphony.module.sitemesh.filter;
