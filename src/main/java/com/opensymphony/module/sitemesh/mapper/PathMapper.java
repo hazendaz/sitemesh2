@@ -50,7 +50,7 @@ import java.util.Map;
 public class PathMapper {
 
     /** The mappings. */
-    private Map mappings = new HashMap();
+    private Map<String, String> mappings = new HashMap<String, String>();
 
     /**
      * Add a key and appropriate matching pattern.
@@ -95,7 +95,7 @@ public class PathMapper {
      *
      * @return the string
      */
-    private static String findKey(String path, Map mappings) {
+    private static String findKey(String path, Map<String, String> mappings) {
         String result = findExactKey(path, mappings);
         if (result == null) {
             result = findComplexKey(path, mappings);
@@ -116,7 +116,7 @@ public class PathMapper {
      *
      * @return the string
      */
-    private static String findExactKey(String path, Map mappings) {
+    private static String findExactKey(String path, Map<String, String> mappings) {
         if (mappings.containsKey(path)) {
             return path;
         }
@@ -133,8 +133,8 @@ public class PathMapper {
      *
      * @return the string
      */
-    private static String findComplexKey(String path, Map mappings) {
-        Iterator i = mappings.keySet().iterator();
+    private static String findComplexKey(String path, Map<String, String> mappings) {
+        Iterator<String> i = mappings.keySet().iterator();
         String result = null, key = null;
         while (i.hasNext()) {
             key = (String) i.next();
@@ -156,7 +156,7 @@ public class PathMapper {
      *
      * @return the string
      */
-    private static String findDefaultKey(Map mappings) {
+    private static String findDefaultKey(Map<String, String> mappings) {
         String[] defaultKeys = { "/", "*", "/*" };
         for (String defaultKey : defaultKeys) {
             if (mappings.containsKey(defaultKey)) {

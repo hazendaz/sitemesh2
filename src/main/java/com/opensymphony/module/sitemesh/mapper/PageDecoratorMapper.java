@@ -28,9 +28,8 @@ import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,18 +55,16 @@ import javax.servlet.http.HttpServletRequest;
 public class PageDecoratorMapper extends AbstractDecoratorMapper {
 
     /** The page props. */
-    private List pageProps = null;
+    private List<String> pageProps;
 
     @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
-        pageProps = new ArrayList();
-        Iterator i = properties.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
+        pageProps = new ArrayList<>();
+        for (Entry<Object, Object> entry : properties.entrySet()) {
             String key = (String) entry.getKey();
             if (key.startsWith("property")) {
-                pageProps.add(entry.getValue());
+                pageProps.add((String) entry.getValue());
             }
         }
     }
@@ -75,9 +72,8 @@ public class PageDecoratorMapper extends AbstractDecoratorMapper {
     @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
-        Iterator i = pageProps.iterator();
-        while (i.hasNext()) {
-            String propName = (String) i.next();
+        for (String entry : pageProps) {
+            String propName = entry;
             result = getByProperty(request, page, propName);
             if (result != null) {
                 break;

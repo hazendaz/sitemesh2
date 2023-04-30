@@ -93,7 +93,7 @@ public class ConfigLoader {
         boolean checking = false;
 
         /** The decorators. */
-        Map decorators = new HashMap();
+        Map<String, Decorator> decorators = new HashMap<String, Decorator>();
 
         /** The path mapper. */
         PathMapper pathMapper = new PathMapper();
@@ -281,7 +281,7 @@ public class ConfigLoader {
                 }
             }
 
-            Map params = new HashMap();
+            Map<Object, Object> params = new HashMap<>();
 
             NodeList paramNodes = decoratorElement.getElementsByTagName("init-param");
             for (int ii = 0; ii < paramNodes.getLength(); ii++) {

@@ -48,7 +48,7 @@ public abstract class AbstractPage implements Page {
     /**
      * Map of all properties. Key is String. Value is java.util.List of multiple String values.
      */
-    private final Map properties = new HashMap();
+    private final Map<String, String> properties = new HashMap<String, String>();
 
     /** Date of page contents. */
     private final SitemeshBuffer sitemeshBuffer;
@@ -159,13 +159,13 @@ public abstract class AbstractPage implements Page {
     @Override
     public String[] getPropertyKeys() {
         synchronized (properties) {
-            Set keys = properties.keySet();
+            Set<String> keys = properties.keySet();
             return (String[]) keys.toArray(new String[keys.size()]);
         }
     }
 
     @Override
-    public Map getProperties() {
+    public Map<String, String> getProperties() {
         return properties;
     }
 

@@ -42,35 +42,35 @@ public class DefaultDecorator implements Decorator {
      *
      * @see #getPage()
      */
-    protected String page = null;
+    protected String page;
 
     /**
      * The name.
      *
      * @see #getName()
      */
-    protected String name = null;
+    protected String name;
 
     /**
      * The uri path.
      *
      * @see #getURIPath()
      */
-    protected String uriPath = null;
+    protected String uriPath;
 
     /**
      * The role.
      *
      * @see #getRole()
      */
-    protected String role = null;
+    protected String role;
 
     /**
      * The parameters.
      *
      * @see #getInitParameter(java.lang.String)
      */
-    protected Map parameters = null;
+    protected Map<Object, Object> parameters;
 
     /**
      * Constructor to set name, page and parameters.
@@ -82,7 +82,7 @@ public class DefaultDecorator implements Decorator {
      * @param parameters
      *            the parameters
      */
-    public DefaultDecorator(String name, String page, Map parameters) {
+    public DefaultDecorator(String name, String page, Map<Object, Object> parameters) {
         this(name, page, null, null, parameters);
     }
 
@@ -98,7 +98,7 @@ public class DefaultDecorator implements Decorator {
      * @param parameters
      *            the parameters
      */
-    public DefaultDecorator(String name, String page, String uriPath, Map parameters) {
+    public DefaultDecorator(String name, String page, String uriPath, Map<Object, Object> parameters) {
         this(name, page, uriPath, null, parameters);
     }
 
@@ -116,7 +116,7 @@ public class DefaultDecorator implements Decorator {
      * @param parameters
      *            the parameters
      */
-    public DefaultDecorator(String name, String page, String uriPath, String role, Map parameters) {
+    public DefaultDecorator(String name, String page, String uriPath, String role, Map<Object, Object> parameters) {
         this.name = name;
         this.page = page;
         this.uriPath = uriPath;
@@ -173,7 +173,7 @@ public class DefaultDecorator implements Decorator {
      * Iterator if the Decorator has no initialization parameters.
      */
     @Override
-    public Iterator getInitParameterNames() {
+    public Iterator<Object> getInitParameterNames() {
         if (parameters == null) {
             // make sure we always return an empty iterator
             return Collections.emptyMap().keySet().iterator();

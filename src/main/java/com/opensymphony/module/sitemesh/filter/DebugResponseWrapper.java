@@ -90,6 +90,7 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
         return super.containsHeader(name);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String encodeRedirectUrl(String url) {
         return super.encodeRedirectUrl(url);
@@ -156,6 +157,7 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
         super.setStatus(sc);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setStatus(int sc, String msg) {
         if (enabled()) {

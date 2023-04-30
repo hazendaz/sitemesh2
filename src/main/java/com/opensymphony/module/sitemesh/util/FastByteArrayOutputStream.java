@@ -47,7 +47,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     private byte[] buffer;
 
     /** The buffers. */
-    private LinkedList buffers;
+    private LinkedList<byte[]> buffers;
 
     /** The index. */
     private int index;
@@ -80,7 +80,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     public void writeTo(OutputStream out) throws IOException {
         // check if we have a list of buffers
         if (buffers != null) {
-            Iterator iterator = buffers.iterator();
+            Iterator<byte[]> iterator = buffers.iterator();
             while (iterator.hasNext()) {
                 byte[] bytes = (byte[]) iterator.next();
                 out.write(bytes, 0, blockSize);
@@ -103,7 +103,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         // check if we have a list of buffers
         int pos = 0;
         if (buffers != null) {
-            Iterator iterator = buffers.iterator();
+            Iterator<byte[]> iterator = buffers.iterator();
             while (iterator.hasNext()) {
                 byte[] bytes = (byte[]) iterator.next();
                 System.arraycopy(bytes, 0, data, pos, blockSize);
@@ -122,7 +122,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         if (index == blockSize) {
             // Create new buffer and store current in linked list
             if (buffers == null) {
-                buffers = new LinkedList();
+                buffers = new LinkedList<byte[]>();
             }
 
             buffers.addLast(buffer);

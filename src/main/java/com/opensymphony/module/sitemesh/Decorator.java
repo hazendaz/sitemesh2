@@ -79,5 +79,5 @@ public interface Decorator {
      *
      * @return the inits the parameter names
      */
-    Iterator getInitParameterNames();
+    Iterator<Object> getInitParameterNames();
 }

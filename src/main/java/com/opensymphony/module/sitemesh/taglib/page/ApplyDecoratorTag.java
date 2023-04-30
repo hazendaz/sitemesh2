@@ -38,7 +38,6 @@ import com.opensymphony.module.sitemesh.filter.PageResponseWrapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -79,7 +78,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
     private String contentType = null;
     private String encoding = null;
 
-    private Map params = new HashMap(6);
+    private Map<String, String> params = new HashMap<String, String>(6);
     private Config config = null;
     private DecoratorMapper decoratorMapper = null;
     private Factory factory;
@@ -186,21 +185,19 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
                     URL url = new URL(page);
                     URLConnection urlConn = url.openConnection();
                     urlConn.setUseCaches(true);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
 
-                    SitemeshBufferWriter sitemeshWriter = new SitemeshBufferWriter();
-                    char[] buf = new char[1000];
-                    for (;;) {
-                        int moved = in.read(buf);
-                        if (moved < 0) {
-                            break;
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                            SitemeshBufferWriter sitemeshWriter = new SitemeshBufferWriter()) {
+                        char[] buf = new char[1000];
+                        for (;;) {
+                            int moved = in.read(buf);
+                            if (moved < 0) {
+                                break;
+                            }
+                            sitemeshWriter.write(buf, 0, moved);
                         }
-                        sitemeshWriter.write(buf, 0, moved);
+                        pageObj = parser.parse(sitemeshWriter.getSitemeshBuffer());
                     }
-                    in.close();
-                    pageObj = parser.parse(sitemeshWriter.getSitemeshBuffer());
-                } catch (MalformedURLException e) {
-                    throw new JspException(e);
                 } catch (IOException e) {
                     throw new JspException(e);
                 }
@@ -262,7 +259,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
             }
 
             // add extra params to Page
-            Iterator paramKeys = params.keySet().iterator();
+            Iterator<String> paramKeys = params.keySet().iterator();
             while (paramKeys.hasNext()) {
                 String k = (String) paramKeys.next();
                 String v = (String) params.get(k);

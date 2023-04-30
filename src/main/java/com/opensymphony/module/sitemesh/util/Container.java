@@ -65,11 +65,11 @@ public final class Container {
     /**
      * A map containing classes that can be searched for, and which container they are typically found in.
      */
-    private static Map classMappings = null;
+    private static Map<String, Integer> classMappings = null;
 
     static {
         // initialize the classes that can be searched for
-        classMappings = new HashMap(6);
+        classMappings = new HashMap<String, Integer>(6);
         classMappings.put("org.apache.jasper.runtime.JspFactoryImpl", Integer.valueOf(TOMCAT));
         classMappings.put("com.caucho.jsp.JspServlet", Integer.valueOf(RESIN));
         classMappings.put("com.evermind.server.http.JSPServlet", Integer.valueOf(ORION));
@@ -105,14 +105,14 @@ public final class Container {
      *
      * @return Name of the match class, or null if not found.
      */
-    private static String searchForClosestClass(Map classMappings) {
+    private static String searchForClosestClass(Map<String, Integer> classMappings) {
         // get closest classloader
         ClassLoader loader = Container.class.getClassLoader();
 
         // iterate up through the classloader hierachy (through parents), until no more left.
         while (loader != null) {
 
-            for (Iterator iterator = classMappings.keySet().iterator(); iterator.hasNext();) {
+            for (Iterator<String> iterator = classMappings.keySet().iterator(); iterator.hasNext();) {
                 String className = (String) iterator.next();
 
                 try {

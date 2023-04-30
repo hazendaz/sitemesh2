@@ -31,10 +31,11 @@ public final class State {
     private int ruleCount = 0;
 
     /** The listeners. */
-    private List listeners = null;
+    private List<StateChangeListener> listeners;
 
     /** The text filters. */
-    private List textFilters = null; // lazily instantiated to reduce overhead for most cases where it's not needed.
+    private List<TextFilter> textFilters; // lazily instantiated to reduce overhead for most cases where it's not
+                                          // needed.
 
     /**
      * Adds the rule.
@@ -60,7 +61,7 @@ public final class State {
      */
     public void addTextFilter(TextFilter textFilter) {
         if (textFilters == null) {
-            textFilters = new ArrayList(); // lazy instantiation
+            textFilters = new ArrayList<TextFilter>(); // lazy instantiation
         }
         textFilters.add(textFilter);
     }
@@ -107,7 +108,7 @@ public final class State {
      */
     public void addListener(StateChangeListener listener) {
         if (listeners == null) {
-            listeners = new ArrayList();
+            listeners = new ArrayList<StateChangeListener>();
         }
         listeners.add(listener);
     }
@@ -119,7 +120,7 @@ public final class State {
         if (listeners == null) {
             return;
         }
-        for (Iterator iter = listeners.iterator(); iter.hasNext();) {
+        for (Iterator<StateChangeListener> iter = listeners.iterator(); iter.hasNext();) {
             StateChangeListener listener = (StateChangeListener) iter.next();
             listener.stateFinished();
         }
@@ -137,7 +138,7 @@ public final class State {
         if (textFilters != null && !textFilters.isEmpty()) {
             String original = text.getContents();
             String asString = original;
-            for (Iterator iterator = textFilters.iterator(); iterator.hasNext();) {
+            for (Iterator<TextFilter> iterator = textFilters.iterator(); iterator.hasNext();) {
                 TextFilter textFilter = (TextFilter) iterator.next();
                 asString = textFilter.filter(asString);
             }

@@ -90,6 +90,7 @@ public class ParserPerformanceComparison {
         char[] page = writer.toCharArray();
         // Create the parsers
         PageParser normal = new HTMLPageParser();
+        @SuppressWarnings("deprecation")
         PageParser fast = new FastPageParser();
         PageParser superfast = new PartialPageParser();
 

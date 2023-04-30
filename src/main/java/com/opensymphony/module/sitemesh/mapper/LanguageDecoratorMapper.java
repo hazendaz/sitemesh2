@@ -29,7 +29,6 @@ import com.opensymphony.module.sitemesh.Page;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -59,12 +58,12 @@ import javax.servlet.http.HttpServletRequest;
 public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
 
     /** The map. */
-    private Map map = null;
+    private Map<String, Object> map;
 
     @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
-        map = new HashMap();
+        map = new HashMap<String, Object>();
         initMap(properties);
     }
 
@@ -100,9 +99,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
      * @return the ext
      */
     private String getExt(String acceptLanguage) {
-        Iterator i = map.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
 
             // Get the first language (preferred one) in the header, and
             // only check the first two chars (the acceptLanguage could be en-gb, but
@@ -146,9 +143,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
      *            the props
      */
     private void initMap(Properties props) {
-        Iterator i = props.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
+        for (Map.Entry<Object, Object> entry : props.entrySet()) {
             String key = (String) entry.getKey();
             if (key.startsWith("match.")) {
                 String match = key.substring(6);

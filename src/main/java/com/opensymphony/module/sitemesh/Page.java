@@ -161,7 +161,7 @@ public interface Page {
      *
      * @return Properties map
      */
-    Map getProperties();
+    Map<String, String> getProperties();
 
     /**
      * Return the request of the original page.

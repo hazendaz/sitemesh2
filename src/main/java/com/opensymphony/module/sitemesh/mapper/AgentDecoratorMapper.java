@@ -29,7 +29,6 @@ import com.opensymphony.module.sitemesh.Page;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -101,9 +100,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
      * @return the ext
      */
     private String getExt(String userAgent) {
-        Iterator<?> i = map.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
+        for (Map.Entry<Object, Object> entry : map.entrySet()) {
             String curr = (String) entry.getKey();
             if (userAgent.indexOf(curr) > -1) {
                 return (String) entry.getValue();
@@ -137,9 +134,7 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
      *            the props
      */
     private void initMap(Properties props) {
-        Iterator<?> i = props.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
+        for (Map.Entry<Object, Object> entry : props.entrySet()) {
             String key = (String) entry.getKey();
             if (key.startsWith("match.")) {
                 String match = key.substring(6);

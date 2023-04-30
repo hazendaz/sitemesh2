@@ -169,8 +169,8 @@ public class Content2HTMLPage implements HTMLPage {
     }
 
     @Override
-    public Map getProperties() {
-        Map result = new HashMap();
+    public Map<String, String> getProperties() {
+        Map<String, String> result = new HashMap<String, String>();
         String[] keys = content.getPropertyKeys();
         for (String key : keys) {
             result.put(key, content.getProperty(key));

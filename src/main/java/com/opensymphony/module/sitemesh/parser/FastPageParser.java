@@ -188,10 +188,10 @@ public final class FastPageParser implements PageParser {
         CharArray _body = new CharArray(4096);
         CharArray _head = new CharArray(512);
         CharArray _title = new CharArray(128);
-        Map _htmlProperties = null;
-        Map _metaProperties = new HashMap(6);
-        Map _sitemeshProperties = new HashMap(6);
-        Map _bodyProperties = null;
+        Map<String, String> _htmlProperties = null;
+        Map<String, String> _metaProperties = new HashMap<>(6);
+        Map<String, String> _sitemeshProperties = new HashMap<>(6);
+        Map<String, String> _bodyProperties = null;
 
         CharArray _currentTaggedContent = new CharArray(1024);
         String _contentTagId = null;
@@ -396,7 +396,7 @@ public final class FastPageParser implements PageParser {
                                 break;
                             }
                             state = TAG_STATE_NONE;
-                            Map props = parseProperties(tagObject, _buffer).properties;
+                            Map<String, String> props = parseProperties(tagObject, _buffer).properties;
                             if (props != null) {
                                 tagged = true;
                                 _contentTagId = (String) props.get("tag");
@@ -859,15 +859,21 @@ public final class FastPageParser implements PageParser {
      * The Class Tag.
      */
     private static class Tag {
-        // The index where the name string ends. This is used as the starting
-        /** The name end idx. */
-        // offet if we need to continue processing to find the tag's properties
+        /**
+         * The name end idx.
+         * <p>
+         * The index where the name string ends. This is used as the starting offet if we need to continue processing to
+         * find the tag's properties.
+         */
         public int nameEndIdx = 0;
 
-        // This holds a map of the various properties for a particular tag.
-        /** The properties. */
-        // This map is only populated when required - normally it will remain empty
-        public Map properties = Collections.emptyMap();
+        /**
+         * The properties.
+         * <p>
+         * This holds a map of the various properties for a particular tag. This map is only populated when required -
+         * normally it will remain empty.
+         */
+        public Map<String, String> properties = Collections.emptyMap();
 
         /**
          * Adds a name/value property pair to this tag. Each property that is added represents a property that was
@@ -879,8 +885,8 @@ public final class FastPageParser implements PageParser {
          *            the value
          */
         public void addProperty(String name, String value) {
-            if (properties == Collections.emptyMap()) {
-                properties = new HashMap(8);
+            if (properties.isEmpty()) {
+                properties = new HashMap<>(8);
             }
             properties.put(name, value);
         }

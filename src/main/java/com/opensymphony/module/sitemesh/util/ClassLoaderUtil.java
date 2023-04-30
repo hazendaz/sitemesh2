@@ -39,7 +39,7 @@ public class ClassLoaderUtil {
      *
      * @return the resource
      */
-    public static URL getResource(String resourceName, Class callingClass) {
+    public static URL getResource(String resourceName, Class<?> callingClass) {
         URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
 
         if (url == null) {
@@ -72,7 +72,7 @@ public class ClassLoaderUtil {
      *
      * @return the resource as stream
      */
-    public static InputStream getResourceAsStream(String resourceName, Class callingClass) {
+    public static InputStream getResourceAsStream(String resourceName, Class<?> callingClass) {
         URL url = getResource(resourceName, callingClass);
 
         try {
@@ -101,7 +101,7 @@ public class ClassLoaderUtil {
      * @throws ClassNotFoundException
      *             If the class cannot be found anywhere.
      */
-    public static Class loadClass(String className, Class callingClass) throws ClassNotFoundException {
+    public static Class<?> loadClass(String className, Class<?> callingClass) throws ClassNotFoundException {
         try {
             return Thread.currentThread().getContextClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {

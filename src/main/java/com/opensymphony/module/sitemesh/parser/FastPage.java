@@ -26,7 +26,6 @@ import com.opensymphony.module.sitemesh.SitemeshBuffer;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -64,8 +63,9 @@ public final class FastPage extends AbstractHTMLPage {
      * @param frameSet
      *            the frame set
      */
-    public FastPage(SitemeshBuffer sitemeshBuffer, Map sitemeshProps, Map htmlProps, Map metaProps, Map bodyProps,
-            String title, String head, String body, boolean frameSet) {
+    public FastPage(SitemeshBuffer sitemeshBuffer, Map<String, String> sitemeshProps, Map<String, String> htmlProps,
+            Map<String, String> metaProps, Map<String, String> bodyProps, String title, String head, String body,
+            boolean frameSet) {
         super(sitemeshBuffer);
         this.head = head;
         this.body = body;
@@ -95,18 +95,16 @@ public final class FastPage extends AbstractHTMLPage {
      * @param attributes
      *            the attributes
      */
-    private void addAttributeList(String prefix, Map attributes) {
+    private void addAttributeList(String prefix, Map<String, String> attributes) {
         if (attributes == null || attributes.isEmpty()) {
             return;
         }
 
-        String name, value;
-        Iterator i = attributes.entrySet().iterator();
-
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
-            name = (String) entry.getKey();
-            value = (String) entry.getValue();
+        String name;
+        String value;
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            name = entry.getKey();
+            value = entry.getValue();
 
             if (value != null && value.trim().length() > 0) {
                 addProperty(prefix + name, value);

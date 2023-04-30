@@ -27,7 +27,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,8 +89,8 @@ public class OSDecoratorMapper extends AbstractDecoratorMapper {
 
         // run through the list of operating systems the application developer listed
         // in sitemesh.xml to see if we have a match to the user's current OS
-        for (Enumeration e = properties.propertyNames(); e.hasMoreElements();) {
-            String os = (String) e.nextElement();
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            String os = (String) entry.getKey();
 
             // see if the name matches the user's operating system name
             if (osHeader.toLowerCase().indexOf(os.toLowerCase()) != -1) {
