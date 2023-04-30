@@ -24,7 +24,13 @@ import com.opensymphony.sitemesh.compatability.PageParser2ContentProcessor;
 
 import java.io.IOException;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,11 +53,13 @@ public class SiteMeshFilter implements Filter {
     /** The Constant ALREADY_APPLIED_KEY. */
     private static final String ALREADY_APPLIED_KEY = "com.opensymphony.sitemesh.APPLIED_ONCE";
 
+    @Override
     public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         containerTweaks = new ContainerTweaks();
     }
 
+    @Override
     public void destroy() {
         filterConfig = null;
         containerTweaks = null;
@@ -63,6 +71,7 @@ public class SiteMeshFilter implements Filter {
      * Checks if the Filter has been applied this request. If not, parses the page and applies
      * {@link com.opensymphony.module.sitemesh.Decorator} (if found).
      */
+    @Override
     public void doFilter(ServletRequest rq, ServletResponse rs, FilterChain chain)
             throws IOException, ServletException {
 
@@ -75,14 +84,7 @@ public class SiteMeshFilter implements Filter {
         ContentProcessor contentProcessor = initContentProcessor(webAppContext);
         DecoratorSelector decoratorSelector = initDecoratorSelector(webAppContext);
 
-        if (filterAlreadyAppliedForRequest(request)) {
-            // Prior to Servlet 2.4 spec, it was unspecified whether the filter should be called again upon an
-            // include().
-            chain.doFilter(request, response);
-            return;
-        }
-
-        if (!contentProcessor.handles(webAppContext)) {
+        if (filterAlreadyAppliedForRequest(request) || !contentProcessor.handles(webAppContext)) {
             // Optimization: If the content doesn't need to be processed, bypass SiteMesh.
             chain.doFilter(request, response);
             return;
@@ -180,7 +182,7 @@ public class SiteMeshFilter implements Filter {
      */
     private Content obtainContent(ContentProcessor contentProcessor, SiteMeshWebAppContext webAppContext,
             HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+                    throws IOException, ServletException {
 
         ContentBufferingResponse contentBufferingResponse = new ContentBufferingResponse(response, contentProcessor,
                 webAppContext);
@@ -206,10 +208,9 @@ public class SiteMeshFilter implements Filter {
     private boolean filterAlreadyAppliedForRequest(HttpServletRequest request) {
         if (request.getAttribute(ALREADY_APPLIED_KEY) == Boolean.TRUE) {
             return true;
-        } else {
-            request.setAttribute(ALREADY_APPLIED_KEY, Boolean.TRUE);
-            return false;
         }
+        request.setAttribute(ALREADY_APPLIED_KEY, Boolean.TRUE);
+        return false;
     }
 
 }

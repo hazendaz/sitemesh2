@@ -59,15 +59,18 @@ public class ContentBufferingResponse extends HttpServletResponseWrapper {
     public ContentBufferingResponse(HttpServletResponse response, final ContentProcessor contentProcessor,
             final SiteMeshWebAppContext webAppContext) {
         super(new PageResponseWrapper(response, new PageParserSelector() {
+            @Override
             public boolean shouldParsePage(String contentType) {
                 return contentProcessor.handles(contentType);
             }
 
+            @Override
             public PageParser getPageParser(String contentType) {
                 // Migration: Not actually needed by PageResponseWrapper, so long as getPage() isn't called.
                 return null;
             }
         }) {
+            @Override
             public void setContentType(String contentType) {
                 webAppContext.setContentType(contentType);
                 super.setContentType(contentType);

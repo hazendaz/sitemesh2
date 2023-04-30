@@ -106,10 +106,12 @@ public class SiteMeshWebAppContext implements SiteMeshContext {
         request.setAttribute(IS_USING_STRING_KEY, isUsingStream ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly
     }
 
+    @Override
     public String getContentType() {
         return contentType;
     }
 
+    @Override
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
