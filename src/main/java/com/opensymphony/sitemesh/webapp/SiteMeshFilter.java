@@ -182,7 +182,7 @@ public class SiteMeshFilter implements Filter {
      */
     private Content obtainContent(ContentProcessor contentProcessor, SiteMeshWebAppContext webAppContext,
             HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-                    throws IOException, ServletException {
+            throws IOException, ServletException {
 
         ContentBufferingResponse contentBufferingResponse = new ContentBufferingResponse(response, contentProcessor,
                 webAppContext);

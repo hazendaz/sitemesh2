@@ -11,4 +11,4 @@
  * Contributors:
  *     Hazendaz (Jeremy Landis).
  */
-package com.opensymphony.module.sitemesh;
+package com.opensymphony.module.sitemesh.velocity;
