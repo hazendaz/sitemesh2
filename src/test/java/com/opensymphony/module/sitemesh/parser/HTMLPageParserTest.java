@@ -21,13 +21,14 @@ import com.opensymphony.module.sitemesh.PageParser;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -79,7 +80,7 @@ public class HTMLPageParserTest extends TestCase {
         for (String p : parsers) {
             String name = props.getProperty("parser." + p + ".class");
             Class<? extends PageParser> parserClass = Class.forName(name).asSubclass(PageParser.class);
-            PageParser parser = parserClass.newInstance();
+            PageParser parser = parserClass.getDeclaredConstructor().newInstance();
 
             String filesPath = props.getProperty("parser." + p + ".tests", "src/parser-tests");
             List<File> files = new ArrayList<>(Arrays.asList(listParserTests(new File(filesPath))));
@@ -138,7 +139,7 @@ public class HTMLPageParserTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // read blocks from input file.
-        this.blocks = readBlocks(new FileReader(file));
+        this.blocks = readBlocks(Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8));
         // create PageParser and parse input block into HTMLPage object.
         String input = (String) blocks.get("INPUT");
         this.page = parser.parse(new DefaultSitemeshBuffer(input.toCharArray()));
@@ -268,7 +269,8 @@ public class HTMLPageParserTest extends TestCase {
         // get list of files to ignore
         final List<String> ignoreFileNames = new ArrayList<>();
         String line;
-        try (LineNumberReader ignoreReader = new LineNumberReader(new FileReader(new File(dir, "ignore.txt")))) {
+        try (LineNumberReader ignoreReader = new LineNumberReader(
+                Files.newBufferedReader(new File(dir, "ignore.txt").toPath(), StandardCharsets.UTF_8))) {
             while ((line = ignoreReader.readLine()) != null) {
                 ignoreFileNames.add(line);
             }
