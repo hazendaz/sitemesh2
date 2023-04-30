@@ -19,6 +19,7 @@ package com.opensymphony.module.sitemesh.filter;
 import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 
 /**
  * Provides a ServletOutputStream that routes through to another ServletOutputStream, however the destination can be
@@ -185,5 +186,15 @@ public class RoutableServletOutputStream extends ServletOutputStream {
     @Override
     public void flush() throws IOException {
         getDestination().flush();
+    }
+
+    @Override
+    public boolean isReady() {
+        return false;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener writeListener) {
+        // TODO Not Implemented
     }
 }

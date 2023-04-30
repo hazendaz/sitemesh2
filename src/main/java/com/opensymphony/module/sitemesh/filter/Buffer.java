@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 
 /**
  * When SiteMesh is activated for a request, the contents of the response are stored in this buffer, where they can
@@ -132,6 +133,16 @@ public class Buffer {
                 @Override
                 public void write(int b) {
                     bufferedStream.write(b);
+                }
+
+                @Override
+                public boolean isReady() {
+                    return false;
+                }
+
+                @Override
+                public void setWriteListener(WriteListener writeListener) {
+                    // TODO Not implemented
                 }
             };
         }
