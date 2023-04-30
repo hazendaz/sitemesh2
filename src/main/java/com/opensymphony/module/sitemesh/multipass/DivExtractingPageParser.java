@@ -25,6 +25,7 @@ import com.opensymphony.module.sitemesh.parser.HTMLPageParser;
  */
 public class DivExtractingPageParser extends HTMLPageParser {
 
+    @Override
     protected void addUserDefinedRules(State html, final PageBuilder page) {
         super.addUserDefinedRules(html, page);
         html.addRule(new TopLevelDivExtractingRule(page));
@@ -55,6 +56,7 @@ public class DivExtractingPageParser extends HTMLPageParser {
             this.page = page;
         }
 
+        @Override
         public void process(Tag tag) {
             if (tag.getType() == Tag.OPEN) {
                 String id = tag.getAttributeValue("id", false);

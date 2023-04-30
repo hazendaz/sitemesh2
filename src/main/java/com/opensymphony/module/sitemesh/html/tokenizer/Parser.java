@@ -74,9 +74,8 @@ public class Parser extends Lexer {
     private String text() {
         if (pushbackToken == -1) {
             return yytext();
-        } else {
-            return pushbackText;
         }
+        return pushbackText;
     }
 
     private void skipWhiteSpace() throws IOException {
@@ -117,23 +116,29 @@ public class Parser extends Lexer {
                     token = pushbackToken;
                     pushbackToken = -1;
                 }
-                if (token == 0) {
-                    // EOF
-                    return;
-                } else if (token == Parser.TEXT) {
-                    // Got some text
-                    parsedText(position(), length());
-                } else if (token == Parser.LT) {
-                    // Token "<" - start of tag
-                    parseTag(Tag.OPEN);
-                } else if (token == Parser.LT_OPEN_MAGIC_COMMENT) {
-                    // Token "<!--[" - start of open magic comment
-                    parseTag(Tag.OPEN_MAGIC_COMMENT);
-                } else if (token == Parser.LT_CLOSE_MAGIC_COMMENT) {
-                    // Token "<![" - start of close magic comment
-                    parseTag(Tag.CLOSE_MAGIC_COMMENT);
-                } else {
-                    reportError("Unexpected token from lexer, was expecting TEXT or LT", line(), column());
+                switch (token) {
+                    case 0:
+                        // EOF
+                        return;
+                    case Parser.TEXT:
+                        // Got some text
+                        parsedText(position(), length());
+                        break;
+                    case Parser.LT:
+                        // Token "<" - start of tag
+                        parseTag(Tag.OPEN);
+                        break;
+                    case Parser.LT_OPEN_MAGIC_COMMENT:
+                        // Token "<!--[" - start of open magic comment
+                        parseTag(Tag.OPEN_MAGIC_COMMENT);
+                        break;
+                    case Parser.LT_CLOSE_MAGIC_COMMENT:
+                        // Token "<![" - start of close magic comment
+                        parseTag(Tag.CLOSE_MAGIC_COMMENT);
+                        break;
+                    default:
+                        reportError("Unexpected token from lexer, was expecting TEXT or LT", line(), column());
+                        break;
                 }
             }
         } catch (IOException e) {
@@ -165,22 +170,27 @@ public class Parser extends Lexer {
             }
         }
 
-        if (token == Parser.WORD) {
-            // Token WORD - name of tag
-            String name = text();
-            if (handler.shouldProcessTag(name)) {
-                parseFullTag(type, name, start);
-            } else {
-                resetLexerState();
-                pushBack(yylex()); // take and replace the next token, so the position is correct
-                parsedText(start, position() - start);
+        switch (token) {
+            case Parser.WORD: {
+                // Token WORD - name of tag
+                String name = text();
+                if (handler.shouldProcessTag(name)) {
+                    parseFullTag(type, name, start);
+                } else {
+                    resetLexerState();
+                    pushBack(yylex()); // take and replace the next token, so the position is correct
+                    parsedText(start, position() - start);
+                }
+                break;
             }
-        } else if (token == Parser.GT) {
-            // Token ">" - an illegal <> or < > tag. Ignore
-        } else if (token == 0) {
-            parsedText(start, position() - start); // eof
-        } else {
-            reportError("Could not recognise tag", line(), column());
+            case Parser.GT:
+                break;
+            case 0:
+                parsedText(start, position() - start); // eof
+                break;
+            default:
+                reportError("Could not recognise tag", line(), column());
+                break;
         }
     }
 
@@ -198,7 +208,8 @@ public class Parser extends Lexer {
 
             if (token == Parser.SLASH || token == Parser.GT) {
                 break; // no more attributes here
-            } else if (token == Parser.WORD) {
+            }
+            if (token == Parser.WORD) {
                 parseAttribute(); // start of an attribute
             } else if (token == 0) {
                 parsedText(start, position() - start); // eof
@@ -254,54 +265,59 @@ public class Parser extends Lexer {
             token = pushbackToken;
             pushbackToken = -1;
         }
-        if (token == Parser.EQUALS) {
-            // Token "=" - the attribute has a value
-            skipWhiteSpace();
-            if (pushbackToken == -1) {
-                token = yylex();
-            } else {
-                token = pushbackToken;
-                pushbackToken = -1;
-            }
-            if (token == Parser.QUOTED) {
-                // token QUOTED - a quoted literal as the attribute value
-                parsedAttribute(attributeName, text(), true);
-            } else if (token == Parser.WORD || token == Parser.SLASH) {
-                // unquoted word
-                attributeBuffer.clear();
-                attributeBuffer.append(text());
-                while (true) {
-                    int next;
-                    if (pushbackToken == -1) {
-                        next = yylex();
-                    } else {
-                        next = pushbackToken;
-                        pushbackToken = -1;
-                    }
-                    if (next == Parser.WORD || next == Parser.EQUALS || next == Parser.SLASH) {
-                        attributeBuffer.append(text());
-                    } else {
-                        pushBack(next);
-                        break;
-                    }
+        switch (token) {
+            case Parser.EQUALS:
+                // Token "=" - the attribute has a value
+                skipWhiteSpace();
+                if (pushbackToken == -1) {
+                    token = yylex();
+                } else {
+                    token = pushbackToken;
+                    pushbackToken = -1;
                 }
-                parsedAttribute(attributeName, attributeBuffer.toString(), false);
-            } else if (token == Parser.SLASH || token == Parser.GT) {
-                // no more attributes
+                if (token == Parser.QUOTED) {
+                    // token QUOTED - a quoted literal as the attribute value
+                    parsedAttribute(attributeName, text(), true);
+                } else if (token == Parser.WORD || token == Parser.SLASH) {
+                    // unquoted word
+                    attributeBuffer.clear();
+                    attributeBuffer.append(text());
+                    while (true) {
+                        int next;
+                        if (pushbackToken == -1) {
+                            next = yylex();
+                        } else {
+                            next = pushbackToken;
+                            pushbackToken = -1;
+                        }
+                        if ((next != Parser.WORD) && (next != Parser.EQUALS) && (next != Parser.SLASH)) {
+                            pushBack(next);
+                            break;
+                        }
+                        attributeBuffer.append(text());
+                    }
+                    parsedAttribute(attributeName, attributeBuffer.toString(), false);
+                } else if (token == Parser.SLASH || token == Parser.GT) {
+                    // no more attributes
+                    pushBack(token);
+                } else if (token == 0) {
+                    return;
+                } else {
+                    reportError("Illegal attribute value", line(), column());
+                }
+                break;
+            case Parser.SLASH:
+            case Parser.GT:
+            case Parser.WORD:
+                // it was a value-less HTML style attribute
+                parsedAttribute(attributeName, null, false);
                 pushBack(token);
-            } else if (token == 0) {
+                break;
+            case 0:
                 return;
-            } else {
-                reportError("Illegal attribute value", line(), column());
-            }
-        } else if (token == Parser.SLASH || token == Parser.GT || token == Parser.WORD) {
-            // it was a value-less HTML style attribute
-            parsedAttribute(attributeName, null, false);
-            pushBack(token);
-        } else if (token == 0) {
-            return;
-        } else {
-            reportError("Illegal attribute name", line(), column());
+            default:
+                reportError("Illegal attribute name", line(), column());
+                break;
         }
     }
 
@@ -334,6 +350,7 @@ public class Parser extends Lexer {
         }
     }
 
+    @Override
     protected void reportError(String message, int line, int column) {
         handler.warning(message, line, column);
     }
@@ -343,30 +360,37 @@ public class Parser extends Lexer {
         public int attributeCount = 0;
         public String[] attributes = new String[10]; // name1, value1, name2, value2...
 
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public int getType() {
             return type;
         }
 
+        @Override
         public String getContents() {
             return new String(input, position, length);
         }
 
+        @Override
         public void writeTo(SitemeshBufferFragment.Builder buffer, int position) {
             buffer.insert(position, SitemeshBufferFragment.builder().setBuffer(new DefaultSitemeshBuffer(input))
                     .setStart(position).setLength(length).build());
         }
 
+        @Override
         public int getAttributeCount() {
             return attributeCount / 2;
         }
 
+        @Override
         public int getAttributeIndex(String name, boolean caseSensitive) {
-            if (attributeCount == 0)
+            if (attributeCount == 0) {
                 return -1;
+            }
             final int len = attributeCount;
             for (int i = 0; i < len; i += 2) {
                 final String current = attributes[i];
@@ -377,17 +401,21 @@ public class Parser extends Lexer {
             return -1;
         }
 
+        @Override
         public String getAttributeName(int index) {
             return attributes[index * 2];
         }
 
+        @Override
         public String getAttributeValue(int index) {
             return attributes[index * 2 + 1];
         }
 
+        @Override
         public String getAttributeValue(String name, boolean caseSensitive) {
-            if (attributeCount == 0)
+            if (attributeCount == 0) {
                 return null;
+            }
             final int len = attributeCount;
             for (int i = 0; i < len; i += 2) {
                 final String current = attributes[i];
@@ -398,14 +426,17 @@ public class Parser extends Lexer {
             return null;
         }
 
+        @Override
         public boolean hasAttribute(String name, boolean caseSensitive) {
             return getAttributeIndex(name, caseSensitive) > -1;
         }
 
+        @Override
         public int getPosition() {
             return position;
         }
 
+        @Override
         public int getLength() {
             return length;
         }

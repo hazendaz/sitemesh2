@@ -53,13 +53,13 @@ public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {
      * Retrieves the {@link com.opensymphony.module.sitemesh.Decorator} specified by the decorator name. If it's not in
      * the environment entries of the web application, assume it's a named decorator from <code>decorators.xml</code>.
      */
+    @Override
     public Decorator getNamedDecorator(HttpServletRequest request, String name) {
         String resourceValue = getStringResource(name);
         if (resourceValue == null) {
             return super.getNamedDecorator(request, name);
-        } else {
-            return new DefaultDecorator(name, resourceValue, null);
         }
+        return new DefaultDecorator(name, resourceValue, null);
     }
 
     /**
@@ -82,8 +82,9 @@ public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {
         } catch (NamingException ne) {
         } finally {
             try {
-                if (ctx != null)
+                if (ctx != null) {
                     ctx.close();
+                }
             } catch (NamingException ne) {
             }
         }

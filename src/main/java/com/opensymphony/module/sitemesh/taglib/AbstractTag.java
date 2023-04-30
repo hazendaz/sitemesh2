@@ -40,6 +40,8 @@ import javax.servlet.jsp.tagext.Tag;
  */
 public abstract class AbstractTag extends BodyTagSupport implements RequestConstants {
 
+    private static final long serialVersionUID = 1L;
+
     /** The page context. */
     protected PageContext pageContext;
 
@@ -47,24 +49,30 @@ public abstract class AbstractTag extends BodyTagSupport implements RequestConst
     protected Tag parent;
 
     /** To be implemented by all empty tags. */
+    @Override
     public abstract int doEndTag() throws JspException;
 
     /** Returns SKIP_BODY. */
+    @Override
     public int doStartTag() {
         return SKIP_BODY;
     }
 
+    @Override
     public void release() {
     }
 
+    @Override
     public Tag getParent() {
         return parent;
     }
 
+    @Override
     public void setParent(Tag parent) {
         this.parent = parent;
     }
 
+    @Override
     public void setPageContext(PageContext pageContext) {
         this.pageContext = pageContext;
     }

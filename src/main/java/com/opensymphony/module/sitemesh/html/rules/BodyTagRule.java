@@ -28,6 +28,7 @@ public class BodyTagRule extends BasicRule {
         this.body = body;
     }
 
+    @Override
     public void process(Tag tag) {
         if (tag.getType() == Tag.OPEN || tag.getType() == Tag.EMPTY) {
             context.currentBuffer().setStart(tag.getPosition() + tag.getLength());
@@ -38,7 +39,7 @@ public class BodyTagRule extends BasicRule {
         } else {
             body.end(tag.getPosition());
             context.pushBuffer(SitemeshBufferFragment.builder()); // unused buffer: everything after </body> is
-                                                                  // discarded.
+            // discarded.
         }
     }
 

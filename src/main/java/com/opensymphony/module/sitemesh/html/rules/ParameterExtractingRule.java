@@ -25,6 +25,7 @@ public class ParameterExtractingRule extends BasicRule {
         this.page = page;
     }
 
+    @Override
     public void process(Tag tag) {
         context.currentBuffer().delete(tag.getPosition(), tag.getLength());
         page.addProperty("page." + tag.getAttributeValue("name", false), tag.getAttributeValue("value", false));

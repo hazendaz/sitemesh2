@@ -56,12 +56,15 @@ public abstract class AbstractHTMLPage extends AbstractPage implements HTMLPage 
      * <p>
      * Must be implemented. Data written should not actually contain the head tags, but all the data in between.
      */
+    @Override
     public abstract void writeHead(Writer out) throws IOException;
 
+    @Override
     public boolean isFrameSet() {
         return isPropertySet("frameset") && getProperty("frameset").equalsIgnoreCase("true");
     }
 
+    @Override
     public void setFrameSet(boolean frameset) {
         if (frameset) {
             addProperty("frameset", "true");

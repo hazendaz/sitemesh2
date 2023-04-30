@@ -27,7 +27,11 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -54,6 +58,7 @@ public class PageDecoratorMapper extends AbstractDecoratorMapper {
     /** The page props. */
     private List pageProps = null;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         pageProps = new ArrayList();
@@ -67,14 +72,16 @@ public class PageDecoratorMapper extends AbstractDecoratorMapper {
         }
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
         Iterator i = pageProps.iterator();
         while (i.hasNext()) {
             String propName = (String) i.next();
             result = getByProperty(request, page, propName);
-            if (result != null)
+            if (result != null) {
                 break;
+            }
         }
         return result == null ? super.getDecorator(request, page) : result;
     }

@@ -50,12 +50,14 @@ public class HttpContentType {
      * @return the string
      */
     private String extractContentTypeValue(String type, int startIndex) {
-        if (startIndex < 0)
+        if (startIndex < 0) {
             return null;
+        }
 
         // Skip over any leading spaces
-        while (startIndex < type.length() && type.charAt(startIndex) == ' ')
+        while (startIndex < type.length() && type.charAt(startIndex) == ' ') {
             startIndex++;
+        }
 
         if (startIndex >= type.length()) {
             return null;
@@ -66,8 +68,9 @@ public class HttpContentType {
         if (type.charAt(startIndex) == '"') {
             startIndex++;
             endIndex = type.indexOf('"', startIndex);
-            if (endIndex == -1)
+            if (endIndex == -1) {
                 endIndex = type.length();
+            }
         } else {
             // Scan through until we hit either the end of the string or a
             // special character (as defined in RFC-2045). Note that we ignore '/'
@@ -75,8 +78,9 @@ public class HttpContentType {
             char ch;
             while (endIndex < type.length() && (ch = type.charAt(endIndex)) != ' ' && ch != ';' && ch != '('
                     && ch != ')' && ch != '[' && ch != ']' && ch != '<' && ch != '>' && ch != ':' && ch != ','
-                    && ch != '=' && ch != '?' && ch != '@' && ch != '"' && ch != '\\')
+                    && ch != '=' && ch != '?' && ch != '@' && ch != '"' && ch != '\\') {
                 endIndex++;
+            }
         }
         return type.substring(startIndex, endIndex);
     }

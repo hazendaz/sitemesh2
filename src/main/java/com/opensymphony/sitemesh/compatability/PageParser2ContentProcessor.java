@@ -13,7 +13,11 @@
  */
 package com.opensymphony.sitemesh.compatability;
 
-import com.opensymphony.module.sitemesh.*;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.filter.HttpContentType;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.ContentProcessor;
@@ -54,6 +58,7 @@ public class PageParser2ContentProcessor implements ContentProcessor {
      *
      * @return true, if successful
      */
+    @Override
     public boolean handles(SiteMeshContext context) {
         SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;
         return !factory.isPathExcluded(extractRequestPath(webAppContext.getRequest()));
@@ -72,9 +77,10 @@ public class PageParser2ContentProcessor implements ContentProcessor {
         String pathInfo = request.getPathInfo();
         String query = request.getQueryString();
         return (servletPath == null ? "" : servletPath) + (pathInfo == null ? "" : pathInfo)
-                + (query == null ? "" : ("?" + query));
+                + (query == null ? "" : "?" + query);
     }
 
+    @Override
     public boolean handles(String contentType) {
         return factory.shouldParsePage(contentType);
     }
@@ -92,6 +98,7 @@ public class PageParser2ContentProcessor implements ContentProcessor {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Override
     public Content build(SitemeshBuffer buffer, SiteMeshContext context) throws IOException {
         HttpContentType httpContentType = new HttpContentType(context.getContentType());
         PageParser pageParser = factory.getPageParser(httpContentType.getType());

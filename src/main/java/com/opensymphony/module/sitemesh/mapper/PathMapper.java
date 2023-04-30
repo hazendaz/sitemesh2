@@ -75,11 +75,13 @@ public class PathMapper {
      * @return the string
      */
     public String get(String path) {
-        if (path == null)
+        if (path == null) {
             path = "/";
+        }
         String mapped = findKey(path, mappings);
-        if (mapped == null)
+        if (mapped == null) {
             return null;
+        }
         return (String) mappings.get(mapped);
     }
 
@@ -95,10 +97,12 @@ public class PathMapper {
      */
     private static String findKey(String path, Map mappings) {
         String result = findExactKey(path, mappings);
-        if (result == null)
+        if (result == null) {
             result = findComplexKey(path, mappings);
-        if (result == null)
+        }
+        if (result == null) {
             result = findDefaultKey(mappings);
+        }
         return result;
     }
 
@@ -113,8 +117,9 @@ public class PathMapper {
      * @return the string
      */
     private static String findExactKey(String path, Map mappings) {
-        if (mappings.containsKey(path))
+        if (mappings.containsKey(path)) {
             return path;
+        }
         return null;
     }
 
@@ -153,9 +158,10 @@ public class PathMapper {
      */
     private static String findDefaultKey(Map mappings) {
         String[] defaultKeys = { "/", "*", "/*" };
-        for (int i = 0; i < defaultKeys.length; i++) {
-            if (mappings.containsKey(defaultKeys[i]))
-                return defaultKeys[i];
+        for (String defaultKey : defaultKeys) {
+            if (mappings.containsKey(defaultKey)) {
+                return defaultKey;
+            }
         }
         return null;
     }
@@ -182,8 +188,8 @@ public class PathMapper {
         char ch;
 
         boolean containsStar = false;
-        for (int i = 0; i < patArr.length; i++) {
-            if (patArr[i] == '*') {
+        for (char element : patArr) {
+            if (element == '*') {
                 containsStar = true;
                 break;
             }
@@ -197,10 +203,8 @@ public class PathMapper {
             for (int i = 0; i <= patIdxEnd; i++) {
                 ch = patArr[i];
                 if (ch != '?') {
-                    if (isCaseSensitive && ch != strArr[i]) {
-                        return false; // Character mismatch
-                    }
-                    if (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[i])) {
+                    if ((isCaseSensitive && ch != strArr[i])
+                            || (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[i]))) {
                         return false; // Character mismatch
                     }
                 }
@@ -215,10 +219,8 @@ public class PathMapper {
         // Process characters before first star
         while ((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
             if (ch != '?') {
-                if (isCaseSensitive && ch != strArr[strIdxStart]) {
-                    return false; // Character mismatch
-                }
-                if (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart])) {
+                if ((isCaseSensitive && ch != strArr[strIdxStart]) || (!isCaseSensitive
+                        && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart]))) {
                     return false; // Character mismatch
                 }
             }
@@ -239,10 +241,8 @@ public class PathMapper {
         // Process characters after last star
         while ((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
             if (ch != '?') {
-                if (isCaseSensitive && ch != strArr[strIdxEnd]) {
-                    return false; // Character mismatch
-                }
-                if (!isCaseSensitive && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxEnd])) {
+                if ((isCaseSensitive && ch != strArr[strIdxEnd]) || (!isCaseSensitive
+                        && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxEnd]))) {
                     return false; // Character mismatch
                 }
             }
@@ -277,18 +277,15 @@ public class PathMapper {
             }
             // Find the pattern between padIdxStart & padIdxTmp in str between
             // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp - patIdxStart - 1);
-            int strLength = (strIdxEnd - strIdxStart + 1);
+            int patLength = patIdxTmp - patIdxStart - 1;
+            int strLength = strIdxEnd - strIdxStart + 1;
             int foundIdx = -1;
             strLoop: for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
                     ch = patArr[patIdxStart + j + 1];
                     if (ch != '?') {
-                        if (isCaseSensitive && ch != strArr[strIdxStart + i + j]) {
-                            continue strLoop;
-                        }
-                        if (!isCaseSensitive
-                                && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart + i + j])) {
+                        if ((isCaseSensitive && ch != strArr[strIdxStart + i + j]) || (!isCaseSensitive
+                                && Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart + i + j]))) {
                             continue strLoop;
                         }
                     }

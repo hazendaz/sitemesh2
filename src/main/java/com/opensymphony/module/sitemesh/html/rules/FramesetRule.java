@@ -25,6 +25,7 @@ public class FramesetRule extends BasicRule {
         this.page = page;
     }
 
+    @Override
     public void process(Tag tag) {
         context.currentBuffer().delete(tag.getPosition(), tag.getLength());
         page.addProperty("frameset", "true");

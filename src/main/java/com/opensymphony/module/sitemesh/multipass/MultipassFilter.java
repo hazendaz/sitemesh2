@@ -51,10 +51,12 @@ public class MultipassFilter extends SiteMeshFilter {
     protected void writeDecorator(final HttpServletResponse response, final Page page, RequestDispatcher dispatcher,
             HttpServletRequest request) throws ServletException, IOException {
         PageResponseWrapper pageResponse = new PageResponseWrapper(response, new PageParserSelector() {
+            @Override
             public boolean shouldParsePage(String contentType) {
                 return true;
             }
 
+            @Override
             public PageParser getPageParser(String contentType) {
                 return new MultipassReplacementPageParser(page, response);
             }

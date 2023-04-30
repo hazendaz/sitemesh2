@@ -44,6 +44,7 @@ public class FileDecoratorMapper extends AbstractDecoratorMapper {
     /** The path not available. */
     private boolean pathNotAvailable = false;
 
+    @Override
     public Decorator getNamedDecorator(HttpServletRequest req, String name) {
         if (pathNotAvailable || name == null) {
             return super.getNamedDecorator(req, name);
@@ -63,7 +64,8 @@ public class FileDecoratorMapper extends AbstractDecoratorMapper {
         if (filePath == null && resourcePath == null) {
             pathNotAvailable = true;
             return super.getNamedDecorator(req, name);
-        } else if (filePath != null) { // do we really need this disk file check?!
+        }
+        if (filePath != null) { // do we really need this disk file check?!
             File file = new File(filePath);
 
             if (file.exists() && file.canRead() && file.isFile()) {

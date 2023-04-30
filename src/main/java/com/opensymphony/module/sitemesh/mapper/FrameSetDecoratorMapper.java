@@ -48,16 +48,17 @@ public class FrameSetDecoratorMapper extends AbstractDecoratorMapper {
     /** The decorator. */
     private String decorator = null;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         decorator = properties.getProperty("decorator");
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         if (page instanceof HTMLPage && ((HTMLPage) page).isFrameSet()) {
             return getNamedDecorator(request, decorator);
-        } else {
-            return super.getDecorator(request, page);
         }
+        return super.getDecorator(request, page);
     }
 }

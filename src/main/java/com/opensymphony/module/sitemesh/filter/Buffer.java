@@ -16,7 +16,11 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import com.opensymphony.module.sitemesh.*;
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
 import com.opensymphony.module.sitemesh.util.FastByteArrayOutputStream;
 
 import java.io.IOException;
@@ -77,7 +81,8 @@ public class Buffer {
     public SitemeshBuffer getContents() throws IOException {
         if (bufferedWriter != null) {
             return bufferedWriter.getSitemeshBuffer();
-        } else if (bufferedStream != null) {
+        }
+        if (bufferedStream != null) {
             return new DefaultSitemeshBuffer(TEXT_ENCODER.encode(bufferedStream.toByteArray(), encoding));
         } else {
             return new DefaultSitemeshBuffer(new char[0]);
@@ -124,6 +129,7 @@ public class Buffer {
             }
             bufferedStream = new FastByteArrayOutputStream();
             exposedStream = new ServletOutputStream() {
+                @Override
                 public void write(int b) {
                     bufferedStream.write(b);
                 }

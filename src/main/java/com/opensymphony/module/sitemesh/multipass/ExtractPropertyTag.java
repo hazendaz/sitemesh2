@@ -21,6 +21,9 @@ import com.opensymphony.module.sitemesh.taglib.decorator.PropertyTag;
  */
 public class ExtractPropertyTag extends PropertyTag {
 
+    private static final long serialVersionUID = 1L;
+
+    @Override
     public int doEndTag() {
         Page page = getPage();
         page.addProperty("_sitemesh.removefrompage." + getProperty(), "true");

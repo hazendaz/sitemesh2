@@ -49,6 +49,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
     private ConfigLoader configLoader = null;
 
     /** Create new ConfigLoader using '/WEB-INF/decorators.xml' file. */
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         try {
@@ -60,6 +61,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
     }
 
     /** Retrieve {@link com.opensymphony.module.sitemesh.Decorator} based on 'pattern' tag. */
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         String thisPath = request.getServletPath();
 
@@ -89,6 +91,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
     }
 
     /** Retrieve Decorator named in 'name' attribute. Checks the role if specified. */
+    @Override
     public Decorator getNamedDecorator(HttpServletRequest request, String name) {
         Decorator result = null;
         try {
@@ -97,11 +100,10 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
             e.printStackTrace();
         }
 
-        if (result == null || (result.getRole() != null && !request.isUserInRole(result.getRole()))) {
+        if (result == null || result.getRole() != null && !request.isUserInRole(result.getRole())) {
             // if the result is null or the user is not in the role
             return super.getNamedDecorator(request, name);
-        } else {
-            return result;
         }
+        return result;
     }
 }

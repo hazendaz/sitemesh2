@@ -33,10 +33,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class DebugResponseWrapper extends HttpServletResponseWrapper {
 
     /** The last count. */
-    private static int lastCount = 0;
+    private static int lastCount;
 
     /** The count. */
-    private int count = 0;
+    private int count;
 
     /**
      * Instantiates a new debug response wrapper.
@@ -53,131 +53,170 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
         }
     }
 
+    @Override
     public void addCookie(Cookie cookie) {
-        if (enabled())
+        if (enabled()) {
             debug("addCookie", cookie.getName(), cookie.toString());
+        }
         super.addCookie(cookie);
     }
 
+    @Override
     public void addDateHeader(String name, long date) {
-        if (enabled())
+        if (enabled()) {
             debug("addDateHeader", name, String.valueOf(date));
+        }
         super.addDateHeader(name, date);
     }
 
+    @Override
     public void addHeader(String name, String value) {
-        if (enabled())
+        if (enabled()) {
             debug("addHeader", name, value);
+        }
         super.addHeader(name, value);
     }
 
+    @Override
     public void addIntHeader(String name, int value) {
-        if (enabled())
+        if (enabled()) {
             debug("addIntHeader", name, String.valueOf(value));
+        }
         super.addIntHeader(name, value);
     }
 
+    @Override
     public boolean containsHeader(String name) {
         return super.containsHeader(name);
     }
 
+    @Override
     public String encodeRedirectUrl(String url) {
         return super.encodeRedirectUrl(url);
     }
 
+    @Override
     public String encodeRedirectURL(String url) {
         return super.encodeRedirectURL(url);
     }
 
+    @Override
     public void sendError(int sc) throws IOException {
-        if (enabled())
+        if (enabled()) {
             debug("sendError", String.valueOf(sc), null);
+        }
         super.sendError(sc);
     }
 
+    @Override
     public void sendError(int sc, String msg) throws IOException {
-        if (enabled())
+        if (enabled()) {
             debug("sendError", String.valueOf(sc), msg);
+        }
         super.sendError(sc, msg);
     }
 
+    @Override
     public void sendRedirect(String location) throws IOException {
-        if (enabled())
+        if (enabled()) {
             debug("sendRedirect", location, null);
+        }
         super.sendRedirect(location);
     }
 
+    @Override
     public void setDateHeader(String name, long date) {
-        if (enabled())
+        if (enabled()) {
             debug("setDateHeader", name, String.valueOf(date));
+        }
         super.setDateHeader(name, date);
     }
 
+    @Override
     public void setHeader(String name, String value) {
-        if (enabled())
+        if (enabled()) {
             debug("setHeader", name, value);
+        }
         super.setHeader(name, value);
     }
 
+    @Override
     public void setIntHeader(String name, int value) {
-        if (enabled())
+        if (enabled()) {
             debug("setIntHeader", name, String.valueOf(value));
+        }
         super.setIntHeader(name, value);
     }
 
+    @Override
     public void setStatus(int sc) {
-        if (enabled())
+        if (enabled()) {
             debug("setStatus", String.valueOf(sc), null);
+        }
         super.setStatus(sc);
     }
 
+    @Override
     public void setStatus(int sc, String msg) {
-        if (enabled())
+        if (enabled()) {
             debug("setStatus", String.valueOf(sc), msg);
+        }
         super.setStatus(sc, msg);
     }
 
+    @Override
     public void flushBuffer() throws IOException {
-        if (enabled())
+        if (enabled()) {
             debug("flushBuffer", null, null);
+        }
         super.flushBuffer();
     }
 
+    @Override
     public int getBufferSize() {
         //
         return super.getBufferSize();
     }
 
+    @Override
     public String getCharacterEncoding() {
         //
         return super.getCharacterEncoding();
     }
 
+    @Override
     public Locale getLocale() {
         //
         return super.getLocale();
     }
 
+    @Override
     public ServletOutputStream getOutputStream() throws IOException {
-        if (enabled())
+        if (enabled()) {
             debug("getOutputStream", null, null);
+        }
         return super.getOutputStream();
     }
 
+    @Override
     public PrintWriter getWriter() throws IOException {
-        if (enabled())
+        if (enabled()) {
             debug("getWriter", null, null);
+        }
         return super.getWriter();
     }
 
+    @Override
     public boolean isCommitted() {
         //
         return super.isCommitted();
     }
 
+    @Override
     public void reset() {
-        if (enabled())
+        if (enabled()) {
             debug("reset", null, null);
+        }
         super.reset();
     }
 
@@ -185,27 +224,35 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
      * public void resetBuffer() { super.resetBuffer(); }
      */
 
+    @Override
     public void setBufferSize(int size) {
-        if (enabled())
+        if (enabled()) {
             debug("setBufferSize", String.valueOf(size), null);
+        }
         super.setBufferSize(size);
     }
 
+    @Override
     public void setContentLength(int len) {
-        if (enabled())
+        if (enabled()) {
             debug("setContentLength", String.valueOf(len), null);
+        }
         super.setContentLength(len);
     }
 
+    @Override
     public void setContentType(String type) {
-        if (enabled())
+        if (enabled()) {
             debug("setContentType", type, null);
+        }
         super.setContentType(type);
     }
 
+    @Override
     public void setLocale(Locale locale) {
-        if (enabled())
+        if (enabled()) {
             debug("setBufferSize", locale.getDisplayName(), null);
+        }
         super.setLocale(locale);
     }
 

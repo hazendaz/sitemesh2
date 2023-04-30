@@ -37,9 +37,10 @@ import java.nio.charset.CodingErrorAction;
 public class TextEncoder {
 
     /** The Constant DEFAULT_ENCODING. */
-    private static final String DEFAULT_ENCODING = System.getProperty("file.encoding");
+    private static final String DEFAULT_ENCODING = Charset.defaultCharset().displayName();
 
     /** The Constant JDK14. */
+    // TODO Issue with this code, look to fix
     private static final boolean JDK14 = System.getProperty("java.version").startsWith("1.4")
             || System.getProperty("java.version").startsWith("1.5");
 
@@ -62,9 +63,8 @@ public class TextEncoder {
         }
         if (JDK14) {
             return get14Buffer(data, encoding);
-        } else {
-            return get13Buffer(data, encoding);
         }
+        return get13Buffer(data, encoding);
     }
 
     /**
@@ -81,12 +81,11 @@ public class TextEncoder {
      *             Signals that an I/O exception has occurred.
      */
     private char[] get13Buffer(byte[] data, String encoding) throws IOException {
-        CharArrayWriter out = null;
         // Why all this indirection? Because we are being given bytes, and we have to then write
         // them to characters. We need to know the encoding of the characterset that we are creating.
         // The test that verifies this is InlineDecoratorTest (inline/page6.jsp).
         InputStreamReader reader;
-        out = new CharArrayWriter();
+        CharArrayWriter out = new CharArrayWriter();
         if (encoding != null) {
             reader = new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(encoding));
         } else {
@@ -114,8 +113,9 @@ public class TextEncoder {
      *             Signals that an I/O exception has occurred.
      */
     private char[] get14Buffer(byte[] data, String encoding) throws IOException {
-        if (!Charset.isSupported(encoding))
+        if (!Charset.isSupported(encoding)) {
             throw new IOException("Unsupported encoding " + encoding);
+        }
         Charset charset = Charset.forName(encoding);
         CharsetDecoder cd = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE)
                 .onUnmappableCharacter(CodingErrorAction.REPLACE);

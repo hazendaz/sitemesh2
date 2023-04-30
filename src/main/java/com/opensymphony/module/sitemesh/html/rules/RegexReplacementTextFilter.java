@@ -47,6 +47,7 @@ public class RegexReplacementTextFilter implements TextFilter {
         this.replacement = replacement;
     }
 
+    @Override
     public String filter(String text) {
         Matcher matcher = regex.matcher(text);
         return matcher.replaceAll(replacement);

@@ -45,6 +45,7 @@ public class CharArray {
     /**
      * Returns a String represenation of the character array.
      */
+    @Override
     public String toString() {
         return new String(buffer, 0, size);
     }
@@ -74,11 +75,13 @@ public class CharArray {
         if (newSize <= size) {
             size = newSize;
         } else {
-            if (newSize >= buffer.length)
+            if (newSize >= buffer.length) {
                 grow(newSize);
+            }
             // Pad the array
-            for (; size < newSize; size++)
+            for (; size < newSize; size++) {
                 buffer[size] = '\0';
+            }
         }
     }
 
@@ -106,8 +109,9 @@ public class CharArray {
 
     public CharArray append(char[] chars, int position, int length) {
         int requiredSize = length + size;
-        if (requiredSize >= buffer.length)
+        if (requiredSize >= buffer.length) {
             grow(requiredSize);
+        }
         System.arraycopy(chars, position, buffer, size, length);
         size = requiredSize;
         return this;
@@ -117,8 +121,9 @@ public class CharArray {
      * Appends a single character to the end of the character array.
      */
     public CharArray append(char c) {
-        if (buffer.length == size)
+        if (buffer.length == size) {
             grow(0);
+        }
         buffer[size++] = c;
         return this;
     }
@@ -129,11 +134,13 @@ public class CharArray {
      */
     public CharArray append(String str) {
         int requiredSize = str.length() + size;
-        if (requiredSize >= buffer.length)
+        if (requiredSize >= buffer.length) {
             grow(requiredSize);
+        }
 
-        for (int i = 0; i < str.length(); i++)
+        for (int i = 0; i < str.length(); i++) {
             buffer[size + i] = str.charAt(i);
+        }
 
         size = requiredSize;
         return this;
@@ -164,8 +171,9 @@ public class CharArray {
      * Returns the substring that was specified by the {@link #setSubstr(int, int)} call.
      */
     public String getLowerSubstr() {
-        for (int i = subStrStart; i < subStrStart + subStrLen; i++)
+        for (int i = subStrStart; i < subStrStart + subStrLen; i++) {
             buffer[i] |= 32;
+        }
         return new String(buffer, subStrStart, subStrLen);
     }
 
@@ -175,13 +183,15 @@ public class CharArray {
      */
     public boolean compareLowerSubstr(String lowerStr) {
         // Range check
-        if (lowerStr.length() != subStrLen || subStrLen <= 0)
+        if (lowerStr.length() != subStrLen || subStrLen <= 0) {
             return false;
+        }
 
         for (int i = 0; i < lowerStr.length(); i++) {
             // | 32 converts from ASCII uppercase to ASCII lowercase
-            if ((buffer[subStrStart + i] | 32) != lowerStr.charAt(i))
+            if ((buffer[subStrStart + i] | 32) != lowerStr.charAt(i)) {
                 return false;
+            }
         }
         return true;
     }
@@ -195,7 +205,8 @@ public class CharArray {
         int hash = 0;
         int offset = subStrStart;
         for (int i = 0; i < subStrLen; i++) {
-            hash = 31 * hash + (buffer[offset++] | 32);
+            hash = 31 * hash + (buffer[offset] | 32);
+            offset++;
         }
         return hash;
     }
@@ -212,13 +223,15 @@ public class CharArray {
      */
     public boolean compareLower(String lowerStr, int offset) {
         // Range check
-        if (offset < 0 || offset + lowerStr.length() > size)
+        if (offset < 0 || offset + lowerStr.length() > size) {
             return false;
+        }
 
         for (int i = 0; i < lowerStr.length(); i++) {
             // | 32 converts from ASCII uppercase to ASCII lowercase
-            if ((buffer[offset + i] | 32) != lowerStr.charAt(i))
+            if ((buffer[offset + i] | 32) != lowerStr.charAt(i)) {
                 return false;
+            }
         }
         return true;
     }

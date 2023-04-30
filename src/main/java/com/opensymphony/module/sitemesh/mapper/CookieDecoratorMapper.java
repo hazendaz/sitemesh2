@@ -47,6 +47,7 @@ public class CookieDecoratorMapper extends AbstractDecoratorMapper {
     /** The cookie name. */
     private String cookieName;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         cookieName = properties.getProperty("cookie.name", null);
@@ -55,12 +56,12 @@ public class CookieDecoratorMapper extends AbstractDecoratorMapper {
         }
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                Cookie cookie = cookies[i];
+            for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(cookieName)) {
                     result = getNamedDecorator(request, cookie.getValue());
                 }

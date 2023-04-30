@@ -25,6 +25,7 @@ public class MetaTagRule extends BasicRule {
         this.page = page;
     }
 
+    @Override
     public void process(Tag tag) {
         if (tag.hasAttribute("name", false)) {
             page.addProperty("meta." + tag.getAttributeValue("name", false), tag.getAttributeValue("content", false));

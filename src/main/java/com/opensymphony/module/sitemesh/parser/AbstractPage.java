@@ -25,7 +25,9 @@ package com.opensymphony.module.sitemesh.parser;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -64,10 +66,12 @@ public abstract class AbstractPage implements Page {
         this.sitemeshBuffer = sitemeshBuffer;
     }
 
+    @Override
     public void writePage(Writer out) throws IOException {
         sitemeshBuffer.writeTo(out, 0, sitemeshBuffer.getBufferLength());
     }
 
+    @Override
     public String getPage() {
         try {
             StringWriter writer = new StringWriter();
@@ -83,8 +87,10 @@ public abstract class AbstractPage implements Page {
      * <p>
      * Must be implemented. Data written should not actually contain the body tags, but all the data in between.
      */
+    @Override
     public abstract void writeBody(Writer out) throws IOException;
 
+    @Override
     public String getBody() {
         try {
             StringWriter writer = new StringWriter();
@@ -96,16 +102,20 @@ public abstract class AbstractPage implements Page {
     }
 
     /** Return title of from "title" property. Never returns null. */
+    @Override
     public String getTitle() {
         return noNull(getProperty("title"));
     }
 
+    @Override
     public String getProperty(String name) {
-        if (!isPropertySet(name))
+        if (!isPropertySet(name)) {
             return null;
+        }
         return (String) properties.get(name);
     }
 
+    @Override
     public int getIntProperty(String name) {
         try {
             return Integer.parseInt(noNull(getProperty(name)));
@@ -114,6 +124,7 @@ public abstract class AbstractPage implements Page {
         }
     }
 
+    @Override
     public long getLongProperty(String name) {
         try {
             return Long.parseLong(noNull(getProperty(name)));
@@ -122,10 +133,12 @@ public abstract class AbstractPage implements Page {
         }
     }
 
+    @Override
     public boolean getBooleanProperty(String name) {
         String property = getProperty(name);
-        if (property == null || property.trim().length() == 0)
+        if (property == null || property.trim().length() == 0) {
             return false;
+        }
         switch (property.charAt(0)) {
             case '1':
             case 't':
@@ -138,10 +151,12 @@ public abstract class AbstractPage implements Page {
         }
     }
 
+    @Override
     public boolean isPropertySet(String name) {
         return properties.containsKey(name);
     }
 
+    @Override
     public String[] getPropertyKeys() {
         synchronized (properties) {
             Set keys = properties.keySet();
@@ -149,11 +164,13 @@ public abstract class AbstractPage implements Page {
         }
     }
 
+    @Override
     public Map getProperties() {
         return properties;
     }
 
     /** @see com.opensymphony.module.sitemesh.Page#getRequest() */
+    @Override
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -163,6 +180,7 @@ public abstract class AbstractPage implements Page {
      *
      * @see com.opensymphony.module.sitemesh.Page#getRequest()
      */
+    @Override
     public void setRequest(HttpServletRequest request) {
         this.request = new PageRequest(request);
     }
@@ -175,6 +193,7 @@ public abstract class AbstractPage implements Page {
      * @param value
      *            Value of property
      */
+    @Override
     public void addProperty(String name, String value) {
         properties.put(name, value);
     }
@@ -207,26 +226,32 @@ class PageRequest extends HttpServletRequestWrapper {
         servletPath = request.getServletPath();
     }
 
+    @Override
     public String getRequestURI() {
         return requestURI;
     }
 
+    @Override
     public String getMethod() {
         return method;
     }
 
+    @Override
     public String getPathInfo() {
         return pathInfo;
     }
 
+    @Override
     public String getPathTranslated() {
         return pathTranslated;
     }
 
+    @Override
     public String getQueryString() {
         return queryString;
     }
 
+    @Override
     public String getServletPath() {
         return servletPath;
     }

@@ -21,9 +21,6 @@ public class StateTransitionRule extends BasicRule {
     /** The new state. */
     private final State newState;
 
-    /** The write enclosing tag. */
-    private final boolean writeEnclosingTag;
-
     /** The last state. */
     private State lastState;
 
@@ -52,9 +49,9 @@ public class StateTransitionRule extends BasicRule {
     public StateTransitionRule(String tagName, State newState, boolean writeEnclosingTag) {
         super(tagName);
         this.newState = newState;
-        this.writeEnclosingTag = writeEnclosingTag;
     }
 
+    @Override
     public void process(Tag tag) {
         if (tag.getType() == Tag.OPEN) {
             lastState = context.currentState();

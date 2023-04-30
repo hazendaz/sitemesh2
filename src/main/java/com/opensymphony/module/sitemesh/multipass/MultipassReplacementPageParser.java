@@ -50,14 +50,17 @@ public class MultipassReplacementPageParser implements PageParser {
         this.response = response;
     }
 
+    @Override
     public Page parse(char[] buffer) throws IOException {
         return parse(new DefaultSitemeshBuffer(buffer));
     }
 
+    @Override
     public Page parse(SitemeshBuffer sitemeshBuffer) throws IOException {
         SitemeshBufferFragment.Builder builder = SitemeshBufferFragment.builder().setBuffer(sitemeshBuffer);
         HTMLProcessor processor = new HTMLProcessor(sitemeshBuffer, builder);
         processor.addRule(new BasicRule("sitemesh:multipass") {
+            @Override
             public void process(Tag tag) {
                 currentBuffer().delete(tag.getPosition(), tag.getLength());
                 String id = tag.getAttributeValue("id", true);

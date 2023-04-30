@@ -22,7 +22,12 @@
 
 package com.opensymphony.module.sitemesh.velocity;
 
-import com.opensymphony.module.sitemesh.*;
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 
 import java.io.StringWriter;
@@ -40,6 +45,9 @@ import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class VelocityDecoratorServlet extends VelocityViewServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
     public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context)
             throws Exception {
         HTMLPage htmlPage = (HTMLPage) request.getAttribute(RequestConstants.PAGE);
@@ -85,7 +93,6 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      */
     private DecoratorMapper getDecoratorMapper() {
         Factory factory = Factory.getInstance(new Config(getServletConfig()));
-        DecoratorMapper decoratorMapper = factory.getDecoratorMapper();
-        return decoratorMapper;
+        return factory.getDecoratorMapper();
     }
 }

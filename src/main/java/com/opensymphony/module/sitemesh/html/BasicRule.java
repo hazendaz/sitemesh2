@@ -65,9 +65,10 @@ public abstract class BasicRule implements TagRule {
                     + " should be constructed with acceptableTagNames OR should implement shouldProcess()");
         }
 
-        for (int i = 0; i < acceptableTagNames.length; i++) {
-            if (name.equals(acceptableTagNames[i]))
+        for (String acceptableTagName : acceptableTagNames) {
+            if (name.equals(acceptableTagName)) {
                 return true;
+            }
         }
         return false;
     }

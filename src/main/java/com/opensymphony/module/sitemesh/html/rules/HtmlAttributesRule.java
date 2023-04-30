@@ -25,6 +25,7 @@ public class HtmlAttributesRule extends BasicRule {
         this.page = page;
     }
 
+    @Override
     public void process(Tag tag) {
         if (tag.getType() == Tag.OPEN) {
             context.currentBuffer().markStart(tag.getPosition() + tag.getLength());

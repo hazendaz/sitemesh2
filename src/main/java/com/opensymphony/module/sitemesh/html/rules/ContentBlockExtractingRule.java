@@ -27,10 +27,12 @@ public class ContentBlockExtractingRule extends BlockExtractingRule {
         this.page = page;
     }
 
+    @Override
     protected void start(Tag tag) {
         contentBlockId = tag.getAttributeValue("tag", false);
     }
 
+    @Override
     protected void end(Tag tag) {
         page.addProperty("page." + contentBlockId, getCurrentBufferContent());
     }

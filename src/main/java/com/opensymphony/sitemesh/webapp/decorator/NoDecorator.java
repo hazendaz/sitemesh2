@@ -52,6 +52,7 @@ public class NoDecorator extends BaseWebAppDecorator {
      * @throws ServletException
      *             the servlet exception
      */
+    @Override
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
 

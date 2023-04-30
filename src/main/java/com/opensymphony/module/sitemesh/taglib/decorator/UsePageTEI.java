@@ -39,6 +39,7 @@ public class UsePageTEI extends TagExtraInfo {
         return "com.opensymphony.module.sitemesh.Page";
     }
 
+    @Override
     public VariableInfo[] getVariableInfo(TagData data) {
         String id = data.getAttributeString("id");
         return new VariableInfo[] { new VariableInfo(id, getType(), true, VariableInfo.AT_END) };

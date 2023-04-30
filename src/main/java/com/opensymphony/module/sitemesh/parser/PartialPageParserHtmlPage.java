@@ -93,30 +93,33 @@ public class PartialPageParserHtmlPage extends PartialPageParserPage implements 
         }
     }
 
+    @Override
     public void writeHead(Writer out) throws IOException {
         if (head != null) {
             head.writeTo(out);
         }
     }
 
+    @Override
     public String getHead() {
-        if (head != null) {
-            StringWriter headString = new StringWriter();
-            try {
-                head.writeTo(headString);
-            } catch (IOException e) {
-                throw new RuntimeException("IOException occured while writing to buffer?", e);
-            }
-            return headString.toString();
-        } else {
+        if (head == null) {
             return "";
         }
+        StringWriter headString = new StringWriter();
+        try {
+            head.writeTo(headString);
+        } catch (IOException e) {
+            throw new RuntimeException("IOException occured while writing to buffer?", e);
+        }
+        return headString.toString();
     }
 
+    @Override
     public boolean isFrameSet() {
         return false;
     }
 
+    @Override
     public void setFrameSet(boolean frameset) {
         throw new UnsupportedOperationException();
     }

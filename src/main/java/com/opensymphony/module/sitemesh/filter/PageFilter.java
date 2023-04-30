@@ -26,6 +26,7 @@ import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
  *
  * @deprecated Use {@link com.opensymphony.sitemesh.webapp.SiteMeshFilter} instead.
  */
+@Deprecated
 public class PageFilter extends SiteMeshFilter {
 
 }

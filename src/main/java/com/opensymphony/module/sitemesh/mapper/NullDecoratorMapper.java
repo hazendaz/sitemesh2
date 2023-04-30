@@ -43,15 +43,18 @@ import javax.servlet.http.HttpServletRequest;
 public class NullDecoratorMapper implements DecoratorMapper {
 
     /** Does nothing. */
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) {
     }
 
     /** Returns null. */
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         return null;
     }
 
     /** Returns null. */
+    @Override
     public Decorator getNamedDecorator(HttpServletRequest request, String name) {
         return null;
     }

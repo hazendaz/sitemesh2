@@ -62,6 +62,7 @@ public class OSDecoratorMapper extends AbstractDecoratorMapper {
      * @param parent
      *            The parent DecoratorMapper object
      */
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent)
             throws java.lang.InstantiationException {
         this.properties = properties;
@@ -79,10 +80,12 @@ public class OSDecoratorMapper extends AbstractDecoratorMapper {
      * @return A Decorator object that is either the decorator for the identified OS, or the parent DecoratorMapper's
      *         decorator
      */
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         String osHeader = request.getHeader("UA-OS");
-        if (osHeader == null)
+        if (osHeader == null) {
             return parent.getDecorator(request, page);
+        }
 
         // run through the list of operating systems the application developer listed
         // in sitemesh.xml to see if we have a match to the user's current OS

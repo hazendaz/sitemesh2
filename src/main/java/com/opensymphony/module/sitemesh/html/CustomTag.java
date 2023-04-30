@@ -88,6 +88,7 @@ public class CustomTag implements Tag {
         }
     }
 
+    @Override
     public String getContents() {
         SitemeshBufferFragment.Builder buffer = SitemeshBufferFragment.builder()
                 .setBuffer(new DefaultSitemeshBuffer(new char[] {}));
@@ -95,6 +96,7 @@ public class CustomTag implements Tag {
         return buffer.build().getStringContent();
     }
 
+    @Override
     public void writeTo(SitemeshBufferFragment.Builder buffer, int position) {
         StringWriter out = new StringWriter();
         if (type == Tag.CLOSE) {
@@ -124,41 +126,47 @@ public class CustomTag implements Tag {
         buffer.insert(position, StringSitemeshBuffer.createBufferFragment(out.toString()));
     }
 
+    @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof CustomTag))
+        }
+        if (!(o instanceof CustomTag)) {
             return false;
+        }
 
         final CustomTag customTag = (CustomTag) o;
 
-        if (type != customTag.type)
+        if ((type != customTag.type)
+                || (attributes != null ? !Arrays.equals(attributes, customTag.attributes)
+                        : customTag.attributes != null)
+                || (name != null ? !name.equals(customTag.name) : customTag.name != null)) {
             return false;
-        if (attributes != null ? !Arrays.equals(attributes, customTag.attributes) : customTag.attributes != null)
-            return false;
-        if (name != null ? !name.equals(customTag.name) : customTag.name != null)
-            return false;
+        }
 
         return true;
     }
 
+    @Override
     public int hashCode() {
-        int result = (attributes != null ? attributes.hashCode() : 0);
+        int result = attributes != null ? attributes.hashCode() : 0;
         result = 29 * result + (name != null ? name.hashCode() : 0);
-        result = 29 * result + type;
-        return result;
+        return 29 * result + type;
     }
 
+    @Override
     public String toString() {
         return getContents();
     }
 
     // ---------- Standard methods to implement Tag interface ------
 
+    @Override
     public int getAttributeCount() {
         return attributeCount / 2;
     }
 
+    @Override
     public int getAttributeIndex(String name, boolean caseSensitive) {
         if (attributes == null) {
             return -1;
@@ -173,27 +181,31 @@ public class CustomTag implements Tag {
         return -1;
     }
 
+    @Override
     public String getAttributeName(int index) {
         return attributes[index * 2];
     }
 
+    @Override
     public String getAttributeValue(int index) {
         return attributes[index * 2 + 1];
     }
 
+    @Override
     public String getAttributeValue(String name, boolean caseSensitive) {
         int attributeIndex = getAttributeIndex(name, caseSensitive);
         if (attributeIndex == -1) {
             return null;
-        } else {
-            return attributes[attributeIndex * 2 + 1];
         }
+        return attributes[attributeIndex * 2 + 1];
     }
 
+    @Override
     public boolean hasAttribute(String name, boolean caseSensitive) {
         return getAttributeIndex(name, caseSensitive) > -1;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -204,6 +216,7 @@ public class CustomTag implements Tag {
      * &lt;/blah&gt; - Tag.CLOSE<br/>
      * &lt;blah/&gt; - Tag.EMPTY<br/>
      */
+    @Override
     public int getType() {
         return type;
     }
@@ -219,9 +232,8 @@ public class CustomTag implements Tag {
     public void setName(String name) {
         if (name == null || name.length() == 0) {
             throw new IllegalArgumentException("CustomTag requires a name");
-        } else {
-            this.name = name;
         }
+        this.name = name;
     }
 
     /**
@@ -234,12 +246,11 @@ public class CustomTag implements Tag {
      *            the new type
      */
     public void setType(int type) {
-        if (type == Tag.OPEN || type == Tag.CLOSE || type == Tag.EMPTY) {
-            this.type = type;
-        } else {
+        if ((type != Tag.OPEN) && (type != Tag.CLOSE) && (type != Tag.EMPTY)) {
             throw new IllegalArgumentException(
                     "CustomTag must be of type Tag.OPEN, Tag.CLOSE or Tag.EMPTY - was " + type);
         }
+        this.type = type;
     }
 
     /**
@@ -269,7 +280,7 @@ public class CustomTag implements Tag {
         }
         attributes[attributeCount++] = name;
         attributes[attributeCount++] = value;
-        return (attributeCount / 2) - 1;
+        return attributeCount / 2 - 1;
     }
 
     /**
@@ -312,7 +323,7 @@ public class CustomTag implements Tag {
      *            the value
      */
     public void setAttributeValue(int attributeIndex, String value) {
-        attributes[(attributeIndex * 2) + 1] = value;
+        attributes[attributeIndex * 2 + 1] = value;
     }
 
     /**
@@ -329,7 +340,7 @@ public class CustomTag implements Tag {
         // shift everything down one and null the last two
         String[] newAttributes = new String[attributes.length - 2];
         System.arraycopy(attributes, 0, newAttributes, 0, attributeIndex * 2);
-        int next = (attributeIndex * 2) + 2;
+        int next = attributeIndex * 2 + 2;
         System.arraycopy(attributes, next, newAttributes, attributeIndex * 2, attributes.length - next);
         attributeCount = attributeCount - 2;
         attributes = newAttributes;
@@ -347,15 +358,16 @@ public class CustomTag implements Tag {
         int attributeIndex = getAttributeIndex(name, caseSensitive);
         if (attributeIndex == -1) {
             throw new IllegalArgumentException("Attribute " + name + " not found");
-        } else {
-            removeAttribute(attributeIndex);
         }
+        removeAttribute(attributeIndex);
     }
 
+    @Override
     public int getPosition() {
         return 0;
     }
 
+    @Override
     public int getLength() {
         return 0;
     }

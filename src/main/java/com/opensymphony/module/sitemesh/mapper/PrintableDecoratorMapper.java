@@ -51,6 +51,7 @@ public class PrintableDecoratorMapper extends AbstractDecoratorMapper {
     /** The param value. */
     private String decorator, paramName, paramValue;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         decorator = properties.getProperty("decorator");
@@ -58,6 +59,7 @@ public class PrintableDecoratorMapper extends AbstractDecoratorMapper {
         paramValue = properties.getProperty("parameter.value", "true");
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
         if (decorator != null && paramValue.equalsIgnoreCase(request.getParameter(paramName))) {

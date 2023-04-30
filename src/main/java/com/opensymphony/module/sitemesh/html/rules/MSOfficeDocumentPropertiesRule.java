@@ -32,21 +32,25 @@ public class MSOfficeDocumentPropertiesRule extends BlockExtractingRule {
         this.page = page;
     }
 
+    @Override
     public boolean shouldProcess(String name) {
-        return (inDocumentProperties && name.startsWith("o:")) || name.equals("o:documentproperties");
+        return inDocumentProperties && name.startsWith("o:") || name.equals("o:documentproperties");
     }
 
+    @Override
     public void process(Tag tag) {
         if (tag.getName().equals("o:DocumentProperties")) {
-            inDocumentProperties = (tag.getType() == Tag.OPEN);
+            inDocumentProperties = tag.getType() == Tag.OPEN;
         } else {
             super.process(tag);
         }
     }
 
+    @Override
     protected void start(Tag tag) {
     }
 
+    @Override
     protected void end(Tag tag) {
         String name = tag.getName().substring(2);
         page.addProperty("office.DocumentProperties." + name, getCurrentBufferContent());

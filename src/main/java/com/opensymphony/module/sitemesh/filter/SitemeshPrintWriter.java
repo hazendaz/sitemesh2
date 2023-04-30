@@ -40,10 +40,12 @@ public class SitemeshPrintWriter extends PrintWriter implements SitemeshWriter {
         this.sitemeshWriter = sitemeshWriter;
     }
 
+    @Override
     public boolean writeSitemeshBufferFragment(SitemeshBufferFragment bufferFragment) throws IOException {
         return sitemeshWriter.writeSitemeshBufferFragment(bufferFragment);
     }
 
+    @Override
     public SitemeshBuffer getSitemeshBuffer() {
         return sitemeshWriter.getSitemeshBuffer();
     }

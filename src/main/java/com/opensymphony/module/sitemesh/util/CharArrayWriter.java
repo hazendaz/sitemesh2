@@ -56,6 +56,7 @@ public class CharArrayWriter extends Writer {
     /**
      * Writes a character to the buffer.
      */
+    @Override
     public void write(int c) {
         int newcount = count + 1;
         if (newcount > buf.length) {
@@ -77,10 +78,12 @@ public class CharArrayWriter extends Writer {
      * @param len
      *            the number of chars that are written
      */
+    @Override
     public void write(char c[], int off, int len) {
-        if ((off < 0) || (off > c.length) || (len < 0) || ((off + len) > c.length) || ((off + len) < 0)) {
+        if (off < 0 || off > c.length || len < 0 || off + len > c.length || off + len < 0) {
             throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
+        }
+        if (len == 0) {
             return;
         }
         int newcount = count + len;
@@ -103,6 +106,7 @@ public class CharArrayWriter extends Writer {
      * @param len
      *            Number of characters to be written
      */
+    @Override
     public void write(String str, int off, int len) {
         int newcount = count + len;
         if (newcount > buf.length) {
@@ -159,6 +163,7 @@ public class CharArrayWriter extends Writer {
      *
      * @return the string.
      */
+    @Override
     public String toString() {
         return new String(buf, 0, count);
     }
@@ -166,12 +171,14 @@ public class CharArrayWriter extends Writer {
     /**
      * Flush the stream.
      */
+    @Override
     public void flush() {
     }
 
     /**
      * Close the stream. This method does not release the buffer, since its contents might still be required.
      */
+    @Override
     public void close() {
     }
 

@@ -71,7 +71,7 @@ public class FreemarkerDecoratorServlet extends FreemarkerServlet {
             htmlPage.writeHead(buffer);
             head = buffer.toString();
 
-            hash.put("page", (TemplateModel) htmlPage);
+            hash.put("page", htmlPage);
         }
 
         hash.put("title", title);

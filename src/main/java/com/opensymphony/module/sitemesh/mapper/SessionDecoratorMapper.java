@@ -39,11 +39,13 @@ public class SessionDecoratorMapper extends AbstractDecoratorMapper {
     /** The decorator parameter. */
     private String decoratorParameter = null;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         decoratorParameter = properties.getProperty("decorator.parameter", "decorator");
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
         String decorator = (String) request.getSession().getAttribute(decoratorParameter);

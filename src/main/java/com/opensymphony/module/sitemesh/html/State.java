@@ -106,8 +106,9 @@ public final class State {
      *            the listener
      */
     public void addListener(StateChangeListener listener) {
-        if (listeners == null)
+        if (listeners == null) {
             listeners = new ArrayList();
+        }
         listeners.add(listener);
     }
 
@@ -115,8 +116,9 @@ public final class State {
      * End of state.
      */
     public void endOfState() {
-        if (listeners == null)
+        if (listeners == null) {
             return;
+        }
         for (Iterator iter = listeners.iterator(); iter.hasNext();) {
             StateChangeListener listener = (StateChangeListener) iter.next();
             listener.stateFinished();

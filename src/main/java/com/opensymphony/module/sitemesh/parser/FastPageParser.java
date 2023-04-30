@@ -43,6 +43,7 @@ import java.util.Map;
  *
  * @deprecated Use HTMLPageParser instead - it performs better and is more extensible.
  */
+@Deprecated
 public final class FastPageParser implements PageParser {
 
     /** The Constant TOKEN_NONE. */
@@ -175,10 +176,12 @@ public final class FastPageParser implements PageParser {
     /** The Constant CONTENT_HASH. */
     private static final int CONTENT_HASH = 951530617; // "content".hashCode();
 
+    @Override
     public Page parse(char[] buffer) throws IOException {
         return parse(new DefaultSitemeshBuffer(buffer));
     }
 
+    @Override
     public Page parse(SitemeshBuffer buffer) throws IOException {
         CharArrayReader reader = new CharArrayReader(buffer.getCharArray(), 0, buffer.getBufferLength());
         CharArray _buffer = new CharArray(4096);
@@ -218,8 +221,9 @@ public final class FastPageParser implements PageParser {
                         continue;
                     }
 
-                    if (parseTag(tagObject, _buffer) == null)
+                    if (parseTag(tagObject, _buffer) == null) {
                         continue;
+                    }
 
                     if (_buffer.compareLowerSubstr("/content")) // Note that the '/' survives the | 32 operation
                     {
@@ -234,201 +238,203 @@ public final class FastPageParser implements PageParser {
                         _currentTaggedContent.append('<').append(_buffer).append('>');
                     }
                 } else {
-                    if (_buffer.length() > 0)
+                    if (_buffer.length() > 0) {
                         _currentTaggedContent.append(_buffer);
+                    }
                 }
-            } else {
-                if (_tokenType == TOKEN_TAG || _tokenType == TOKEN_EMPTYTAG) {
-                    if (_buffer == null || _buffer.length() == 0) {
-                        _tokenType = TOKEN_NONE;
-                        continue;
+            } else if (_tokenType == TOKEN_TAG || _tokenType == TOKEN_EMPTYTAG) {
+                if (_buffer == null || _buffer.length() == 0) {
+                    _tokenType = TOKEN_NONE;
+                    continue;
+                }
+
+                if (parseTag(tagObject, _buffer) == null) {
+                    _tokenType = TOKEN_TEXT;
+                    continue;
+                }
+
+                int tagHash = _buffer.substrHashCode();
+
+                if (state == TAG_STATE_XML || state == TAG_STATE_XMP) {
+                    writeTag(state, laststate, hide, _head, _buffer, _body);
+                    if (state == TAG_STATE_XML && tagHash == SLASH_XML_HASH
+                            || state == TAG_STATE_XMP && tagHash == SLASH_XMP_HASH) {
+                        state = laststate;
                     }
-
-                    if (parseTag(tagObject, _buffer) == null) {
-                        _tokenType = TOKEN_TEXT;
-                        continue;
-                    }
-
-                    int tagHash = _buffer.substrHashCode();
-
-                    if (state == TAG_STATE_XML || state == TAG_STATE_XMP) {
-                        writeTag(state, laststate, hide, _head, _buffer, _body);
-                        if ((state == TAG_STATE_XML && tagHash == SLASH_XML_HASH)
-                                || (state == TAG_STATE_XMP && tagHash == SLASH_XMP_HASH)) {
-                            state = laststate;
-                        }
-                    } else {
-                        boolean doDefault = false;
-                        switch (tagHash) {
-                            case HTML_HASH:
-                                if (!_buffer.compareLowerSubstr("html")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                state = TAG_STATE_HTML;
-                                _htmlProperties = parseProperties(tagObject, _buffer).properties;
-                                break;
-                            case HEAD_HASH:
-                                if (!_buffer.compareLowerSubstr("head")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                state = TAG_STATE_HEAD;
-                                break;
-                            case XML_HASH:
-                                if (!_buffer.compareLowerSubstr("xml")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                laststate = state;
-                                writeTag(state, laststate, hide, _head, _buffer, _body);
-                                state = TAG_STATE_XML;
-                                break;
-                            case XMP_HASH:
-                                if (!_buffer.compareLowerSubstr("xmp")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                laststate = state;
-                                writeTag(state, laststate, hide, _head, _buffer, _body);
-                                state = TAG_STATE_XMP;
-                                break;
-                            case TITLE_HASH:
-                                if (!_buffer.compareLowerSubstr("title")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                if (doneTitle) {
-                                    hide = true;
-                                } else {
-                                    laststate = state;
-                                    state = TAG_STATE_TITLE;
-                                }
-                                break;
-                            case SLASH_TITLE_HASH:
-                                if (!_buffer.compareLowerSubstr("/title")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                if (doneTitle) {
-                                    hide = false;
-                                } else {
-                                    doneTitle = true;
-                                    state = laststate;
-                                }
-                                break;
-                            case PARAMETER_HASH:
-                                if (!_buffer.compareLowerSubstr("parameter")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                parseProperties(tagObject, _buffer);
-                                String name = (String) tagObject.properties.get("name");
-                                String value = (String) tagObject.properties.get("value");
-
-                                if (name != null && value != null) {
-                                    _sitemeshProperties.put(name, value);
-                                }
-                                break;
-                            case META_HASH:
-                                if (!_buffer.compareLowerSubstr("meta")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                CharArray metaDestination = state == TAG_STATE_HEAD ? _head : _body;
-                                metaDestination.append('<');
-                                metaDestination.append(_buffer);
-                                metaDestination.append('>');
-                                parseProperties(tagObject, _buffer);
-                                name = (String) tagObject.properties.get("name");
-                                value = (String) tagObject.properties.get("content");
-
-                                if (name == null) {
-                                    String httpEquiv = (String) tagObject.properties.get("http-equiv");
-
-                                    if (httpEquiv != null) {
-                                        name = "http-equiv." + httpEquiv;
-                                    }
-                                }
-
-                                if (name != null && value != null) {
-                                    _metaProperties.put(name, value);
-                                }
-                                break;
-                            case SLASH_HEAD_HASH:
-                                if (!_buffer.compareLowerSubstr("/head")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                state = TAG_STATE_HTML;
-                                break;
-                            case FRAME_HASH:
-                                if (!_buffer.compareLowerSubstr("frame")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                _frameSet = true;
-                                break;
-                            case FRAMESET_HASH:
-                                if (!_buffer.compareLowerSubstr("frameset")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                _frameSet = true;
-                                break;
-                            case BODY_HASH:
-                                if (!_buffer.compareLowerSubstr("body")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                if (_tokenType == TOKEN_EMPTYTAG) {
-                                    state = TAG_STATE_BODY;
-                                }
-                                _bodyProperties = parseProperties(tagObject, _buffer).properties;
-                                break;
-                            case CONTENT_HASH:
-                                if (!_buffer.compareLowerSubstr("content")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                state = TAG_STATE_NONE;
-                                Map props = parseProperties(tagObject, _buffer).properties;
-                                if (props != null) {
-                                    tagged = true;
-                                    _contentTagId = (String) props.get("tag");
-                                }
-                                break;
-                            case SLASH_XMP_HASH:
-                                if (!_buffer.compareLowerSubstr("/xmp")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                hide = false;
-                                break;
-                            case SLASH_BODY_HASH:
-                                if (!_buffer.compareLowerSubstr("/body")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                state = TAG_STATE_NONE;
-                                hide = true;
-                                break;
-                            case SLASH_HTML_HASH:
-                                if (!_buffer.compareLowerSubstr("/html")) { // skip any accidental hash collisions
-                                    doDefault = true;
-                                    break;
-                                }
-                                state = TAG_STATE_NONE;
-                                hide = true;
-                                break;
-                            default:
+                } else {
+                    boolean doDefault = false;
+                    switch (tagHash) {
+                        case HTML_HASH:
+                            if (!_buffer.compareLowerSubstr("html")) { // skip any accidental hash collisions
                                 doDefault = true;
-                        }
-                        if (doDefault)
+                                break;
+                            }
+                            state = TAG_STATE_HTML;
+                            _htmlProperties = parseProperties(tagObject, _buffer).properties;
+                            break;
+                        case HEAD_HASH:
+                            if (!_buffer.compareLowerSubstr("head")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            state = TAG_STATE_HEAD;
+                            break;
+                        case XML_HASH:
+                            if (!_buffer.compareLowerSubstr("xml")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            laststate = state;
                             writeTag(state, laststate, hide, _head, _buffer, _body);
+                            state = TAG_STATE_XML;
+                            break;
+                        case XMP_HASH:
+                            if (!_buffer.compareLowerSubstr("xmp")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            laststate = state;
+                            writeTag(state, laststate, hide, _head, _buffer, _body);
+                            state = TAG_STATE_XMP;
+                            break;
+                        case TITLE_HASH:
+                            if (!_buffer.compareLowerSubstr("title")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            if (doneTitle) {
+                                hide = true;
+                            } else {
+                                laststate = state;
+                                state = TAG_STATE_TITLE;
+                            }
+                            break;
+                        case SLASH_TITLE_HASH:
+                            if (!_buffer.compareLowerSubstr("/title")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            if (doneTitle) {
+                                hide = false;
+                            } else {
+                                doneTitle = true;
+                                state = laststate;
+                            }
+                            break;
+                        case PARAMETER_HASH:
+                            if (!_buffer.compareLowerSubstr("parameter")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            parseProperties(tagObject, _buffer);
+                            String name = (String) tagObject.properties.get("name");
+                            String value = (String) tagObject.properties.get("value");
+
+                            if (name != null && value != null) {
+                                _sitemeshProperties.put(name, value);
+                            }
+                            break;
+                        case META_HASH:
+                            if (!_buffer.compareLowerSubstr("meta")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            CharArray metaDestination = state == TAG_STATE_HEAD ? _head : _body;
+                            metaDestination.append('<');
+                            metaDestination.append(_buffer);
+                            metaDestination.append('>');
+                            parseProperties(tagObject, _buffer);
+                            name = (String) tagObject.properties.get("name");
+                            value = (String) tagObject.properties.get("content");
+
+                            if (name == null) {
+                                String httpEquiv = (String) tagObject.properties.get("http-equiv");
+
+                                if (httpEquiv != null) {
+                                    name = "http-equiv." + httpEquiv;
+                                }
+                            }
+
+                            if (name != null && value != null) {
+                                _metaProperties.put(name, value);
+                            }
+                            break;
+                        case SLASH_HEAD_HASH:
+                            if (!_buffer.compareLowerSubstr("/head")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            state = TAG_STATE_HTML;
+                            break;
+                        case FRAME_HASH:
+                            if (!_buffer.compareLowerSubstr("frame")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            _frameSet = true;
+                            break;
+                        case FRAMESET_HASH:
+                            if (!_buffer.compareLowerSubstr("frameset")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            _frameSet = true;
+                            break;
+                        case BODY_HASH:
+                            if (!_buffer.compareLowerSubstr("body")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            if (_tokenType == TOKEN_EMPTYTAG) {
+                                state = TAG_STATE_BODY;
+                            }
+                            _bodyProperties = parseProperties(tagObject, _buffer).properties;
+                            break;
+                        case CONTENT_HASH:
+                            if (!_buffer.compareLowerSubstr("content")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            state = TAG_STATE_NONE;
+                            Map props = parseProperties(tagObject, _buffer).properties;
+                            if (props != null) {
+                                tagged = true;
+                                _contentTagId = (String) props.get("tag");
+                            }
+                            break;
+                        case SLASH_XMP_HASH:
+                            if (!_buffer.compareLowerSubstr("/xmp")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            hide = false;
+                            break;
+                        case SLASH_BODY_HASH:
+                            if (!_buffer.compareLowerSubstr("/body")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            state = TAG_STATE_NONE;
+                            hide = true;
+                            break;
+                        case SLASH_HTML_HASH:
+                            if (!_buffer.compareLowerSubstr("/html")) { // skip any accidental hash collisions
+                                doDefault = true;
+                                break;
+                            }
+                            state = TAG_STATE_NONE;
+                            hide = true;
+                            break;
+                        default:
+                            doDefault = true;
                     }
-                } else if (!hide) {
-                    if (_tokenType == TOKEN_TEXT) {
+                    if (doDefault) {
+                        writeTag(state, laststate, hide, _head, _buffer, _body);
+                    }
+                }
+            } else if (!hide) {
+                switch (_tokenType) {
+                    case TOKEN_TEXT:
                         if (state == TAG_STATE_TITLE) {
                             _title.append(_buffer);
                         } else if (shouldWriteToHead(state, laststate)) {
@@ -436,21 +442,29 @@ public final class FastPageParser implements PageParser {
                         } else {
                             _body.append(_buffer);
                         }
-                    } else if (_tokenType == TOKEN_COMMENT) {
+                        break;
+                    case TOKEN_COMMENT: {
                         final CharArray commentDestination = shouldWriteToHead(state, laststate) ? _head : _body;
                         commentDestination.append("<!--");
                         commentDestination.append(_buffer);
                         commentDestination.append("-->");
-                    } else if (_tokenType == TOKEN_CDATA) {
+                        break;
+                    }
+                    case TOKEN_CDATA: {
                         final CharArray commentDestination = state == TAG_STATE_HEAD ? _head : _body;
                         commentDestination.append("<![CDATA[");
                         commentDestination.append(_buffer);
                         commentDestination.append("]]>");
-                    } else if (_tokenType == TOKEN_SCRIPT) {
+                        break;
+                    }
+                    case TOKEN_SCRIPT: {
                         final CharArray commentDestination = state == TAG_STATE_HEAD ? _head : _body;
                         commentDestination.append('<');
                         commentDestination.append(_buffer);
+                        break;
                     }
+                    default:
+                        break;
                 }
             }
             _buffer.setLength(0);
@@ -477,10 +491,9 @@ public final class FastPageParser implements PageParser {
                     if (_buffer.length() > 0 && tmpstate == STATE_TEXT) {
                         _tokenType = TOKEN_TEXT;
                         break start;
-                    } else {
-                        _tokenType = TOKEN_EOF;
-                        break start;
                     }
+                    _tokenType = TOKEN_EOF;
+                    break start;
                 }
 
                 switch (_state) {
@@ -495,7 +508,8 @@ public final class FastPageParser implements PageParser {
                             }
                             _state = STATE_TEXT;
                             break start;
-                        } else if (c == '/') {
+                        }
+                        if (c == '/') {
                             _buffer.append('/');
                         } else if (c == '<' && buflen == 0) {
                             _buffer.append("<<");
@@ -559,7 +573,8 @@ public final class FastPageParser implements PageParser {
                             _state = STATE_TEXT;
                             _tokenType = TOKEN_COMMENT;
                             break start;
-                        } else if (c == '-') {
+                        }
+                        if (c == '-') {
                             _comment++;
                         } else {
                             _comment = 0;
@@ -576,7 +591,8 @@ public final class FastPageParser implements PageParser {
                             _state = STATE_TEXT;
                             _tokenType = TOKEN_CDATA;
                             break start;
-                        } else if (c == ']') {
+                        }
+                        if (c == ']') {
                             _comment++;
                         } else {
                             _comment = 0;
@@ -590,12 +606,10 @@ public final class FastPageParser implements PageParser {
                         _buffer.append((char) c);
                         if (c == '<') {
                             _comment = 0;
-                        } else if ((c == '/' && _comment == 0) || ((c == 's' || c == 'S') && _comment == 1)
-                                || ((c == 'c' || c == 'C') && _comment == 2)
-                                || ((c == 'r' || c == 'R') && _comment == 3)
-                                || ((c == 'i' || c == 'I') && _comment == 4)
-                                || ((c == 'p' || c == 'P') && _comment == 5)
-                                || ((c == 't' || c == 'T') && _comment == 6)) {
+                        } else if (c == '/' && _comment == 0 || (c == 's' || c == 'S') && _comment == 1
+                                || (c == 'c' || c == 'C') && _comment == 2 || (c == 'r' || c == 'R') && _comment == 3
+                                || (c == 'i' || c == 'I') && _comment == 4 || (c == 'p' || c == 'P') && _comment == 5
+                                || (c == 't' || c == 'T') && _comment == 6) {
                             _comment++;
                         } else if (c == '>' && _comment >= 7) {
                             _comment = 0;
@@ -612,9 +626,8 @@ public final class FastPageParser implements PageParser {
                             _state = STATE_TEXT;
                             _tokenType = TOKEN_DOCTYPE;
                             break start;
-                        } else {
-                            _comment = 0;
                         }
+                        _comment = 0;
                     }
                         break;
                 }
@@ -668,7 +681,7 @@ public final class FastPageParser implements PageParser {
      */
     private static boolean shouldWriteToHead(int state, int laststate) {
         return state == TAG_STATE_HEAD
-                || (laststate == TAG_STATE_HEAD && (state == TAG_STATE_XML || state == TAG_STATE_XMP));
+                || laststate == TAG_STATE_HEAD && (state == TAG_STATE_XML || state == TAG_STATE_XMP);
     }
 
     /**
@@ -690,16 +703,19 @@ public final class FastPageParser implements PageParser {
         int begin;
 
         // Skip over any leading whitespace in the tag
-        while (idx < len && Character.isWhitespace(buf.charAt(idx)))
+        while (idx < len && Character.isWhitespace(buf.charAt(idx))) {
             idx++;
+        }
 
-        if (idx == len)
+        if (idx == len) {
             return null;
+        }
 
         // Find out where the non-whitespace characters end. This will give us the tag name.
         begin = idx;
-        while (idx < len && !Character.isWhitespace(buf.charAt(idx)))
+        while (idx < len && !Character.isWhitespace(buf.charAt(idx))) {
             idx++;
+        }
 
         // Mark the tag name as a substring within the buffer. This allows us to perform
         // a substring comparison against it at a later date
@@ -735,56 +751,69 @@ public final class FastPageParser implements PageParser {
         int begin;
         while (idx < len) {
             // Skip forward to the next non-whitespace character
-            while (idx < len && Character.isWhitespace(buffer.charAt(idx)))
+            while (idx < len && Character.isWhitespace(buffer.charAt(idx))) {
                 idx++;
+            }
 
-            if (idx == len)
+            if (idx == len) {
                 continue;
+            }
 
             begin = idx;
             if (buffer.charAt(idx) == '"') {
                 idx++;
-                while (idx < len && buffer.charAt(idx) != '"')
+                while (idx < len && buffer.charAt(idx) != '"') {
                     idx++;
-                if (idx == len)
+                }
+                if (idx == len) {
                     continue;
+                }
                 idx++;
             } else if (buffer.charAt(idx) == '\'') {
                 idx++;
-                while (idx < len && buffer.charAt(idx) != '\'')
+                while (idx < len && buffer.charAt(idx) != '\'') {
                     idx++;
-                if (idx == len)
+                }
+                if (idx == len) {
                     continue;
+                }
                 idx++;
             } else {
-                while (idx < len && !Character.isWhitespace(buffer.charAt(idx)) && buffer.charAt(idx) != '=')
+                while (idx < len && !Character.isWhitespace(buffer.charAt(idx)) && buffer.charAt(idx) != '=') {
                     idx++;
+                }
             }
 
             // Mark the substring. This is the attribute name
             buffer.setSubstr(begin, idx);
 
             if (idx < len && Character.isWhitespace(buffer.charAt(idx))) {
-                while (idx < len && Character.isWhitespace(buffer.charAt(idx)))
+                while (idx < len && Character.isWhitespace(buffer.charAt(idx))) {
                     idx++;
+                }
             }
 
-            if (idx == len || buffer.charAt(idx) != '=')
+            if (idx == len || buffer.charAt(idx) != '=') {
                 continue;
+            }
 
             idx++;
 
-            if (idx == len)
+            if (idx == len) {
                 continue;
+            }
 
-            while (idx < len && (buffer.charAt(idx) == '\n' || buffer.charAt(idx) == '\r'))
+            while (idx < len && (buffer.charAt(idx) == '\n' || buffer.charAt(idx) == '\r')) {
                 idx++;
+            }
 
             if (buffer.charAt(idx) == ' ') {
-                while (idx < len && Character.isWhitespace(buffer.charAt(idx)))
+                while (idx < len && Character.isWhitespace(buffer.charAt(idx))) {
                     idx++;
-                if (idx == len || (buffer.charAt(idx) != '"' && buffer.charAt(idx) != '"'))
+                }
+                if (idx == len || buffer.charAt(idx) != '"' && buffer.charAt(idx) != '"') {
                     continue;
+                }
             }
 
             begin = idx;
@@ -792,24 +821,29 @@ public final class FastPageParser implements PageParser {
             if (buffer.charAt(idx) == '"') {
                 idx++;
                 begin = idx;
-                while (idx < len && buffer.charAt(idx) != '"')
+                while (idx < len && buffer.charAt(idx) != '"') {
                     idx++;
-                if (idx == len)
+                }
+                if (idx == len) {
                     continue;
+                }
                 end = idx;
                 idx++;
             } else if (buffer.charAt(idx) == '\'') {
                 idx++;
                 begin = idx;
-                while (idx < len && buffer.charAt(idx) != '\'')
+                while (idx < len && buffer.charAt(idx) != '\'') {
                     idx++;
-                if (idx == len)
+                }
+                if (idx == len) {
                     continue;
+                }
                 end = idx;
                 idx++;
             } else {
-                while (idx < len && !Character.isWhitespace(buffer.charAt(idx)))
+                while (idx < len && !Character.isWhitespace(buffer.charAt(idx))) {
                     idx++;
+                }
                 end = idx;
             }
             // Extract the name and value as String objects and add them to the property map
@@ -824,7 +858,7 @@ public final class FastPageParser implements PageParser {
     /**
      * The Class Tag.
      */
-    private class Tag {
+    private static class Tag {
         // The index where the name string ends. This is used as the starting
         /** The name end idx. */
         // offet if we need to continue processing to find the tag's properties

@@ -50,10 +50,10 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     private Buffer buffer;
 
     /** The aborted. */
-    private boolean aborted = false;
+    private boolean aborted;
 
     /** The parseable page. */
-    private boolean parseablePage = false;
+    private boolean parseablePage;
 
     /**
      * Instantiates a new page response wrapper.
@@ -67,17 +67,8 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
         super(response);
         this.parserSelector = parserSelector;
 
-        routablePrintWriter = new RoutablePrintWriter(new RoutablePrintWriter.DestinationFactory() {
-            public PrintWriter activateDestination() throws IOException {
-                return response.getWriter();
-            }
-        });
-        routableServletOutputStream = new RoutableServletOutputStream(
-                new RoutableServletOutputStream.DestinationFactory() {
-                    public ServletOutputStream create() throws IOException {
-                        return response.getOutputStream();
-                    }
-                });
+        routablePrintWriter = new RoutablePrintWriter(response::getWriter);
+        routableServletOutputStream = new RoutableServletOutputStream(response::getOutputStream);
 
     }
 
@@ -114,18 +105,8 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
             return; // already activated
         }
         buffer = new Buffer(parserSelector.getPageParser(contentType), encoding);
-        routablePrintWriter.updateDestination(new RoutablePrintWriter.DestinationFactory() {
-            @Override
-            public PrintWriter activateDestination() {
-                return buffer.getWriter();
-            }
-        });
-        routableServletOutputStream.updateDestination(new RoutableServletOutputStream.DestinationFactory() {
-            @Override
-            public ServletOutputStream create() {
-                return buffer.getOutputStream();
-            }
-        });
+        routablePrintWriter.updateDestination(buffer::getWriter);
+        routableServletOutputStream.updateDestination(buffer::getOutputStream);
         parseablePage = true;
     }
 
@@ -135,18 +116,8 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
     private void deactivateSiteMesh() {
         parseablePage = false;
         buffer = null;
-        routablePrintWriter.updateDestination(new RoutablePrintWriter.DestinationFactory() {
-            @Override
-            public PrintWriter activateDestination() throws IOException {
-                return getResponse().getWriter();
-            }
-        });
-        routableServletOutputStream.updateDestination(new RoutableServletOutputStream.DestinationFactory() {
-            @Override
-            public ServletOutputStream create() throws IOException {
-                return getResponse().getOutputStream();
-            }
-        });
+        routablePrintWriter.updateDestination(() -> getResponse().getWriter());
+        routableServletOutputStream.updateDestination(() -> getResponse().getOutputStream());
     }
 
     /**
@@ -154,8 +125,9 @@ public class PageResponseWrapper extends HttpServletResponseWrapper {
      */
     @Override
     public void setContentLength(int contentLength) {
-        if (!parseablePage)
+        if (!parseablePage) {
             super.setContentLength(contentLength);
+        }
     }
 
     /**

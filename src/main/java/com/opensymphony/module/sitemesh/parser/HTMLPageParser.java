@@ -49,10 +49,12 @@ import java.io.IOException;
  */
 public class HTMLPageParser implements PageParser {
 
+    @Override
     public Page parse(char[] buffer) throws IOException {
         return parse(new DefaultSitemeshBuffer(buffer));
     }
 
+    @Override
     public Page parse(SitemeshBuffer buffer) throws IOException {
         SitemeshBufferFragment.Builder head = SitemeshBufferFragment.builder().setBuffer(buffer).setLength(0);
         SitemeshBufferFragment.Builder body = SitemeshBufferFragment.builder().setBuffer(buffer);

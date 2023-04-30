@@ -27,6 +27,7 @@ public class TitleExtractingRule extends BlockExtractingRule {
         this.page = page;
     }
 
+    @Override
     protected void end(Tag tag) {
         if (!seenTitle) {
             page.addProperty("title", getCurrentBufferContent());

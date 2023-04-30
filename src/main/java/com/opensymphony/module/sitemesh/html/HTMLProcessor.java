@@ -79,14 +79,17 @@ public class HTMLProcessor {
         TagTokenizer tokenizer = new TagTokenizer(sitemeshBuffer.getCharArray(), sitemeshBuffer.getBufferLength());
         final HTMLProcessorContext context = new HTMLProcessorContext() {
 
+            @Override
             public SitemeshBuffer getSitemeshBuffer() {
                 return sitemeshBuffer;
             }
 
+            @Override
             public State currentState() {
                 return currentState;
             }
 
+            @Override
             public void changeState(State newState) {
                 currentState = newState;
             }
@@ -94,6 +97,7 @@ public class HTMLProcessor {
             private SitemeshBufferFragment.Builder[] buffers = new SitemeshBufferFragment.Builder[10];
             private int size;
 
+            @Override
             public void pushBuffer(SitemeshBufferFragment.Builder buffer) {
                 if (size == buffers.length) {
                     SitemeshBufferFragment.Builder[] newBuffers = new SitemeshBufferFragment.Builder[buffers.length
@@ -104,10 +108,12 @@ public class HTMLProcessor {
                 buffers[size++] = buffer;
             }
 
+            @Override
             public SitemeshBufferFragment.Builder currentBuffer() {
                 return buffers[size - 1];
             }
 
+            @Override
             public SitemeshBufferFragment.Builder popBuffer() {
                 SitemeshBufferFragment.Builder last = buffers[size - 1];
                 buffers[--size] = null;
@@ -117,20 +123,24 @@ public class HTMLProcessor {
         context.pushBuffer(body);
         tokenizer.start(new TokenHandler() {
 
+            @Override
             public boolean shouldProcessTag(String name) {
                 return currentState.shouldProcessTag(name.toLowerCase());
             }
 
+            @Override
             public void tag(Tag tag) {
                 TagRule tagRule = currentState.getRule(tag.getName().toLowerCase());
                 tagRule.setContext(context);
                 tagRule.process(tag);
             }
 
+            @Override
             public void text(Text text) {
                 currentState.handleText(text, context);
             }
 
+            @Override
             public void warning(String message, int line, int column) {
                 // TODO
                 // System.out.println(line + "," + column + ": " + message);

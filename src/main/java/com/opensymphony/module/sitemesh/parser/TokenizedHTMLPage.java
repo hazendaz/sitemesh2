@@ -69,6 +69,7 @@ public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
         this.head = head;
     }
 
+    @Override
     public void writeHead(Writer out) throws IOException {
         if (out instanceof SitemeshWriter) {
             ((SitemeshWriter) out).writeSitemeshBufferFragment(head);
@@ -77,6 +78,7 @@ public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
         }
     }
 
+    @Override
     public void writeBody(Writer out) throws IOException {
         if (out instanceof SitemeshWriter) {
             ((SitemeshWriter) out).writeSitemeshBufferFragment(body);
@@ -85,10 +87,12 @@ public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
         }
     }
 
+    @Override
     public String getHead() {
         return head.getStringContent();
     }
 
+    @Override
     public String getBody() {
         return body.getStringContent();
     }

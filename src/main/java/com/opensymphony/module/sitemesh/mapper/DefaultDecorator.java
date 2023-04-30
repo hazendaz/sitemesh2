@@ -127,21 +127,25 @@ public class DefaultDecorator implements Decorator {
     /**
      * URI of the Servlet/JSP to dispatch the request to (relative to the web-app context).
      */
+    @Override
     public String getPage() {
         return page;
     }
 
     /** Name of Decorator. For information purposes only. */
+    @Override
     public String getName() {
         return name;
     }
 
     /** URI path of the Decorator. Enables support for decorators defined in seperate web-apps. */
+    @Override
     public String getURIPath() {
         return uriPath;
     }
 
     /** Role the user has to be in to get this decorator applied. */
+    @Override
     public String getRole() {
         return role;
     }
@@ -155,6 +159,7 @@ public class DefaultDecorator implements Decorator {
      *
      * @return Value of parameter or null if not found.
      */
+    @Override
     public String getInitParameter(String paramName) {
         if (parameters == null || !parameters.containsKey(paramName)) {
             return null;
@@ -167,6 +172,7 @@ public class DefaultDecorator implements Decorator {
      * Returns the names of the Decorator's initialization parameters as an Iterator of String objects, or an empty
      * Iterator if the Decorator has no initialization parameters.
      */
+    @Override
     public Iterator getInitParameterNames() {
         if (parameters == null) {
             // make sure we always return an empty iterator

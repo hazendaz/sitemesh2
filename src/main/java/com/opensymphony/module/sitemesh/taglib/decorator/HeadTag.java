@@ -37,6 +37,9 @@ import javax.servlet.jsp.JspException;
  * @see com.opensymphony.module.sitemesh.HTMLPage#writeHead(java.io.Writer)
  */
 public class HeadTag extends AbstractTag {
+    private static final long serialVersionUID = 1L;
+
+    @Override
     public final int doEndTag() throws JspException {
         HTMLPage htmlPage = (HTMLPage) getPage();
         try {

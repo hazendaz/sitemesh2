@@ -121,8 +121,9 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     public void write(int datum) {
         if (index == blockSize) {
             // Create new buffer and store current in linked list
-            if (buffers == null)
+            if (buffers == null) {
                 buffers = new LinkedList();
+            }
 
             buffers.addLast(buffer);
 
@@ -139,19 +140,19 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     public void write(byte[] data, int offset, int length) {
         if (data == null) {
             throw new NullPointerException();
-        } else if ((offset < 0) || (offset + length > data.length) || (length < 0)) {
+        }
+        if (offset < 0 || offset + length > data.length || length < 0) {
             throw new IndexOutOfBoundsException();
-        } else {
-            if (index + length >= blockSize) {
-                // Write byte by byte
-                // FIXME optimize this to use arraycopy's instead
-                for (int i = 0; i < length; i++)
-                    write(data[offset + i]);
-            } else {
-                // copy in the subarray
-                System.arraycopy(data, offset, buffer, index, length);
-                index += length;
+        } else if (index + length >= blockSize) {
+            // Write byte by byte
+            // FIXME optimize this to use arraycopy's instead
+            for (int i = 0; i < length; i++) {
+                write(data[offset + i]);
             }
+        } else {
+            // copy in the subarray
+            System.arraycopy(data, offset, buffer, index, length);
+            index += length;
         }
     }
 

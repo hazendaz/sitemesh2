@@ -45,6 +45,7 @@ public class DecoratorMapper2DecoratorSelector implements DecoratorSelector {
         this.decoratorMapper = decoratorMapper;
     }
 
+    @Override
     public Decorator selectDecorator(Content content, SiteMeshContext context) {
         SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;
         HttpServletRequest request = webAppContext.getRequest();
@@ -52,9 +53,8 @@ public class DecoratorMapper2DecoratorSelector implements DecoratorSelector {
                 new Content2HTMLPage(content, request));
         if (decorator == null || decorator.getPage() == null) {
             return new NoDecorator();
-        } else {
-            return new OldDecorator2NewDecorator(decorator);
         }
+        return new OldDecorator2NewDecorator(decorator);
     }
 
 }

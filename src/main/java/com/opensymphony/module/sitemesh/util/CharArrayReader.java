@@ -64,7 +64,7 @@ public class CharArrayReader extends Reader {
      *            Number of chars to read
      */
     public CharArrayReader(char buf[], int offset, int length) {
-        if ((offset < 0) || (offset > buf.length) || (length < 0) || ((offset + length) < 0)) {
+        if (offset < 0 || offset > buf.length || length < 0 || offset + length < 0) {
             throw new IllegalArgumentException();
         }
         this.buf = buf;
@@ -79,11 +79,12 @@ public class CharArrayReader extends Reader {
      * @throws IOException
      *             If an I/O error occurs
      */
+    @Override
     public int read() throws IOException {
-        if (pos >= count)
+        if (pos >= count) {
             return -1;
-        else
-            return buf[pos++];
+        }
+        return buf[pos++];
     }
 
     /**
@@ -101,10 +102,12 @@ public class CharArrayReader extends Reader {
      * @throws IOException
      *             If an I/O error occurs
      */
+    @Override
     public int read(char b[], int off, int len) throws IOException {
-        if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+        if (off < 0 || off > b.length || len < 0 || off + len > b.length || off + len < 0) {
             throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
+        }
+        if (len == 0) {
             return 0;
         }
 
@@ -133,6 +136,7 @@ public class CharArrayReader extends Reader {
      *
      * @return The number of characters actually skipped
      */
+    @Override
     public long skip(long n) throws IOException {
         if (pos + n > count) {
             n = count - pos;
@@ -150,13 +154,15 @@ public class CharArrayReader extends Reader {
      * @throws IOException
      *             If an I/O error occurs
      */
+    @Override
     public boolean ready() throws IOException {
-        return (count - pos) > 0;
+        return count - pos > 0;
     }
 
     /**
      * Tell whether this stream supports the mark() operation, which it does.
      */
+    @Override
     public boolean markSupported() {
         return true;
     }
@@ -171,6 +177,7 @@ public class CharArrayReader extends Reader {
      * @throws IOException
      *             If an I/O error occurs
      */
+    @Override
     public void mark(int readAheadLimit) throws IOException {
         markedPos = pos;
     }
@@ -181,6 +188,7 @@ public class CharArrayReader extends Reader {
      * @throws IOException
      *             If an I/O error occurs
      */
+    @Override
     public void reset() throws IOException {
         pos = markedPos;
     }
@@ -188,6 +196,7 @@ public class CharArrayReader extends Reader {
     /**
      * Close the stream.
      */
+    @Override
     public void close() {
         buf = null;
     }

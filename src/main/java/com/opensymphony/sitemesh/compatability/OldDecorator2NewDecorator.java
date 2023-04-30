@@ -49,18 +49,17 @@ public class OldDecorator2NewDecorator extends BaseWebAppDecorator implements Re
         this.oldDecorator = oldDecorator;
     }
 
+    @Override
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
 
         request.setAttribute(PAGE, new Content2HTMLPage(content, request));
 
         // see if the URI path (webapp) is set
-        if (oldDecorator.getURIPath() != null) {
-            // in a security conscious environment, the servlet container
-            // may return null for a given URL
-            if (servletContext.getContext(oldDecorator.getURIPath()) != null) {
-                servletContext = servletContext.getContext(oldDecorator.getURIPath());
-            }
+        // in a security conscious environment, the servlet container
+        // may return null for a given URL
+        if ((oldDecorator.getURIPath() != null) && (servletContext.getContext(oldDecorator.getURIPath()) != null)) {
+            servletContext = servletContext.getContext(oldDecorator.getURIPath());
         }
         // get the dispatcher for the decorator
         RequestDispatcher dispatcher = servletContext.getRequestDispatcher(oldDecorator.getPage());

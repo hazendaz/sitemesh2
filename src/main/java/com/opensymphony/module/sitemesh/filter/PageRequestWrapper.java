@@ -27,8 +27,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class PageRequestWrapper extends HttpServletRequestWrapper {
 
+    // TODO - pull this from a config file
     /** The Constant SUPPRESS_IF_MODIFIED_HEADER. */
-    private static final boolean SUPPRESS_IF_MODIFIED_HEADER = true; // todo - pull this from a config file
+    private static final boolean SUPPRESS_IF_MODIFIED_HEADER = true;
 
     /**
      * Instantiates a new page request wrapper.
@@ -40,16 +41,17 @@ public class PageRequestWrapper extends HttpServletRequestWrapper {
         super(request);
     }
 
+    @Override
     public RequestDispatcher getRequestDispatcher(String s) {
         return new RequestDispatcherWrapper(super.getRequestDispatcher(s));
     }
 
+    @Override
     public String getHeader(String string) {
         // suppress 'if-modified-since' header, so that decorators can modify the response.
         if (SUPPRESS_IF_MODIFIED_HEADER && "IF-MODIFIED-SINCE".equalsIgnoreCase(string)) {
             return "";
-        } else {
-            return super.getHeader(string);
         }
+        return super.getHeader(string);
     }
 }

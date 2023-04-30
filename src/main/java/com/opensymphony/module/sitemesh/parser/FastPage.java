@@ -77,10 +77,12 @@ public final class FastPage extends AbstractHTMLPage {
         addProperty("title", title);
     }
 
+    @Override
     public void writeHead(Writer out) throws IOException {
         out.write(head);
     }
 
+    @Override
     public void writeBody(Writer out) throws IOException {
         out.write(body);
     }
@@ -94,8 +96,9 @@ public final class FastPage extends AbstractHTMLPage {
      *            the attributes
      */
     private void addAttributeList(String prefix, Map attributes) {
-        if (attributes == null || attributes.isEmpty())
+        if (attributes == null || attributes.isEmpty()) {
             return;
+        }
 
         String name, value;
         Iterator i = attributes.entrySet().iterator();
@@ -111,10 +114,12 @@ public final class FastPage extends AbstractHTMLPage {
         }
     }
 
+    @Override
     public String getBody() {
         return body;
     }
 
+    @Override
     public String getHead() {
         return head;
     }

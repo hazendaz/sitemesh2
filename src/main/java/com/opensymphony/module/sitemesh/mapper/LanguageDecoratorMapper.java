@@ -61,12 +61,14 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
     /** The map. */
     private Map map = null;
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         map = new HashMap();
         initMap(properties);
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         try {
             Decorator result = null;
@@ -77,6 +79,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
 
             if (decFile.isFile()) {
                 result = new DefaultDecorator(d.getName(), path, null) {
+                    @Override
                     public String getInitParameter(String paramName) {
                         return d.getInitParameter(paramName);
                     }
@@ -132,9 +135,8 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
         int dot = path.indexOf('.');
         if (dot > -1) {
             return path.substring(0, dot) + '-' + ext + path.substring(dot);
-        } else {
-            return path + '-' + ext;
         }
+        return path + '-' + ext;
     }
 
     /**

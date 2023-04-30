@@ -37,6 +37,7 @@ public class TagReplaceRule extends BasicRule {
         this.newTagName = newTagName;
     }
 
+    @Override
     public void process(Tag tag) {
         currentBuffer().delete(tag.getPosition(), tag.getLength());
         CustomTag customTag = new CustomTag(tag);

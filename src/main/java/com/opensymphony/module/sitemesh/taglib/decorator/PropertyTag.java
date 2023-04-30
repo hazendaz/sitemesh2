@@ -35,6 +35,7 @@ import java.io.Writer;
  * @see com.opensymphony.module.sitemesh.Page#getProperty(java.lang.String)
  */
 public class PropertyTag extends AbstractTag {
+    private static final long serialVersionUID = 1L;
     private String propertyName, defaultValue;
     private boolean writeEntireProperty = false;
 
@@ -54,8 +55,9 @@ public class PropertyTag extends AbstractTag {
 
     /** When begins with y, t or 1, the full attribute (name + value) is written. */
     public final void setWriteEntireProperty(String writeEntireProperty) {
-        if (writeEntireProperty == null || writeEntireProperty.trim().length() == 0)
+        if (writeEntireProperty == null || writeEntireProperty.trim().length() == 0) {
             return;
+        }
 
         switch (writeEntireProperty.charAt(0)) {
             case '1':
@@ -70,13 +72,15 @@ public class PropertyTag extends AbstractTag {
         }
     }
 
+    @Override
     public int doEndTag() {
         try {
             Page page = getPage();
             String propertyValue = page.getProperty(propertyName);
 
-            if (propertyValue == null || propertyValue.trim().length() == 0)
+            if (propertyValue == null || propertyValue.trim().length() == 0) {
                 propertyValue = defaultValue;
+            }
 
             if (propertyValue != null) {
                 Writer out = getOut();

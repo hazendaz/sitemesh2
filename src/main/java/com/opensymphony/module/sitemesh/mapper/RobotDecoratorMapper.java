@@ -95,11 +95,13 @@ public class RobotDecoratorMapper extends AbstractDecoratorMapper {
             "webwatch", "wget", "whowhere", "wmir", "wolp", "wombat", "worm", "wwwc", "wz101", "xget",
             "nederland.zoek" };
 
+    @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
         super.init(config, properties, parent);
         decoratorName = properties.getProperty("decorator");
     }
 
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
 
@@ -119,77 +121,77 @@ public class RobotDecoratorMapper extends AbstractDecoratorMapper {
      * @return true, if is bot
      */
     private static boolean isBot(HttpServletRequest request) {
-        if (request == null)
+        if (request == null) {
             return false;
+        }
 
         // force creation of a session
         HttpSession session = request.getSession(true);
 
         if (Boolean.FALSE.equals(session.getAttribute(RequestConstants.ROBOT))) {
             return false;
-        } else if (Boolean.TRUE.equals(session.getAttribute(RequestConstants.ROBOT))) {
+        }
+        if (Boolean.TRUE.equals(session.getAttribute(RequestConstants.ROBOT))) {
             // a key was found in the session indicating it is a robot
             return true;
+        } else if ("robots.txt".indexOf(request.getRequestURI()) != -1) {
+            // there is a specific request for the robots.txt file, so we assume
+            // it must be a robot (only robots request robots.txt)
+
+            // set a key in the session, so the next time we don't have to manually
+            // detect the robot again
+            session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);
+            return true;
         } else {
-            if ("robots.txt".indexOf(request.getRequestURI()) != -1) {
-                // there is a specific request for the robots.txt file, so we assume
-                // it must be a robot (only robots request robots.txt)
+            String userAgent = request.getHeader("User-Agent");
 
-                // set a key in the session, so the next time we don't have to manually
-                // detect the robot again
-                session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);
-                return true;
-            } else {
-                String userAgent = request.getHeader("User-Agent");
-
-                if (userAgent != null && userAgent.trim().length() > 2) {
-                    // first check for common user-agent headers, so that we can speed
-                    // this thing up, hopefully clever spiders will not send a fake header
-                    if (userAgent.indexOf("MSIE") != -1 || userAgent.indexOf("Gecko") != -1 // MSIE and Mozilla
-                            || userAgent.indexOf("Opera") != -1 || userAgent.indexOf("iCab") != -1 // Opera and iCab
-                                                                                                   // (mac browser)
-                            || userAgent.indexOf("Konqueror") != -1 || userAgent.indexOf("KMeleon") != -1 // Konqueror
-                                                                                                          // and KMeleon
-                            || userAgent.indexOf("4.7") != -1 || userAgent.indexOf("Lynx") != -1) { // NS 4.78 and Lynx
-                        // indicate this session is not a robot
-                        session.setAttribute(RequestConstants.ROBOT, Boolean.FALSE);
-                        return false;
-                    }
-
-                    for (int i = 0; i < botAgents.length; i++) {
-                        if (userAgent.indexOf(botAgents[i]) != -1) {
-                            // set a key in the session, so the next time we don't have to manually
-                            // detect the robot again
-                            session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);
-                            return true;
-                        }
-                    }
+            if (userAgent != null && userAgent.trim().length() > 2) {
+                // first check for common user-agent headers, so that we can speed
+                // this thing up, hopefully clever spiders will not send a fake header
+                if (userAgent.indexOf("MSIE") != -1 || userAgent.indexOf("Gecko") != -1 // MSIE and Mozilla
+                        || userAgent.indexOf("Opera") != -1 || userAgent.indexOf("iCab") != -1 // Opera and iCab
+                        // (mac browser)
+                        || userAgent.indexOf("Konqueror") != -1 || userAgent.indexOf("KMeleon") != -1 // Konqueror
+                        // and KMeleon
+                        || userAgent.indexOf("4.7") != -1 || userAgent.indexOf("Lynx") != -1) { // NS 4.78 and Lynx
+                    // indicate this session is not a robot
+                    session.setAttribute(RequestConstants.ROBOT, Boolean.FALSE);
+                    return false;
                 }
 
-                // detect the robot from the host or user-agent
-                String remoteHost = request.getRemoteHost(); // requires one DNS lookup
-
-                // if the DNS server didn't return a hostname, getRemoteHost returns the
-                // IP address, which is ignored here (the last char is checked, because some
-                // remote hosts begin with the IP)
-                if (remoteHost != null && remoteHost.length() > 0 && remoteHost.charAt(remoteHost.length() - 1) > 64) {
-                    for (int i = 0; i < botHosts.length; i++) {
-                        if (remoteHost.indexOf(botHosts[i]) != -1) {
-                            // set a key in the session, so the next time we don't have to manually
-                            // detect the robot again
-                            session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);
-                            return true;
-                        }
+                for (String botAgent : botAgents) {
+                    if (userAgent.indexOf(botAgent) != -1) {
+                        // set a key in the session, so the next time we don't have to manually
+                        // detect the robot again
+                        session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);
+                        return true;
                     }
                 }
-
-                // remote host and user agent are not in the predefined list,
-                // so it must be an unknown robot or not a robot
-
-                // indicate this session is not a robot
-                session.setAttribute(RequestConstants.ROBOT, Boolean.FALSE);
-                return false;
             }
+
+            // detect the robot from the host or user-agent
+            String remoteHost = request.getRemoteHost(); // requires one DNS lookup
+
+            // if the DNS server didn't return a hostname, getRemoteHost returns the
+            // IP address, which is ignored here (the last char is checked, because some
+            // remote hosts begin with the IP)
+            if (remoteHost != null && remoteHost.length() > 0 && remoteHost.charAt(remoteHost.length() - 1) > 64) {
+                for (String botHost : botHosts) {
+                    if (remoteHost.indexOf(botHost) != -1) {
+                        // set a key in the session, so the next time we don't have to manually
+                        // detect the robot again
+                        session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);
+                        return true;
+                    }
+                }
+            }
+
+            // remote host and user agent are not in the predefined list,
+            // so it must be an unknown robot or not a robot
+
+            // indicate this session is not a robot
+            session.setAttribute(RequestConstants.ROBOT, Boolean.FALSE);
+            return false;
         }
     }
 }

@@ -52,6 +52,7 @@ public abstract class BlockExtractingRule extends BasicRule {
         this.keepInBuffer = keepInBuffer;
     }
 
+    @Override
     public void process(Tag tag) {
         if (tag.getType() == Tag.OPEN) {
             if (!keepInBuffer) {

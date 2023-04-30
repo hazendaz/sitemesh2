@@ -32,6 +32,7 @@ import com.opensymphony.module.sitemesh.taglib.AbstractTag;
  * @see com.opensymphony.module.sitemesh.HTMLPage#getTitle()
  */
 public class TitleTag extends AbstractTag {
+    private static final long serialVersionUID = 1L;
     private String defaultTitle = null;
 
     /** Value to write if no title is found (optional). */
@@ -39,13 +40,16 @@ public class TitleTag extends AbstractTag {
         this.defaultTitle = defaultTitle;
     }
 
+    @Override
     public final int doEndTag() {
         try {
             String title = getPage().getTitle();
-            if (title == null || title.trim().length() == 0)
+            if (title == null || title.trim().length() == 0) {
                 title = defaultTitle;
-            if (title != null)
+            }
+            if (title != null) {
                 getOut().write(title);
+            }
         } catch (Exception e) {
             trace(e);
         }

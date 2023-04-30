@@ -29,26 +29,32 @@ public class StringSitemeshBuffer implements SitemeshBuffer {
         this.buffer = buffer;
     }
 
+    @Override
     public char[] getCharArray() {
         return buffer.toCharArray();
     }
 
+    @Override
     public int getBufferLength() {
         return buffer.length();
     }
 
+    @Override
     public int getTotalLength() {
         return buffer.length();
     }
 
+    @Override
     public int getTotalLength(int start, int length) {
         return length;
     }
 
+    @Override
     public void writeTo(Writer writer, int start, int length) throws IOException {
         writer.write(buffer, start, length);
     }
 
+    @Override
     public boolean hasFragments() {
         return false;
     }

@@ -27,7 +27,9 @@ import com.opensymphony.module.sitemesh.Config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -175,6 +177,7 @@ public class DefaultFactory extends BaseFactory {
      */
     private Element loadSitemeshXML() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         DocumentBuilder builder = factory.newDocumentBuilder();
 
         InputStream is = null;
@@ -185,12 +188,14 @@ public class DefaultFactory extends BaseFactory {
             is = configFile.toURI().toURL().openStream();
         }
 
-        if (is == null) { // load the default sitemesh configuration
+        // load the default sitemesh configuration
+        if (is == null) {
             is = getClass().getClassLoader()
                     .getResourceAsStream("com/opensymphony/module/sitemesh/factory/sitemesh-default.xml");
         }
 
-        if (is == null) { // load the default sitemesh configuration using another classloader
+        // load the default sitemesh configuration using another classloader
+        if (is == null) {
             is = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream("com/opensymphony/module/sitemesh/factory/sitemesh-default.xml");
         }
@@ -199,8 +204,9 @@ public class DefaultFactory extends BaseFactory {
             throw new IllegalStateException("Cannot load default configuration from jar");
         }
 
-        if (configFile != null)
+        if (configFile != null) {
             configLastModified = configFile.lastModified();
+        }
 
         Document doc = builder.parse(is);
         Element root = doc.getDocumentElement();
@@ -223,6 +229,7 @@ public class DefaultFactory extends BaseFactory {
      */
     private void loadExcludes() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         DocumentBuilder builder = factory.newDocumentBuilder();
 
         InputStream is = null;
@@ -340,14 +347,17 @@ public class DefaultFactory extends BaseFactory {
     /**
      * Check if configuration file has been modified, and if so reload it.
      */
+    @Override
     public void refresh() {
         long time = System.currentTimeMillis();
-        if (time - configLastCheck < configCheckMillis)
+        if (time - configLastCheck < configCheckMillis) {
             return;
+        }
         configLastCheck = time;
 
-        if (configFile != null && configLastModified != configFile.lastModified())
+        if (configFile != null && configLastModified != configFile.lastModified()) {
             loadConfig();
+        }
     }
 
     /**
@@ -359,11 +369,9 @@ public class DefaultFactory extends BaseFactory {
      * @return the same string but with any properties expanded out to their actual values
      */
     private String replaceProperties(String str) {
-        Set<?> props = configProps.entrySet();
-        for (Iterator<?> it = props.iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
+        int idx;
+        for (Map.Entry<Object, Object> entry : configProps.entrySet()) {
             String key = (String) entry.getKey();
-            int idx;
             while ((idx = str.indexOf(key)) >= 0) {
                 StringBuilder buf = new StringBuilder(100);
                 buf.append(str.substring(0, idx));

@@ -26,6 +26,7 @@ public class HeadExtractingRule extends BlockExtractingRule {
         this.head = head;
     }
 
+    @Override
     protected SitemeshBufferFragment.Builder createBuffer(SitemeshBuffer sitemeshBuffer) {
         return head;
     }

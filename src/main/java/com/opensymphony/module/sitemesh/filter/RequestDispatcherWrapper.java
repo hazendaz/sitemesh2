@@ -49,22 +49,22 @@ public class RequestDispatcherWrapper implements RequestDispatcher {
         this.rd = rd;
     }
 
+    @Override
     public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
             throws ServletException, IOException {
-        if (!done) {
-            include(servletRequest, servletResponse);
-            done = true;
-        } else {
+        if (done) {
             throw new IllegalStateException("Response has already been committed");
         }
+        include(servletRequest, servletResponse);
+        done = true;
     }
 
+    @Override
     public void include(ServletRequest servletRequest, ServletResponse servletResponse)
             throws ServletException, IOException {
-        if (!done) {
-            rd.include(servletRequest, servletResponse);
-        } else {
+        if (done) {
             throw new IllegalStateException("Response has already been committed");
         }
+        rd.include(servletRequest, servletResponse);
     }
 }

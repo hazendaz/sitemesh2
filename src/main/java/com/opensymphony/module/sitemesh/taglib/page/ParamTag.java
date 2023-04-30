@@ -31,12 +31,14 @@ import javax.servlet.jsp.tagext.Tag;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class ParamTag extends BodyTagSupport {
+    private static final long serialVersionUID = 1L;
     private String name;
 
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public int doAfterBody() {
         Tag parent = findAncestorWithClass(this, ApplyDecoratorTag.class);
         if (parent instanceof ApplyDecoratorTag) {

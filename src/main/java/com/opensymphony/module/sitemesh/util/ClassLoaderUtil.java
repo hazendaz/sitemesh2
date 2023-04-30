@@ -54,7 +54,7 @@ public class ClassLoaderUtil {
             }
         }
 
-        if ((url == null) && (resourceName != null) && (resourceName.charAt(0) != '/')) {
+        if (url == null && resourceName != null && resourceName.charAt(0) != '/') {
             return getResource('/' + resourceName, callingClass);
         }
 
@@ -76,7 +76,7 @@ public class ClassLoaderUtil {
         URL url = getResource(resourceName, callingClass);
 
         try {
-            return (url != null) ? url.openStream() : null;
+            return url != null ? url.openStream() : null;
         } catch (IOException e) {
             return null;
         }

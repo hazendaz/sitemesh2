@@ -13,7 +13,11 @@
  */
 package com.opensymphony.module.sitemesh.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -38,10 +42,10 @@ public class OutputConverter {
      * @return the writer
      */
     public static Writer getWriter(Writer out) {
-        if ("true".equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG)))
+        if ("true".equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG))) {
             return new ResinWriter(out);
-        else
-            return out;
+        }
+        return out;
     }
 
     /**
@@ -60,8 +64,8 @@ public class OutputConverter {
             StringWriter sr = new StringWriter();
             resinConvert(inputString, sr);
             return sr.getBuffer().toString();
-        } else
-            return inputString;
+        }
+        return inputString;
     }
 
     /**
@@ -85,15 +89,18 @@ public class OutputConverter {
             this.target = target;
         }
 
+        @Override
         public void close() throws IOException {
             flush();
         }
 
+        @Override
         public void flush() throws IOException {
             resinConvert(buffer.toString(), target);
             buffer.reset();
         }
 
+        @Override
         public void write(char cbuf[], int off, int len) throws IOException {
             buffer.write(cbuf, off, len);
             flush();

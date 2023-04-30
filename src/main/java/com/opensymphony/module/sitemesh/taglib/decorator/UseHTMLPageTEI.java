@@ -31,6 +31,7 @@ package com.opensymphony.module.sitemesh.taglib.decorator;
  * @see UsePageTEI
  */
 public class UseHTMLPageTEI extends UsePageTEI {
+    @Override
     protected String getType() {
         return "com.opensymphony.module.sitemesh.HTMLPage";
     }

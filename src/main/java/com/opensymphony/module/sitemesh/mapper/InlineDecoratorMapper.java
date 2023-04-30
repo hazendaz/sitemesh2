@@ -41,14 +41,16 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
 public class InlineDecoratorMapper extends AbstractDecoratorMapper implements RequestConstants {
+    @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         Decorator result = null;
         if (request.getAttribute(DECORATOR) != null) {
             // Retrieve name of decorator to use from request
             String decoratorName = (String) request.getAttribute(DECORATOR);
             result = getNamedDecorator(request, decoratorName);
-            if (result == null)
+            if (result == null) {
                 throw new FactoryException("Cannot locate inline Decorator: " + decoratorName);
+            }
         }
         return result == null ? super.getDecorator(request, page) : result;
     }

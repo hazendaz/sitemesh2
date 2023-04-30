@@ -22,7 +22,16 @@
 
 package com.opensymphony.module.sitemesh.taglib.page;
 
-import com.opensymphony.module.sitemesh.*;
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.PageParserSelector;
+import com.opensymphony.module.sitemesh.RequestConstants;
+import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
 import com.opensymphony.module.sitemesh.filter.PageRequestWrapper;
 import com.opensymphony.module.sitemesh.filter.PageResponseWrapper;
 
@@ -63,6 +72,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstants {
+    private static final long serialVersionUID = 1L;
     private String page = null;
     private String decorator = null;
 
@@ -101,6 +111,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
      * Tag attribute: If set, this value will override the 'id' property of the page. This is a convenience utility and
      * is identical to specifing a 'page:param name=id' tag.
      */
+    @Override
     public void setId(String id) {
         addParam("id", id);
     }
@@ -112,11 +123,13 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
      * @see com.opensymphony.module.sitemesh.DecoratorMapper
      */
     public void setName(String decorator) {
-        if (decorator != null)
+        if (decorator != null) {
             this.decorator = decorator;
+        }
     }
 
     /** @deprecated Use setName() instead. */
+    @Deprecated
     public void setDecorator(String decorator) {
         setName(decorator);
     }
@@ -129,6 +142,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
         this.encoding = encoding;
     }
 
+    @Override
     public int doStartTag() {
         if (config == null) {
             // set context if not already set
@@ -141,11 +155,13 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
     }
 
     /** Ensure that external page contents are included in bodycontent. */
+    @Override
     public int doAfterBody() throws JspException {
         return SKIP_BODY;
     }
 
     /** Standard taglib method: apply decorator to page. */
+    @Override
     public int doEndTag() throws JspException {
         try {
             // if composite decorator, remember last page
@@ -176,8 +192,9 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
                     char[] buf = new char[1000];
                     for (;;) {
                         int moved = in.read(buf);
-                        if (moved < 0)
+                        if (moved < 0) {
                             break;
+                        }
                         sitemeshWriter.write(buf, 0, moved);
                     }
                     in.close();
@@ -253,27 +270,25 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
             }
 
             // get decorator
-            if (decorator == null)
+            if (decorator == null) {
                 decorator = "";
+            }
             pageObj.setRequest((HttpServletRequest) pageContext.getRequest());
             pageContext.getRequest().setAttribute(DECORATOR, decorator);
-            Decorator d = decoratorMapper.getDecorator(((HttpServletRequest) pageContext.getRequest()), pageObj);
+            Decorator d = decoratorMapper.getDecorator((HttpServletRequest) pageContext.getRequest(), pageObj);
             pageContext.getRequest().removeAttribute(DECORATOR);
 
             // apply decorator
-            if (d != null && d.getPage() != null) {
-                pageContext.getRequest().setAttribute(PAGE, pageObj);
-                pageContext.include(d.getPage());
-            } else {
+            if ((d == null) || (d.getPage() == null)) {
                 throw new JspException("Cannot locate inline Decorator: " + decorator);
             }
+            pageContext.getRequest().setAttribute(PAGE, pageObj);
+            pageContext.include(d.getPage());
 
             // clean up
             pageContext.getRequest().setAttribute(PAGE, oldPage);
             params.clear(); // params need to be cleared between invocations - SIM-191
-        } catch (IOException e) {
-            throw new JspException(e);
-        } catch (ServletException e) {
+        } catch (IOException | ServletException e) {
             throw new JspException(e);
         } catch (ApplyDecoratorException e) {
             try {
@@ -290,6 +305,8 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
     }
 
     class ApplyDecoratorException extends Exception {
+        private static final long serialVersionUID = 1L;
+
         public ApplyDecoratorException(String s) {
             super(s);
         }

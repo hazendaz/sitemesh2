@@ -13,10 +13,16 @@
  */
 package com.opensymphony.module.sitemesh.parser;
 
-import com.opensymphony.module.sitemesh.*;
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Page parser that doesn't parse the full page, but rather just parses the head section of the page.
@@ -24,10 +30,12 @@ import java.util.*;
  * @since v2.5
  */
 public class PartialPageParser implements PageParser {
+    @Override
     public Page parse(char[] buffer) throws IOException {
         return parse(new DefaultSitemeshBuffer(buffer));
     }
 
+    @Override
     public Page parse(SitemeshBuffer buffer) throws IOException {
         char[] data = buffer.getCharArray();
         int length = buffer.getBufferLength();
@@ -41,10 +49,9 @@ public class PartialPageParser implements PageParser {
                 if (compareLowerCase(data, length, position, "html")) {
                     // It's an HTML page, handle HTML pages
                     return parseHtmlPage(buffer, position);
-                } else {
-                    // The whole thing is the body.
-                    return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, 0, length), null);
                 }
+                // The whole thing is the body.
+                return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, 0, length), null);
             }
         }
         // If we're here, we mustn't have found a tag
@@ -104,58 +111,55 @@ public class PartialPageParser implements PageParser {
             }
         }
 
-        if (headLength > 0) {
-            int idx = headStart;
-            int headEnd = headStart + headLength;
-            String title = null;
-
-            TreeMap<Integer, Integer> deletions = new TreeMap<Integer, Integer>();
-
-            // Extract meta attributes out of head
-            Map<String, String> metaAttributes = new HashMap<String, String>();
-            while (idx < headEnd) {
-                if (data[idx++] == '<') {
-                    if (compareLowerCase(data, headEnd, idx, "meta")) {
-                        MetaTagSimpleMap map = new MetaTagSimpleMap();
-                        idx = parseProperties(data, headEnd, idx + 4, map);
-                        if (map.getName() != null && map.getContent() != null) {
-                            metaAttributes.put(map.getName(), map.getContent());
-                        }
-                    }
-                }
-            }
-
-            // We need a new head buffer because we have to remove the title and content tags from it
-            Map<String, String> pageProperties = new HashMap<String, String>();
-            for (int i = headStart; i < headEnd; i++) {
-                char c = data[i];
-                if (c == '<') {
-                    if (compareLowerCase(data, headEnd, i + 1, "title")) {
-                        int titleStart = findEndOf(data, headEnd, i + 6, ">");
-                        int titleEnd = findStartOf(data, headEnd, titleStart, "<");
-                        title = new String(data, titleStart, titleEnd - titleStart);
-                        int titleTagEnd = titleEnd + "</title>".length();
-                        deletions.put(i, titleTagEnd - i);
-                        i = titleTagEnd - 1;
-                    } else if (compareLowerCase(data, headEnd, i + 1, "content")) {
-                        ContentTagSimpleMap map = new ContentTagSimpleMap();
-                        int contentStart = parseProperties(data, headEnd, i + 8, map);
-                        int contentEnd = findStartOf(data, headEnd, contentStart, "</content>");
-                        pageProperties.put(map.getTag(), new String(data, contentStart, contentEnd - contentStart));
-                        int contentTagEnd = contentEnd + "</content>".length();
-                        deletions.put(i, contentTagEnd - i);
-                        i = contentTagEnd - 1;
-                    }
-                }
-            }
-
-            return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, bodyStart, bodyLength),
-                    bodyProperties, new SitemeshBufferFragment(buffer, headStart, headEnd - headStart, deletions),
-                    title, metaAttributes, pageProperties);
-        } else {
+        if (headLength <= 0) {
             return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, bodyStart, bodyLength),
                     bodyProperties);
         }
+        int idx = headStart;
+        int headEnd = headStart + headLength;
+        String title = null;
+
+        TreeMap<Integer, Integer> deletions = new TreeMap<>();
+
+        // Extract meta attributes out of head
+        Map<String, String> metaAttributes = new HashMap<>();
+        while (idx < headEnd) {
+            if ((data[idx++] == '<') && compareLowerCase(data, headEnd, idx, "meta")) {
+                MetaTagSimpleMap map = new MetaTagSimpleMap();
+                idx = parseProperties(data, headEnd, idx + 4, map);
+                if (map.getName() != null && map.getContent() != null) {
+                    metaAttributes.put(map.getName(), map.getContent());
+                }
+            }
+        }
+
+        // We need a new head buffer because we have to remove the title and content tags from it
+        Map<String, String> pageProperties = new HashMap<>();
+        for (int i = headStart; i < headEnd; i++) {
+            char c = data[i];
+            if (c == '<') {
+                if (compareLowerCase(data, headEnd, i + 1, "title")) {
+                    int titleStart = findEndOf(data, headEnd, i + 6, ">");
+                    int titleEnd = findStartOf(data, headEnd, titleStart, "<");
+                    title = new String(data, titleStart, titleEnd - titleStart);
+                    int titleTagEnd = titleEnd + "</title>".length();
+                    deletions.put(i, titleTagEnd - i);
+                    i = titleTagEnd - 1;
+                } else if (compareLowerCase(data, headEnd, i + 1, "content")) {
+                    ContentTagSimpleMap map = new ContentTagSimpleMap();
+                    int contentStart = parseProperties(data, headEnd, i + 8, map);
+                    int contentEnd = findStartOf(data, headEnd, contentStart, "</content>");
+                    pageProperties.put(map.getTag(), new String(data, contentStart, contentEnd - contentStart));
+                    int contentTagEnd = contentEnd + "</content>".length();
+                    deletions.put(i, contentTagEnd - i);
+                    i = contentTagEnd - 1;
+                }
+            }
+        }
+
+        return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, bodyStart, bodyLength),
+                bodyProperties, new SitemeshBufferFragment(buffer, headStart, headEnd - headStart, deletions), title,
+                metaAttributes, pageProperties);
     }
 
     /**
@@ -181,7 +185,7 @@ public class PartialPageParser implements PageParser {
             // | 32 converts from ASCII uppercase to ASCII lowercase
             char potential = data[position + i];
             char needed = token.charAt(i);
-            if ((Character.isLetter(potential) && (potential | 32) != needed) || potential != needed) {
+            if (Character.isLetter(potential) && (potential | 32) != needed || potential != needed) {
                 return false;
             }
         }
@@ -319,16 +323,15 @@ public class PartialPageParser implements PageParser {
         }
         if (idx == dataEnd) {
             return idx;
-        } else {
-            // Return the first character after the end of the tag
-            return idx + 1;
         }
+        // Return the first character after the end of the tag
+        return idx + 1;
     }
 
     /**
      * The Interface SimpleMap.
      */
-    public static interface SimpleMap {
+    public interface SimpleMap {
 
         /**
          * Put.
@@ -338,7 +341,7 @@ public class PartialPageParser implements PageParser {
          * @param value
          *            the value
          */
-        public void put(String key, String value);
+        void put(String key, String value);
     }
 
     /**
@@ -352,6 +355,7 @@ public class PartialPageParser implements PageParser {
         /** The content. */
         private String content;
 
+        @Override
         public void put(String key, String value) {
             if (key.equals("name")) {
                 name = value;
@@ -387,6 +391,7 @@ public class PartialPageParser implements PageParser {
         /** The tag. */
         private String tag;
 
+        @Override
         public void put(String key, String value) {
             if (key.equals("tag")) {
                 tag = value;
@@ -409,8 +414,9 @@ public class PartialPageParser implements PageParser {
     public static class HashSimpleMap implements SimpleMap {
 
         /** The map. */
-        private final Map<String, String> map = new HashMap<String, String>();
+        private final Map<String, String> map = new HashMap<>();
 
+        @Override
         public void put(String key, String value) {
             map.put(key, value);
         }

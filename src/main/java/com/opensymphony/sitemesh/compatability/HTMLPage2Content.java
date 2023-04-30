@@ -41,30 +41,37 @@ public class HTMLPage2Content implements Content {
         this.page = page;
     }
 
+    @Override
     public void writeOriginal(Writer out) throws IOException {
         page.writePage(out);
     }
 
+    @Override
     public void writeBody(Writer out) throws IOException {
         page.writeBody(out);
     }
 
+    @Override
     public void writeHead(Writer out) throws IOException {
         page.writeHead(out);
     }
 
+    @Override
     public String getTitle() {
         return page.getTitle();
     }
 
+    @Override
     public String getProperty(String name) {
         return page.getProperty(name);
     }
 
+    @Override
     public String[] getPropertyKeys() {
         return page.getPropertyKeys();
     }
 
+    @Override
     public void addProperty(String name, String value) {
         page.addProperty(name, value);
     }

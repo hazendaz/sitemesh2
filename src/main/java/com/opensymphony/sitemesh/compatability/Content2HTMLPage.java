@@ -143,8 +143,9 @@ public class Content2HTMLPage implements HTMLPage {
     @Override
     public boolean getBooleanProperty(String name) {
         String property = getProperty(name);
-        if (property == null || property.trim().length() == 0)
+        if (property == null || property.trim().length() == 0) {
             return false;
+        }
         switch (property.charAt(0)) {
             case '1':
             case 't':
@@ -171,8 +172,8 @@ public class Content2HTMLPage implements HTMLPage {
     public Map getProperties() {
         Map result = new HashMap();
         String[] keys = content.getPropertyKeys();
-        for (int i = 0; i < keys.length; i++) {
-            result.put(keys[i], content.getProperty(keys[i]));
+        for (String key : keys) {
+            result.put(key, content.getProperty(key));
         }
         return result;
     }
@@ -190,6 +191,7 @@ public class Content2HTMLPage implements HTMLPage {
     /**
      * @see com.opensymphony.module.sitemesh.Page#getRequest()
      */
+    @Override
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -199,6 +201,7 @@ public class Content2HTMLPage implements HTMLPage {
      *
      * @see com.opensymphony.module.sitemesh.Page#getRequest()
      */
+    @Override
     public void setRequest(HttpServletRequest request) {
         this.request = request;
     }

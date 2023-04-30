@@ -42,7 +42,6 @@ public class FactoryException extends RuntimeException {
      * Instantiates a new factory exception.
      */
     public FactoryException() {
-        super();
     }
 
     /**
@@ -62,7 +61,6 @@ public class FactoryException extends RuntimeException {
      *            the e
      */
     public FactoryException(Exception e) {
-        super();
         exception = e;
     }
 
@@ -88,6 +86,7 @@ public class FactoryException extends RuntimeException {
         return exception;
     }
 
+    @Override
     public void printStackTrace() {
         super.printStackTrace();
         if (exception != null) {
@@ -98,6 +97,7 @@ public class FactoryException extends RuntimeException {
         }
     }
 
+    @Override
     public void printStackTrace(PrintStream s) {
         super.printStackTrace(s);
         if (exception != null) {
@@ -108,6 +108,7 @@ public class FactoryException extends RuntimeException {
         }
     }
 
+    @Override
     public void printStackTrace(PrintWriter s) {
         super.printStackTrace(s);
         if (exception != null) {

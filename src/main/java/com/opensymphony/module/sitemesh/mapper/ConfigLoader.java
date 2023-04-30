@@ -36,7 +36,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 /**
@@ -228,8 +232,9 @@ public class ConfigLoader {
 
         // get the default directory for the decorators
         String defaultDir = getAttribute(root, "defaultdir");
-        if (defaultDir == null)
+        if (defaultDir == null) {
             defaultDir = getAttribute(root, "defaultDir");
+        }
 
         // Get decorators
         NodeList decoratorNodes = root.getElementsByTagName("decorator");
@@ -250,16 +255,16 @@ public class ConfigLoader {
 
                 // Append the defaultDir
                 if (defaultDir != null && page != null && page.length() > 0 && !page.startsWith("/")) {
-                    if (page.charAt(0) == '/')
+                    if (page.charAt(0) == '/') {
                         page = defaultDir + page;
-                    else
+                    } else {
                         page = defaultDir + '/' + page;
+                    }
                 }
 
                 // The uriPath must begin with a slash
-                if (uriPath != null && uriPath.length() > 0) {
-                    if (uriPath.charAt(0) != '/')
-                        uriPath = '/' + uriPath;
+                if ((uriPath != null && uriPath.length() > 0) && (uriPath.charAt(0) != '/')) {
+                    uriPath = '/' + uriPath;
                 }
 
                 // Get all <pattern>...</pattern> and <url-pattern>...</url-pattern> nodes and add a mapping
@@ -271,8 +276,9 @@ public class ConfigLoader {
                 page = getContainedText(decoratorNodes.item(i), "resource");
                 // We have this here because the use of jsp-file is deprecated, but we still want
                 // it to work.
-                if (page == null)
+                if (page == null) {
                     page = getContainedText(decoratorNodes.item(i), "jsp-file");
+                }
             }
 
             Map params = new HashMap();
@@ -341,9 +347,8 @@ public class ConfigLoader {
     private static String getAttribute(Element element, String name) {
         if (element != null && element.getAttribute(name) != null && element.getAttribute(name).trim() != "") {
             return element.getAttribute(name).trim();
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**

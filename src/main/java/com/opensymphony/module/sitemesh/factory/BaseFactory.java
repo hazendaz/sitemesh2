@@ -39,6 +39,7 @@ import java.util.Properties;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public abstract class BaseFactory extends Factory {
+
     /** The config is of type ServletConfig or FilterConfig. */
     protected Config config;
 
@@ -50,7 +51,7 @@ public abstract class BaseFactory extends Factory {
     protected DecoratorMapper decoratorMapper;
 
     /** Map that associates content-types with PageParser instances. */
-    protected Map pageParsers;
+    protected Map<Object, Object> pageParsers;
 
     /** A map of paths that are excluded from decoration. */
     protected PathMapper excludeUrls;
@@ -72,6 +73,7 @@ public abstract class BaseFactory extends Factory {
     }
 
     /** Return instance of DecoratorMapper. */
+    @Override
     public DecoratorMapper getDecoratorMapper() {
         return decoratorMapper;
     }
@@ -89,6 +91,7 @@ public abstract class BaseFactory extends Factory {
      * @return Appropriate <code>PageParser</code> for reading data, or <code>null</code> if no suitable parser was
      *         found.
      */
+    @Override
     public PageParser getPageParser(String contentType) {
         return (PageParser) pageParsers.get(contentType);
     }
@@ -96,6 +99,7 @@ public abstract class BaseFactory extends Factory {
     /**
      * Determine whether a Page of given content-type should be parsed or not.
      */
+    @Override
     public boolean shouldParsePage(String contentType) {
         return pageParsers.containsKey(contentType);
     }
@@ -108,6 +112,7 @@ public abstract class BaseFactory extends Factory {
      *
      * @return whether the path is excluded
      */
+    @Override
     public boolean isPathExcluded(String path) {
         return excludeUrls.get(path) != null;
     }
@@ -129,7 +134,7 @@ public abstract class BaseFactory extends Factory {
      */
     protected void pushDecoratorMapper(String className, Properties properties) {
         try {
-            Class decoratorMapperClass = ClassLoaderUtil.loadClass(className, getClass());
+            Class<?> decoratorMapperClass = ClassLoaderUtil.loadClass(className, getClass());
             DecoratorMapper newMapper = getDecoratorMapper(decoratorMapperClass);
             newMapper.init(config, properties, decoratorMapper);
             decoratorMapper = newMapper;
@@ -153,7 +158,7 @@ public abstract class BaseFactory extends Factory {
      * @throws IllegalAccessException
      *             the illegal access exception
      */
-    protected DecoratorMapper getDecoratorMapper(Class decoratorMapperClass)
+    protected DecoratorMapper getDecoratorMapper(Class<?> decoratorMapperClass)
             throws InstantiationException, IllegalAccessException {
         return (DecoratorMapper) decoratorMapperClass.newInstance();
     }

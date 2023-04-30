@@ -39,13 +39,16 @@ import javax.servlet.jsp.PageContext;
  * @see UseHTMLPageTEI
  */
 public class UsePageTag extends AbstractTag {
+    private static final long serialVersionUID = 1L;
     private String id = null;
 
     /** Set name of variable the Page will be set as. */
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
+    @Override
     public final int doEndTag() throws JspException {
         pageContext.setAttribute(id, getPage(), PageContext.PAGE_SCOPE);
         return EVAL_PAGE;

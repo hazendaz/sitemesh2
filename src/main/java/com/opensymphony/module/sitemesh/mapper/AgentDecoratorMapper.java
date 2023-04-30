@@ -105,8 +105,9 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         while (i.hasNext()) {
             Map.Entry entry = (Map.Entry) i.next();
             String curr = (String) entry.getKey();
-            if (userAgent.indexOf(curr) > -1)
+            if (userAgent.indexOf(curr) > -1) {
                 return (String) entry.getValue();
+            }
         }
         return null;
     }
@@ -125,9 +126,8 @@ public class AgentDecoratorMapper extends AbstractDecoratorMapper {
         int dot = path.indexOf('.');
         if (dot > -1) {
             return path.substring(0, dot) + '-' + ext + path.substring(dot);
-        } else {
-            return path + '-' + ext;
         }
+        return path + '-' + ext;
     }
 
     /**
