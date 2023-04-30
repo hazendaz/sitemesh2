@@ -16,14 +16,6 @@ Forget the hype - just try it! You'll be impressed with how it can simplify
 things.
 
 --------------------------
--- Obtaining            --
---------------------------
-
-The latest version of SiteMesh can be obtained from:
-
-    http://www.opensymphony.com/sitemesh/
-
---------------------------
 -- Requirements         --
 --------------------------
 
