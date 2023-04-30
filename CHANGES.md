@@ -14,6 +14,8 @@
    parser, set the the pageParser in sitemesh.xml to be com.opensymphony.module.sitemesh.parser.PartialPageParser
  * Relicense project as apache 2
  * Move ownership from sitemesh to hazendaz
+ * Migrate from ant to maven build
+ * Extensive code cleanup (same behaviour - no new features)
 
 --------------------------
 -- Changes in 2.4.2     --
