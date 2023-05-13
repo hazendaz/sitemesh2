@@ -43,6 +43,7 @@ public class DivTag extends AbstractTag {
         this.divId = divId;
     }
 
+    @Override
     public final int doEndTag() throws JspException {
         try {
             String divBody = getPage().getProperty("div." + divId);

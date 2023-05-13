@@ -235,7 +235,8 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
                     URLConnection urlConn = url.openConnection();
                     urlConn.setUseCaches(true);
 
-                    try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                    try (BufferedReader in = new BufferedReader(
+                            new InputStreamReader(urlConn.getInputStream(), Charsets.forName(encoding)));
                             SitemeshBufferWriter sitemeshWriter = new SitemeshBufferWriter()) {
                         char[] buf = new char[1000];
                         for (;;) {
