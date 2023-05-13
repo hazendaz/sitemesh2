@@ -236,6 +236,15 @@ public class DefaultFactory extends BaseFactory {
 
         if (excludesFile == null) {
             is = config.getServletContext().getResourceAsStream(excludesFileName);
+            if (is == null) {
+                String excludesFilePath = config.getServletContext().getRealPath(excludesFileName);// getResourceAsStream
+                                                                                                   // does not work on
+                                                                                                   // weblogic 10.3.5
+                if (excludesFilePath != null) {
+                    excludesFile = new File(excludesFilePath);
+                    is = excludesFile.toURI().toURL().openStream();
+                }
+            }
         } else if (excludesFile.exists() && excludesFile.canRead()) {
             is = excludesFile.toURI().toURL().openStream();
         }
