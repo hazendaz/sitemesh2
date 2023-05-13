@@ -21,6 +21,7 @@ import com.opensymphony.module.sitemesh.taglib.decorator.PropertyTag;
  */
 public class ExtractPropertyTag extends PropertyTag {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
     @Override

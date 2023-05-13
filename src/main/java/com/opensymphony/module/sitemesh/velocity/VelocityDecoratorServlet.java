@@ -45,6 +45,8 @@ import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class VelocityDecoratorServlet extends VelocityViewServlet {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
     @Override

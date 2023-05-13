@@ -40,6 +40,7 @@ import javax.servlet.jsp.tagext.Tag;
  */
 public abstract class AbstractTag extends BodyTagSupport implements RequestConstants {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
     /** The page context. */
