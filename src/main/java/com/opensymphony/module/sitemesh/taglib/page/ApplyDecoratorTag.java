@@ -71,21 +71,39 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstants {
+
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+
+    /** The page. */
     private String page = null;
+
+    /** The decorator. */
     private String decorator = null;
 
+    /** The content type. */
     private String contentType = null;
+
+    /** The encoding. */
     private String encoding = null;
 
+    /** The params. */
     private Map<String, String> params = new HashMap<String, String>(6);
+
+    /** The config. */
     private Config config = null;
+
+    /** The decorator mapper. */
     private DecoratorMapper decoratorMapper = null;
+
+    /** The factory. */
     private Factory factory;
 
     /**
      * Tag attribute: URI of page to include. Can be relative to page being called from, or absolute path from
      * context-root of web-app.
+     *
+     * @param page the new page
      */
     public void setPage(String page) {
         this.page = page;
@@ -93,6 +111,9 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
 
     /**
      * Add a parameter to the page. This has a package level access modifier so ParamTag can also call it.
+     *
+     * @param name the name
+     * @param value the value
      */
     void addParam(String name, String value) {
         params.put(name, value);
@@ -101,6 +122,8 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
     /**
      * Tag attribute: If set, this value will override the 'title' property of the page. This is a convenience utility
      * and is identical to specifing a 'page:param name=title' tag.
+     *
+     * @param title the new title
      */
     public void setTitle(String title) {
         addParam("title", title);
@@ -119,6 +142,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
      * Tag attribute: Name of Decorator to apply to Page. This is passed to DecoratorMapper to retrieve appropriate
      * Decorator. DecoratorMapper may override if needed.
      *
+     * @param decorator the new name
      * @see com.opensymphony.module.sitemesh.DecoratorMapper
      */
     public void setName(String decorator) {
@@ -127,16 +151,31 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
         }
     }
 
-    /** @deprecated Use setName() instead. */
+    /**
+     * Sets the decorator.
+     *
+     * @param decorator the new decorator
+     * @deprecated Use setName() instead.
+     */
     @Deprecated
     public void setDecorator(String decorator) {
         setName(decorator);
     }
 
+    /**
+     * Sets the content type.
+     *
+     * @param contentType the new content type
+     */
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    /**
+     * Sets the encoding.
+     *
+     * @param encoding the new encoding
+     */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
@@ -297,13 +336,28 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
         return EVAL_PAGE;
     }
 
+    /**
+     * Gets the parser selector.
+     *
+     * @return the parser selector
+     */
     private PageParserSelector getParserSelector() {
         return Factory.getInstance(config);
     }
 
+    /**
+     * The Class ApplyDecoratorException.
+     */
     class ApplyDecoratorException extends Exception {
+
+        /** The Constant serialVersionUID. */
         private static final long serialVersionUID = 1L;
 
+        /**
+         * Instantiates a new apply decorator exception.
+         *
+         * @param s the s
+         */
         public ApplyDecoratorException(String s) {
             super(s);
         }

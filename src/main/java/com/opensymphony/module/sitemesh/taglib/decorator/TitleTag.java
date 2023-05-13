@@ -32,10 +32,18 @@ import com.opensymphony.module.sitemesh.taglib.AbstractTag;
  * @see com.opensymphony.module.sitemesh.HTMLPage#getTitle()
  */
 public class TitleTag extends AbstractTag {
+
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+
+    /** The default title. */
     private String defaultTitle = null;
 
-    /** Value to write if no title is found (optional). */
+    /**
+     *  Value to write if no title is found (optional).
+     *
+     * @param defaultTitle the new default
+     */
     public void setDefault(String defaultTitle) {
         this.defaultTitle = defaultTitle;
     }

@@ -37,6 +37,8 @@ import javax.servlet.jsp.JspException;
  * @see com.opensymphony.module.sitemesh.HTMLPage#writeHead(java.io.Writer)
  */
 public class HeadTag extends AbstractTag {
+
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
     @Override

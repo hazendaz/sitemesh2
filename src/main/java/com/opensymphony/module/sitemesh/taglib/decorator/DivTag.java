@@ -26,6 +26,11 @@ import javax.servlet.jsp.JspException;
  * @see com.opensymphony.module.sitemesh.HTMLPage#writeHead(java.io.Writer)
  */
 public class DivTag extends AbstractTag {
+
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
+
+    /** The div id. */
     protected String divId;
 
     public String getId() {

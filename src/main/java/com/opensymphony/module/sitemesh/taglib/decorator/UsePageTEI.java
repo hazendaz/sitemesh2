@@ -35,6 +35,12 @@ import javax.servlet.jsp.tagext.VariableInfo;
  * @see UseHTMLPageTEI
  */
 public class UsePageTEI extends TagExtraInfo {
+
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
     protected String getType() {
         return "com.opensymphony.module.sitemesh.Page";
     }

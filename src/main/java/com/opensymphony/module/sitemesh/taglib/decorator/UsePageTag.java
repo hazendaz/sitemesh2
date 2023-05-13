@@ -39,7 +39,11 @@ import javax.servlet.jsp.PageContext;
  * @see UseHTMLPageTEI
  */
 public class UsePageTag extends AbstractTag {
+
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+
+    /** The id. */
     private String id = null;
 
     /** Set name of variable the Page will be set as. */

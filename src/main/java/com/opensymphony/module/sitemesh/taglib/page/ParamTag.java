@@ -31,9 +31,18 @@ import javax.servlet.jsp.tagext.Tag;
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */
 public class ParamTag extends BodyTagSupport {
+
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+
+    /** The name. */
     private String name;
 
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
     public void setName(String name) {
         this.name = name;
     }
