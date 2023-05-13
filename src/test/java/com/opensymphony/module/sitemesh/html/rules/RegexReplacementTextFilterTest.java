@@ -20,12 +20,13 @@ import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * The Class RegexReplacementTextFilterTest.
  */
-public class RegexReplacementTextFilterTest extends TestCase {
+public class RegexReplacementTextFilterTest {
 
     /** The body. */
     private SitemeshBufferFragment.Builder body;
@@ -50,12 +51,13 @@ public class RegexReplacementTextFilterTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testReplacesTextContentMatchedByRegularExpression() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>Today is DATE so hi</hello>");
         processor.addTextFilter(new RegexReplacementTextFilter("DATE", "1-jan-2009"));
 
         processor.process();
-        assertEquals("<hello>Today is 1-jan-2009 so hi</hello>", body.build().getStringContent());
+        Assert.assertEquals("<hello>Today is 1-jan-2009 so hi</hello>", body.build().getStringContent());
     }
 
     /**
@@ -64,13 +66,14 @@ public class RegexReplacementTextFilterTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testAllowsMatchedGroupToBeUsedInSubsitution() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>I think JIRA:SIM-1234 is the way forward</hello>");
         processor.addTextFilter(new RegexReplacementTextFilter("JIRA:([A-Z]+\\-[0-9]+)",
                 "<a href='http://jira.opensymhony.com/browse/$1'>$1</a>"));
 
         processor.process();
-        assertEquals(
+        Assert.assertEquals(
                 "<hello>I think <a href='http://jira.opensymhony.com/browse/SIM-1234'>SIM-1234</a> is the way forward</hello>",
                 body.build().getStringContent());
     }

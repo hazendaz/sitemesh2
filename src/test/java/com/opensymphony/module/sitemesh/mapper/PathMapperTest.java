@@ -13,20 +13,23 @@
  */
 package com.opensymphony.module.sitemesh.mapper;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * The Class PathMapperTest.
  */
-public class PathMapperTest extends TestCase {
+public class PathMapperTest {
 
     /** The path mapper. */
     private PathMapper pathMapper;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    /**
+     * The test setup. throws Exception the exception
+     */
+    @Before
+    public void setUp() throws Exception {
         pathMapper = new PathMapper();
 
         // exact matches come first
@@ -53,12 +56,13 @@ public class PathMapperTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testHardening() throws Exception {
         PathMapper bad = new PathMapper();
         bad.put(null, null);
-        assertNull(bad.get(null));
-        assertNull(bad.get(""));
-        assertNull(bad.get("/somenonexistingpath"));
+        Assert.assertNull(bad.get(null));
+        Assert.assertNull(bad.get(""));
+        Assert.assertNull(bad.get("/somenonexistingpath"));
     }
 
     /**
@@ -67,11 +71,12 @@ public class PathMapperTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testFindExactKey() throws Exception {
-        assertEquals("exact1", pathMapper.get("/myexactfile.html"));
-        assertEquals("exact2", pathMapper.get("/mydir/myexactfile.html"));
-        assertEquals("exact3", pathMapper.get("/mydir/myexactfile.jsp"));
-        assertEquals("exact4", pathMapper.get("/mydir/dodo"));
+        Assert.assertEquals("exact1", pathMapper.get("/myexactfile.html"));
+        Assert.assertEquals("exact2", pathMapper.get("/mydir/myexactfile.html"));
+        Assert.assertEquals("exact3", pathMapper.get("/mydir/myexactfile.jsp"));
+        Assert.assertEquals("exact4", pathMapper.get("/mydir/dodo"));
     }
 
     /**
@@ -80,26 +85,27 @@ public class PathMapperTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testFindComplexKey() throws Exception {
-        assertEquals("complex1", pathMapper.get("/mydir/"));
-        assertEquals("complex1", pathMapper.get("/mydir/test1.xml"));
-        assertEquals("complex1", pathMapper.get("/mydir/test321.jsp"));
-        assertEquals("complex1", pathMapper.get("/mydir/otherdir"));
+        Assert.assertEquals("complex1", pathMapper.get("/mydir/"));
+        Assert.assertEquals("complex1", pathMapper.get("/mydir/test1.xml"));
+        Assert.assertEquals("complex1", pathMapper.get("/mydir/test321.jsp"));
+        Assert.assertEquals("complex1", pathMapper.get("/mydir/otherdir"));
 
-        assertEquals("complex2", pathMapper.get("/mydir/otherdir/test321.jsp"));
+        Assert.assertEquals("complex2", pathMapper.get("/mydir/otherdir/test321.jsp"));
 
-        assertEquals("complex3", pathMapper.get("/otherdir/test2.jsp"));
-        assertEquals("complex3", pathMapper.get("/otherdir/test2.bpp"));
+        Assert.assertEquals("complex3", pathMapper.get("/otherdir/test2.jsp"));
+        Assert.assertEquals("complex3", pathMapper.get("/otherdir/test2.bpp"));
 
-        assertEquals("complex4", pathMapper.get("/somedir/one/two/some/deep/file/test.xml"));
-        assertEquals("complex4", pathMapper.get("/somedir/321.jsp.xml"));
+        Assert.assertEquals("complex4", pathMapper.get("/somedir/one/two/some/deep/file/test.xml"));
+        Assert.assertEquals("complex4", pathMapper.get("/somedir/321.jsp.xml"));
 
-        assertEquals("complex5", pathMapper.get("/mydir/otherdir/admin/myfile.html"));
-        assertEquals("complex5", pathMapper.get("/mydir/somedir/admin/text.html"));
+        Assert.assertEquals("complex5", pathMapper.get("/mydir/otherdir/admin/myfile.html"));
+        Assert.assertEquals("complex5", pathMapper.get("/mydir/somedir/admin/text.html"));
 
-        assertEquals("complex6", pathMapper.get("/mydir/complexx/a-some-test-b.xctml"));
-        assertEquals("complex6", pathMapper.get("/mydir/complexx/a b.xhtml"));
-        assertEquals("complex6", pathMapper.get("/mydir/complexx/a___b.xhtml"));
+        Assert.assertEquals("complex6", pathMapper.get("/mydir/complexx/a-some-test-b.xctml"));
+        Assert.assertEquals("complex6", pathMapper.get("/mydir/complexx/a b.xhtml"));
+        Assert.assertEquals("complex6", pathMapper.get("/mydir/complexx/a___b.xhtml"));
     }
 
     /**
@@ -108,14 +114,15 @@ public class PathMapperTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testFindDefaultKey() throws Exception {
-        assertEquals("default", pathMapper.get(null));
-        assertEquals("default", pathMapper.get("/"));
-        assertEquals("default", pathMapper.get("/*"));
-        assertEquals("default", pathMapper.get("*"));
-        assertEquals("default", pathMapper.get("blah.txt"));
-        assertEquals("default", pathMapper.get("somefilewithoutextension"));
-        assertEquals("default", pathMapper.get("/file_with_underscores-and-dashes.test"));
-        assertEquals("default", pathMapper.get("/tuuuu*/file.with.dots.test.txt"));
+        Assert.assertEquals("default", pathMapper.get(null));
+        Assert.assertEquals("default", pathMapper.get("/"));
+        Assert.assertEquals("default", pathMapper.get("/*"));
+        Assert.assertEquals("default", pathMapper.get("*"));
+        Assert.assertEquals("default", pathMapper.get("blah.txt"));
+        Assert.assertEquals("default", pathMapper.get("somefilewithoutextension"));
+        Assert.assertEquals("default", pathMapper.get("/file_with_underscores-and-dashes.test"));
+        Assert.assertEquals("default", pathMapper.get("/tuuuu*/file.with.dots.test.txt"));
     }
 }

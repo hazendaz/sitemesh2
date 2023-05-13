@@ -13,12 +13,13 @@
  */
 package com.opensymphony.module.sitemesh.html;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * The Class StateTest.
  */
-public class StateTest extends TestCase {
+public class StateTest {
 
     /**
      * The Class DummyRule.
@@ -44,6 +45,7 @@ public class StateTest extends TestCase {
     /**
      * Test maps tag name to rule.
      */
+    @Test
     public void testMapsTagNameToRule() {
         TagRule mouseRule = new DummyRule("mouse");
         TagRule donkeyRule = new DummyRule("donkey");
@@ -54,14 +56,15 @@ public class StateTest extends TestCase {
         state.addRule(donkeyRule);
         state.addRule(lemonRule);
 
-        assertSame(donkeyRule, state.getRule("donkey"));
-        assertSame(lemonRule, state.getRule("lemon"));
-        assertSame(mouseRule, state.getRule("mouse"));
+        Assert.assertSame(donkeyRule, state.getRule("donkey"));
+        Assert.assertSame(lemonRule, state.getRule("lemon"));
+        Assert.assertSame(mouseRule, state.getRule("mouse"));
     }
 
     /**
      * Test exposes whether it should process A tag based on available rules.
      */
+    @Test
     public void testExposesWhetherItShouldProcessATagBasedOnAvailableRules() {
         TagRule mouseRule = new DummyRule("mouse");
         TagRule donkeyRule = new DummyRule("donkey");
@@ -72,14 +75,15 @@ public class StateTest extends TestCase {
         state.addRule(donkeyRule);
         state.addRule(lemonRule);
 
-        assertTrue(state.shouldProcessTag("donkey"));
-        assertTrue(state.shouldProcessTag("lemon"));
-        assertFalse(state.shouldProcessTag("yeeeehaa"));
+        Assert.assertTrue(state.shouldProcessTag("donkey"));
+        Assert.assertTrue(state.shouldProcessTag("lemon"));
+        Assert.assertFalse(state.shouldProcessTag("yeeeehaa"));
     }
 
     /**
      * Test returns most recently added rule if multiple matches found.
      */
+    @Test
     public void testReturnsMostRecentlyAddedRuleIfMultipleMatchesFound() {
         TagRule oldRule = new DummyRule("something");
         TagRule newRule = new DummyRule("something");
@@ -88,6 +92,6 @@ public class StateTest extends TestCase {
         state.addRule(oldRule);
         state.addRule(newRule);
 
-        assertSame(newRule, state.getRule("something"));
+        Assert.assertSame(newRule, state.getRule("something"));
     }
 }

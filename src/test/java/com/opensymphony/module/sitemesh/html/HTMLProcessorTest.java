@@ -20,12 +20,13 @@ import com.opensymphony.module.sitemesh.html.util.StringSitemeshBuffer;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * The Class HTMLProcessorTest.
  */
-public class HTMLProcessorTest extends TestCase {
+public class HTMLProcessorTest {
 
     /** The body. */
     private SitemeshBufferFragment.Builder body;
@@ -50,6 +51,7 @@ public class HTMLProcessorTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testCreatesStateTransitionEvent() throws IOException {
         String input = "<a></a>";
         HTMLProcessor htmlProcessor = createProcessor(input);
@@ -61,7 +63,7 @@ public class HTMLProcessorTest extends TestCase {
         defaultState.addListener(() -> stateLog.append("finished"));
 
         htmlProcessor.process();
-        assertEquals("finished", stateLog.toString());
+        Assert.assertEquals("finished", stateLog.toString());
     }
 
     /**
@@ -70,12 +72,13 @@ public class HTMLProcessorTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testSupportsConventionalReaderAndWriter() throws IOException {
         HTMLProcessor processor = createProcessor("<hello><b id=\"something\">world</b></hello>");
         processor.addRule(new TagReplaceRule("b", "strong"));
 
         processor.process();
-        assertEquals("<hello><strong id=\"something\">world</strong></hello>", body.build().getStringContent());
+        Assert.assertEquals("<hello><strong id=\"something\">world</strong></hello>", body.build().getStringContent());
     }
 
     /**
@@ -84,6 +87,7 @@ public class HTMLProcessorTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testAllowsRulesToModifyAttributes() throws IOException {
         HTMLProcessor processor = createProcessor("<hello><a href=\"modify-me\">world</a></hello>");
         processor.addRule(new BasicRule("a") {
@@ -101,7 +105,7 @@ public class HTMLProcessorTest extends TestCase {
         });
 
         processor.process();
-        assertEquals("<hello><a href=\"MODIFY-ME\">world</a></hello>", body.build().getStringContent());
+        Assert.assertEquals("<hello><a href=\"MODIFY-ME\">world</a></hello>", body.build().getStringContent());
     }
 
     /**
@@ -110,13 +114,14 @@ public class HTMLProcessorTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testSupportsChainedFilteringOfTextContent() throws IOException {
         HTMLProcessor processor = createProcessor("<hello>world</hello>");
         processor.addTextFilter(text -> text.toUpperCase());
         processor.addTextFilter(text -> text.replace('O', 'o'));
 
         processor.process();
-        assertEquals("<HELLo>WoRLD</HELLo>", body.build().getStringContent());
+        Assert.assertEquals("<HELLo>WoRLD</HELLo>", body.build().getStringContent());
     }
 
     /**
@@ -125,6 +130,7 @@ public class HTMLProcessorTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testSupportsTextFiltersForSpecificStates() throws IOException {
         HTMLProcessor processor = createProcessor("la la<br> la la <capitalism>laaaa<br> laaaa</capitalism> la la");
         State capsState = new State();
@@ -133,7 +139,8 @@ public class HTMLProcessorTest extends TestCase {
         capsState.addTextFilter(text -> text.toUpperCase());
 
         processor.process();
-        assertEquals("la la<br> la la <capitalism>LAAAA<BR> LAAAA</capitalism> la la", body.build().getStringContent());
+        Assert.assertEquals("la la<br> la la <capitalism>LAAAA<BR> LAAAA</capitalism> la la",
+                body.build().getStringContent());
     }
 
     /**
@@ -142,6 +149,7 @@ public class HTMLProcessorTest extends TestCase {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
+    @Test
     public void testCanAddAttributesToCustomTag() throws IOException {
         String html = "<h1>Headline</h1>";
         HTMLProcessor htmlProcessor = createProcessor(html);
@@ -157,12 +165,12 @@ public class HTMLProcessorTest extends TestCase {
                     currentBuffer().delete(tag.getPosition(), tag.getLength());
                     CustomTag ctag = new CustomTag(tag);
                     ctag.addAttribute("class", "y");
-                    assertEquals(1, ctag.getAttributeCount());
+                    Assert.assertEquals(1, ctag.getAttributeCount());
                     ctag.writeTo(currentBuffer(), tag.getPosition());
                 }
             }
         });
         htmlProcessor.process();
-        assertEquals("<h1 class=\"y\">Headline</h1>", body.build().getStringContent());
+        Assert.assertEquals("<h1 class=\"y\">Headline</h1>", body.build().getStringContent());
     }
 }
