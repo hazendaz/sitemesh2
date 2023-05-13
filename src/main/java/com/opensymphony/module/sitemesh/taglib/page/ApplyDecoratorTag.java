@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -236,7 +237,7 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
                     urlConn.setUseCaches(true);
 
                     try (BufferedReader in = new BufferedReader(
-                            new InputStreamReader(urlConn.getInputStream(), Charsets.forName(encoding)));
+                            new InputStreamReader(urlConn.getInputStream(), Charset.forName(encoding)));
                             SitemeshBufferWriter sitemeshWriter = new SitemeshBufferWriter()) {
                         char[] buf = new char[1000];
                         for (;;) {
