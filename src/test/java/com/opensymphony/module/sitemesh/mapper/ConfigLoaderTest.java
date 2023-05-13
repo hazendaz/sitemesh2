@@ -17,12 +17,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * The Class ConfigLoaderTest.
  */
-public class ConfigLoaderTest extends TestCase {
+public class ConfigLoaderTest {
 
     /** The config loader. */
     private ConfigLoader configLoader;
@@ -30,10 +33,11 @@ public class ConfigLoaderTest extends TestCase {
     /** The temp config file. */
     private File tempConfigFile;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    /**
+     * Setup the unit tests.
+     */
+    @Before
+    public void setUp() throws Exception {
         // create temp file
         tempConfigFile = File.createTempFile("decorators-test", ".xml");
         tempConfigFile.deleteOnExit();
@@ -87,8 +91,11 @@ public class ConfigLoaderTest extends TestCase {
         configLoader = new ConfigLoader(tempConfigFile);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    /**
+     * Cleanup the unit tests.
+     */
+    @After
+    public void tearDown() throws Exception {
         if (tempConfigFile != null) {
             tempConfigFile.delete();
         }
@@ -101,17 +108,18 @@ public class ConfigLoaderTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testMappedNames() throws Exception {
-        assertEquals(configLoader.getMappedName("/info/somepage.html"), "default");
-        assertEquals(configLoader.getMappedName("/test/somepage.html"), "default");
+        Assert.assertEquals(configLoader.getMappedName("/info/somepage.html"), "default");
+        Assert.assertEquals(configLoader.getMappedName("/test/somepage.html"), "default");
 
-        assertEquals(configLoader.getMappedName("/other/someotherpage.html"), "other");
+        Assert.assertEquals(configLoader.getMappedName("/other/someotherpage.html"), "other");
 
-        assertEquals(configLoader.getMappedName("/uri/somepage.html"), "uri");
+        Assert.assertEquals(configLoader.getMappedName("/uri/somepage.html"), "uri");
 
-        assertEquals(configLoader.getMappedName("/rolebased/someotherpage.html"), "rolebaseddeveloper");
+        Assert.assertEquals(configLoader.getMappedName("/rolebased/someotherpage.html"), "rolebaseddeveloper");
 
-        assertEquals(configLoader.getMappedName("/old/someoldpage.html"), "old");
+        Assert.assertEquals(configLoader.getMappedName("/old/someoldpage.html"), "old");
     }
 
     /**
@@ -120,12 +128,13 @@ public class ConfigLoaderTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testDecoratorPresence() throws Exception {
-        assertNotNull(configLoader.getDecoratorByName("default"));
-        assertNotNull(configLoader.getDecoratorByName("other"));
-        assertNotNull(configLoader.getDecoratorByName("uri"));
-        assertNotNull(configLoader.getDecoratorByName("rolebaseddeveloper"));
-        assertNotNull(configLoader.getDecoratorByName("old"));
+        Assert.assertNotNull(configLoader.getDecoratorByName("default"));
+        Assert.assertNotNull(configLoader.getDecoratorByName("other"));
+        Assert.assertNotNull(configLoader.getDecoratorByName("uri"));
+        Assert.assertNotNull(configLoader.getDecoratorByName("rolebaseddeveloper"));
+        Assert.assertNotNull(configLoader.getDecoratorByName("old"));
     }
 
     /**
@@ -134,30 +143,32 @@ public class ConfigLoaderTest extends TestCase {
      * @throws Exception
      *             the exception
      */
+    @Test
     public void testDecorators() throws Exception {
-        assertEquals(configLoader.getDecoratorByName("default").getName(), "default");
-        assertEquals(configLoader.getDecoratorByName("default").getPage(), "/decorators/default.jsp");
-        assertNull(configLoader.getDecoratorByName("default").getURIPath());
-        assertNull(configLoader.getDecoratorByName("default").getRole());
+        Assert.assertEquals("default", configLoader.getDecoratorByName("default").getName());
+        Assert.assertEquals("/decorators/default.jsp", configLoader.getDecoratorByName("default").getPage());
+        Assert.assertNull(configLoader.getDecoratorByName("default").getURIPath());
+        Assert.assertNull(configLoader.getDecoratorByName("default").getRole());
 
-        assertEquals(configLoader.getDecoratorByName("other").getName(), "other");
-        assertEquals(configLoader.getDecoratorByName("other").getPage(), "/other.jsp"); // absolute path
-        assertNull(configLoader.getDecoratorByName("other").getURIPath());
-        assertNull(configLoader.getDecoratorByName("other").getRole());
+        Assert.assertEquals("other", configLoader.getDecoratorByName("other").getName());
+        Assert.assertEquals("/other.jsp", configLoader.getDecoratorByName("other").getPage()); // absolute path
+        Assert.assertNull(configLoader.getDecoratorByName("other").getURIPath());
+        Assert.assertNull(configLoader.getDecoratorByName("other").getRole());
 
-        assertEquals(configLoader.getDecoratorByName("uri").getName(), "uri");
-        assertEquals(configLoader.getDecoratorByName("uri").getPage(), "/decorators/uri.jsp");
-        assertEquals(configLoader.getDecoratorByName("uri").getURIPath(), "/someapp");
-        assertNull(configLoader.getDecoratorByName("uri").getRole());
+        Assert.assertEquals("uri", configLoader.getDecoratorByName("uri").getName());
+        Assert.assertEquals("/decorators/uri.jsp", configLoader.getDecoratorByName("uri").getPage());
+        Assert.assertEquals("/someapp", configLoader.getDecoratorByName("uri").getURIPath());
+        Assert.assertNull(configLoader.getDecoratorByName("uri").getRole());
 
-        assertEquals(configLoader.getDecoratorByName("rolebaseddeveloper").getName(), "rolebased");
-        assertEquals(configLoader.getDecoratorByName("rolebaseddeveloper").getPage(), "/decorators/rolebased.jsp");
-        assertNull(configLoader.getDecoratorByName("rolebaseddeveloper").getURIPath());
-        assertEquals(configLoader.getDecoratorByName("rolebaseddeveloper").getRole(), "developer");
+        Assert.assertEquals("rolebased", configLoader.getDecoratorByName("rolebaseddeveloper").getName());
+        Assert.assertEquals("/decorators/rolebased.jsp",
+                configLoader.getDecoratorByName("rolebaseddeveloper").getPage());
+        Assert.assertNull(configLoader.getDecoratorByName("rolebaseddeveloper").getURIPath());
+        Assert.assertEquals("developer", configLoader.getDecoratorByName("rolebaseddeveloper").getRole());
 
-        assertEquals(configLoader.getDecoratorByName("old").getName(), "old");
-        assertEquals(configLoader.getDecoratorByName("old").getPage(), "/decorators/old.jsp");
-        assertNull(configLoader.getDecoratorByName("old").getURIPath());
-        assertNull(configLoader.getDecoratorByName("old").getRole());
+        Assert.assertEquals("old", configLoader.getDecoratorByName("old").getName());
+        Assert.assertEquals("/decorators/old.jsp", configLoader.getDecoratorByName("old").getPage());
+        Assert.assertNull(configLoader.getDecoratorByName("old").getURIPath());
+        Assert.assertNull(configLoader.getDecoratorByName("old").getRole());
     }
 }
