@@ -13,7 +13,7 @@
  */
 package com.opensymphony.module.sitemesh.tapestry;
 
-import org.apache.tapestry.Tapestry;
+import org.apache.hivemind.HiveMind;
 
 /**
  * The Class Title.
@@ -34,6 +34,6 @@ public abstract class Title extends SiteMeshBase {
      */
     public String getTitle() {
         String title = getSiteMeshPage().getTitle();
-        return Tapestry.isBlank(title) ? getDefault() : title;
+        return HiveMind.isBlank(title) ? getDefault() : title;
     }
 }

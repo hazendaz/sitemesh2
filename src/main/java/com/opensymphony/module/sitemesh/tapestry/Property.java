@@ -13,7 +13,7 @@
  */
 package com.opensymphony.module.sitemesh.tapestry;
 
-import org.apache.tapestry.Tapestry;
+import org.apache.hivemind.HiveMind;
 
 /**
  * Because Tapestry templating works differently than JSP taglibs, the writeEntireProperty feature is not implemented
@@ -59,7 +59,7 @@ public abstract class Property extends SiteMeshBase {
         String propertyName = getProperty();
         String propertyValue = getSiteMeshPage().getProperty(propertyName);
 
-        if (Tapestry.isBlank(propertyValue)) {
+        if (HiveMind.isBlank(propertyValue)) {
             propertyValue = getDefault();
         }
 
