@@ -22,6 +22,7 @@
  * [upstream PR] Weblogic 10.3.5 unable to find excludesFile path using getResourceAsStream (alternative approach if null only)
  * [upstream PR] fix rendering for script/comment/CDATA inside content tags in FastPageParser.java
  * [upstream PR] com.opensymphony.module.sitemesh.Factory no longer works with Java 11
+ * Removed code for java 1.3 and before while fixing encoding to properly work for all others
 
 --------------------------
 -- Changes in 2.4.2     --
