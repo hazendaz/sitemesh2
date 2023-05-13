@@ -16,10 +16,7 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import java.io.ByteArrayInputStream;
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -39,11 +36,6 @@ public class TextEncoder {
     /** The Constant DEFAULT_ENCODING. */
     private static final String DEFAULT_ENCODING = Charset.defaultCharset().displayName();
 
-    /** The Constant JDK14. */
-    // TODO Issue with this code, look to fix
-    private static final boolean JDK14 = System.getProperty("java.version").startsWith("1.4")
-            || System.getProperty("java.version").startsWith("1.5");
-
     /**
      * Encode.
      *
@@ -61,58 +53,23 @@ public class TextEncoder {
         if (encoding == null) {
             encoding = DEFAULT_ENCODING;
         }
-        if (JDK14) {
-            return get14Buffer(data, encoding);
-        }
-        return get13Buffer(data, encoding);
+        return getBuffer(data, encoding);
     }
 
     /**
-     * Gets the 13 buffer.
+     * Gets the buffer.
      *
      * @param data
      *            the data
      * @param encoding
      *            the encoding
      *
-     * @return the 13 buffer
+     * @return the buffer
      *
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    private char[] get13Buffer(byte[] data, String encoding) throws IOException {
-        // Why all this indirection? Because we are being given bytes, and we have to then write
-        // them to characters. We need to know the encoding of the characterset that we are creating.
-        // The test that verifies this is InlineDecoratorTest (inline/page6.jsp).
-        InputStreamReader reader;
-        CharArrayWriter out = new CharArrayWriter();
-        if (encoding != null) {
-            reader = new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(encoding));
-        } else {
-            reader = new InputStreamReader(new ByteArrayInputStream(data));
-        }
-
-        int i;
-        while ((i = reader.read()) != -1) {
-            out.write(i);
-        }
-        return out.toCharArray();
-    }
-
-    /**
-     * Gets the 14 buffer.
-     *
-     * @param data
-     *            the data
-     * @param encoding
-     *            the encoding
-     *
-     * @return the 14 buffer
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private char[] get14Buffer(byte[] data, String encoding) throws IOException {
+    private char[] getBuffer(byte[] data, String encoding) throws IOException {
         if (!Charset.isSupported(encoding)) {
             throw new IOException("Unsupported encoding " + encoding);
         }
