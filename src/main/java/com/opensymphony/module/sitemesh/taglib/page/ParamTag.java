@@ -41,7 +41,8 @@ public class ParamTag extends BodyTagSupport {
     /**
      * Sets the name.
      *
-     * @param name the new name
+     * @param name
+     *            the new name
      */
     public void setName(String name) {
         this.name = name;

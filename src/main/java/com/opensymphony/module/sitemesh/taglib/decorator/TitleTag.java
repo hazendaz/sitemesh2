@@ -40,9 +40,10 @@ public class TitleTag extends AbstractTag {
     private String defaultTitle = null;
 
     /**
-     *  Value to write if no title is found (optional).
+     * Value to write if no title is found (optional).
      *
-     * @param defaultTitle the new default
+     * @param defaultTitle
+     *            the new default
      */
     public void setDefault(String defaultTitle) {
         this.defaultTitle = defaultTitle;

@@ -46,9 +46,10 @@ public class PropertyTag extends AbstractTag {
     private boolean writeEntireProperty = false;
 
     /**
-     *  Key of property to write.
+     * Key of property to write.
      *
-     * @param propertyName the new property
+     * @param propertyName
+     *            the new property
      */
     public void setProperty(String propertyName) {
         this.propertyName = propertyName;
@@ -64,18 +65,20 @@ public class PropertyTag extends AbstractTag {
     }
 
     /**
-     *  Value to write if no property matching key is found (optional).
+     * Value to write if no property matching key is found (optional).
      *
-     * @param defaultValue the new default
+     * @param defaultValue
+     *            the new default
      */
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
     /**
-     *  When begins with y, t or 1, the full attribute (name + value) is written.
+     * When begins with y, t or 1, the full attribute (name + value) is written.
      *
-     * @param writeEntireProperty the new write entire property
+     * @param writeEntireProperty
+     *            the new write entire property
      */
     public final void setWriteEntireProperty(String writeEntireProperty) {
         if (writeEntireProperty == null || writeEntireProperty.trim().length() == 0) {
