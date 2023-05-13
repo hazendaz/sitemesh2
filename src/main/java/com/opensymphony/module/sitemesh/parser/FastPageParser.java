@@ -225,8 +225,8 @@ public final class FastPageParser implements PageParser {
                         continue;
                     }
 
-                    if (_buffer.compareLowerSubstr("/content")) // Note that the '/' survives the | 32 operation
-                    {
+                    // Note that the '/' survives the | 32 operation
+                    if (_buffer.compareLowerSubstr("/content")) {
                         tagged = false;
                         if (_contentTagId != null) {
                             state = TAG_STATE_NONE;
