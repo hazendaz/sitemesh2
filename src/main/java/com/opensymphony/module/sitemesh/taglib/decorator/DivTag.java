@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
