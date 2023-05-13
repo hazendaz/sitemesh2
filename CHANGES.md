@@ -16,6 +16,12 @@
  * Move ownership from sitemesh to hazendaz
  * Migrate from ant to maven build
  * Extensive code cleanup (same behaviour - no new features)
+ * [upstream PR] Replaced @VERSION@ with <VERSION> because Github readme was rendering it as email to VERSION@.jar 
+ * [upstream PR] Changed how files are loaded in DefaultFactory and Fixes issue #18
+ * [upstream PR] support for decorator:div tag
+ * [upstream PR] Weblogic 10.3.5 unable to find excludesFile path using getResourceAsStream (alternative approach if null only)
+ * [upstream PR] fix rendering for script/comment/CDATA inside content tags in FastPageParser.java
+ * [upstream PR] com.opensymphony.module.sitemesh.Factory no longer works with Java 11
 
 --------------------------
 -- Changes in 2.4.2     --
