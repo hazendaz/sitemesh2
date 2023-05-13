@@ -33,10 +33,12 @@ public class DivTag extends AbstractTag {
     /** The div id. */
     protected String divId;
 
+    @Override
     public String getId() {
         return divId;
     }
 
+    @Override
     public void setId(String divId) {
         this.divId = divId;
     }
