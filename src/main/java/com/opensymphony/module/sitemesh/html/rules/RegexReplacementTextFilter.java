@@ -34,14 +34,33 @@ import java.util.regex.Pattern;
  */
 public class RegexReplacementTextFilter implements TextFilter {
 
+    /** The regex. */
     private final Pattern regex;
+
+    /** The replacement. */
     private final String replacement;
 
+    /**
+     * Instantiates a new regex replacement text filter.
+     *
+     * @param regex
+     *            the regex
+     * @param replacement
+     *            the replacement
+     */
     public RegexReplacementTextFilter(String regex, String replacement) {
         this.regex = Pattern.compile(regex);
         this.replacement = replacement;
     }
 
+    /**
+     * Instantiates a new regex replacement text filter.
+     *
+     * @param regex
+     *            the regex
+     * @param replacement
+     *            the replacement
+     */
     public RegexReplacementTextFilter(Pattern regex, String replacement) {
         this.regex = regex;
         this.replacement = replacement;

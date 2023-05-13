@@ -37,40 +37,90 @@ import java.io.IOException;
  */
 public class Parser extends Lexer {
 
+    /** The attribute buffer. */
     private final CharArray attributeBuffer = new CharArray(64);
+
+    /** The reusable token. */
     private final ReusableToken reusableToken = new ReusableToken();
 
+    /** The pushback token. */
     private int pushbackToken = -1;
+
+    /** The pushback text. */
     private String pushbackText;
 
+    /** The Constant SLASH. */
     public static final short SLASH = 257;
+
+    /** The Constant WHITESPACE. */
     public static final short WHITESPACE = 258;
+
+    /** The Constant EQUALS. */
     public static final short EQUALS = 259;
+
+    /** The Constant QUOTE. */
     public static final short QUOTE = 260;
+
+    /** The Constant WORD. */
     public static final short WORD = 261;
+
+    /** The Constant TEXT. */
     public static final short TEXT = 262;
+
+    /** The Constant QUOTED. */
     public static final short QUOTED = 263;
+
+    /** The Constant LT. */
     public static final short LT = 264;
+
+    /** The Constant GT. */
     public static final short GT = 265;
+
+    /** The Constant LT_OPEN_MAGIC_COMMENT. */
     public static final short LT_OPEN_MAGIC_COMMENT = 266;
+
+    /** The Constant LT_CLOSE_MAGIC_COMMENT. */
     public static final short LT_CLOSE_MAGIC_COMMENT = 267;
 
+    /** The input. */
     private final char[] input;
 
+    /** The handler. */
     private TokenHandler handler;
 
+    /** The position. */
     private int position;
+
+    /** The length. */
     private int length;
 
+    /** The name. */
     private String name;
+
+    /** The type. */
     private int type;
 
+    /**
+     * Instantiates a new parser.
+     *
+     * @param input
+     *            the input
+     * @param length
+     *            the length
+     * @param handler
+     *            the handler
+     */
     public Parser(char[] input, int length, TokenHandler handler) {
         super(new CharArrayReader(input, 0, length));
         this.input = input;
         this.handler = handler;
     }
 
+    /**
+     * Text.
+     *
+     * @return the string
+     */
     private String text() {
         if (pushbackToken == -1) {
             return yytext();
@@ -78,6 +128,12 @@ public class Parser extends Lexer {
         return pushbackText;
     }
 
+    /**
+     * Skip white space.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private void skipWhiteSpace() throws IOException {
         while (true) {
             int next;
@@ -94,6 +150,12 @@ public class Parser extends Lexer {
         }
     }
 
+    /**
+     * Push back.
+     *
+     * @param next
+     *            the next
+     */
     private void pushBack(int next) {
         if (pushbackToken != -1) {
             reportError("Cannot pushback more than once", line(), column());
@@ -106,6 +168,9 @@ public class Parser extends Lexer {
         }
     }
 
+    /**
+     * Start.
+     */
     public void start() {
         try {
             while (true) {
@@ -146,6 +211,15 @@ public class Parser extends Lexer {
         }
     }
 
+    /**
+     * Parses the tag.
+     *
+     * @param type
+     *            the type
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private void parseTag(int type) throws IOException {
         // Start parsing a TAG
 
@@ -194,6 +268,19 @@ public class Parser extends Lexer {
         }
     }
 
+    /**
+     * Parses the full tag.
+     *
+     * @param type
+     *            the type
+     * @param name
+     *            the name
+     * @param start
+     *            the start
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private void parseFullTag(int type, String name, int start) throws IOException {
         int token;
         while (true) {
@@ -248,6 +335,12 @@ public class Parser extends Lexer {
         }
     }
 
+    /**
+     * Parses the attribute.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private void parseAttribute() throws IOException {
         int token;
         if (pushbackToken == -1) {
@@ -321,12 +414,32 @@ public class Parser extends Lexer {
         }
     }
 
+    /**
+     * Parsed text.
+     *
+     * @param position
+     *            the position
+     * @param length
+     *            the length
+     */
     protected void parsedText(int position, int length) {
         this.position = position;
         this.length = length;
         handler.text(reusableToken);
     }
 
+    /**
+     * Parsed tag.
+     *
+     * @param type
+     *            the type
+     * @param name
+     *            the name
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     */
     protected void parsedTag(int type, String name, int start, int length) {
         this.type = type;
         this.name = name;
@@ -336,6 +449,16 @@ public class Parser extends Lexer {
         reusableToken.attributeCount = 0;
     }
 
+    /**
+     * Parsed attribute.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param quoted
+     *            the quoted
+     */
     protected void parsedAttribute(String name, String value, boolean quoted) {
         if (reusableToken.attributeCount + 2 >= reusableToken.attributes.length) {
             String[] newAttributes = new String[reusableToken.attributeCount * 2];
@@ -355,9 +478,15 @@ public class Parser extends Lexer {
         handler.warning(message, line, column);
     }
 
+    /**
+     * The Class ReusableToken.
+     */
     public class ReusableToken implements Tag, Text {
 
+        /** The attribute count. */
         public int attributeCount = 0;
+
+        /** The attributes. */
         public String[] attributes = new String[10]; // name1, value1, name2, value2...
 
         @Override

@@ -24,9 +24,18 @@ import com.opensymphony.module.sitemesh.html.Tag;
  */
 public class MSOfficeDocumentPropertiesRule extends BlockExtractingRule {
 
+    /** The page. */
     private final PageBuilder page;
+
+    /** The in document properties. */
     private boolean inDocumentProperties;
 
+    /**
+     * Instantiates a new MS office document properties rule.
+     *
+     * @param page
+     *            the page
+     */
     public MSOfficeDocumentPropertiesRule(PageBuilder page) {
         super(true);
         this.page = page;

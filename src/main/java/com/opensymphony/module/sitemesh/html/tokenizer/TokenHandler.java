@@ -32,12 +32,20 @@ public interface TokenHandler {
      * If true is returned, the tokenizer will fully parse the tag and pass it into the
      * {@link #tag(com.opensymphony.module.sitemesh.html.Tag)} method. If false is returned, the tokenizer will not try
      * to parse the tag and pass it to the #{@link #text(com.opensymphony.module.sitemesh.html.Text)} method, untouched.
+     *
+     * @param name
+     *            the name
+     *
+     * @return true, if successful
      */
     boolean shouldProcessTag(String name);
 
     /**
      * Called when tokenizer encounters an HTML tag (open, close or empty). The Tag instance passed in should not be
      * kept beyond the scope of this method as the tokenizer will attempt to reuse it.
+     *
+     * @param tag
+     *            the tag
      */
     void tag(Tag tag);
 
@@ -45,6 +53,9 @@ public interface TokenHandler {
      * Called when tokenizer encounters anything other than a well-formed HTML tag. The Text object is used instead of a
      * String to allow the String to be lazy-loaded. The Text instance passed in should not be kept beyond the scope of
      * this method as the tokenizer will attempt to reuse it.
+     *
+     * @param text
+     *            the text
      */
     void text(Text text);
 

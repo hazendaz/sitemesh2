@@ -20,11 +20,19 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * SitemeshBuffer that is a string
+ * SitemeshBuffer that is a string.
  */
 public class StringSitemeshBuffer implements SitemeshBuffer {
+
+    /** The buffer. */
     private final String buffer;
 
+    /**
+     * Instantiates a new string sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     */
     public StringSitemeshBuffer(String buffer) {
         this.buffer = buffer;
     }
@@ -59,6 +67,14 @@ public class StringSitemeshBuffer implements SitemeshBuffer {
         return false;
     }
 
+    /**
+     * Creates the buffer fragment.
+     *
+     * @param buffer
+     *            the buffer
+     *
+     * @return the sitemesh buffer fragment
+     */
     public static SitemeshBufferFragment createBufferFragment(String buffer) {
         return new SitemeshBufferFragment(new StringSitemeshBuffer(buffer), 0, buffer.length());
     }

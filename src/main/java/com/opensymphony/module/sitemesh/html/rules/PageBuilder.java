@@ -21,5 +21,14 @@ package com.opensymphony.module.sitemesh.html.rules;
  * @author Joe Walnes
  */
 public interface PageBuilder {
+
+    /**
+     * Adds the property.
+     *
+     * @param key
+     *            the key
+     * @param value
+     *            the value
+     */
     void addProperty(String key, String value);
 }

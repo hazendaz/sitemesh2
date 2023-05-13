@@ -30,8 +30,17 @@ import com.opensymphony.module.sitemesh.html.Tag;
  */
 public class TagReplaceRule extends BasicRule {
 
+    /** The new tag name. */
     private final String newTagName;
 
+    /**
+     * Instantiates a new tag replace rule.
+     *
+     * @param originalTagName
+     *            the original tag name
+     * @param newTagName
+     *            the new tag name
+     */
     public TagReplaceRule(String originalTagName, String newTagName) {
         super(originalTagName);
         this.newTagName = newTagName;

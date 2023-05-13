@@ -33,22 +33,51 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
  */
 public class TagTokenizer {
 
+    /** The input. */
     private final char[] input;
+
+    /** The length. */
     private final int length;
 
+    /**
+     * Instantiates a new tag tokenizer.
+     *
+     * @param input
+     *            the input
+     */
     public TagTokenizer(char[] input) {
         this(input, input.length);
     }
 
+    /**
+     * Instantiates a new tag tokenizer.
+     *
+     * @param input
+     *            the input
+     * @param length
+     *            the length
+     */
     public TagTokenizer(char[] input, int length) {
         this.input = input;
         this.length = length;
     }
 
+    /**
+     * Instantiates a new tag tokenizer.
+     *
+     * @param input
+     *            the input
+     */
     public TagTokenizer(String input) {
         this(input.toCharArray());
     }
 
+    /**
+     * Start.
+     *
+     * @param handler
+     *            the handler
+     */
     public void start(TokenHandler handler) {
         Parser parser = new Parser(input, length, handler);
         parser.start();

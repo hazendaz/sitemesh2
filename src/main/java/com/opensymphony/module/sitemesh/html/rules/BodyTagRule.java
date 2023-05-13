@@ -17,11 +17,25 @@ import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
+/**
+ * The Class BodyTagRule.
+ */
 public class BodyTagRule extends BasicRule {
 
+    /** The page. */
     private final PageBuilder page;
+
+    /** The body. */
     private final SitemeshBufferFragment.Builder body;
 
+    /**
+     * Instantiates a new body tag rule.
+     *
+     * @param page
+     *            the page
+     * @param body
+     *            the body
+     */
     public BodyTagRule(PageBuilder page, SitemeshBufferFragment.Builder body) {
         super("body");
         this.page = page;

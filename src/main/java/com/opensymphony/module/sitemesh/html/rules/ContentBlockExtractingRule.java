@@ -16,12 +16,23 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.html.BlockExtractingRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
+/**
+ * The Class ContentBlockExtractingRule.
+ */
 public class ContentBlockExtractingRule extends BlockExtractingRule {
 
+    /** The page. */
     private final PageBuilder page;
 
+    /** The content block id. */
     private String contentBlockId;
 
+    /**
+     * Instantiates a new content block extracting rule.
+     *
+     * @param page
+     *            the page
+     */
     public ContentBlockExtractingRule(PageBuilder page) {
         super(false, "content");
         this.page = page;

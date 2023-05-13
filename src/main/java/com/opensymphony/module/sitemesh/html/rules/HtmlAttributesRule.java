@@ -16,10 +16,20 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
+/**
+ * The Class HtmlAttributesRule.
+ */
 public class HtmlAttributesRule extends BasicRule {
 
+    /** The page. */
     private final PageBuilder page;
 
+    /**
+     * Instantiates a new html attributes rule.
+     *
+     * @param page
+     *            the page
+     */
     public HtmlAttributesRule(PageBuilder page) {
         super("html");
         this.page = page;

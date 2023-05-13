@@ -24,19 +24,29 @@ import java.io.PrintWriter;
  * @author Chris Miller
  */
 public class CharArray {
+
+    /** The size. */
     int size = 0;
+
+    /** The buffer. */
     char[] buffer;
 
     // These properties allow us to specify a substring within the character array
     // that we can perform comparisons against. This is here purely for performance -
     // the comparisons are at the heart of the FastPageParser loop and any speed increase
+    /** The sub str start. */
     // we can get at this level has a huge impact on performance.
     int subStrStart = 0;
+
+    /** The sub str len. */
     int subStrLen = 0;
 
     /**
      * Constructs a CharArray that is initialized to the specified size. Do not pass in a negative value because there
      * is no bounds checking!
+     *
+     * @param size
+     *            the size
      */
     public CharArray(int size) {
         buffer = new char[size];
@@ -53,6 +63,11 @@ public class CharArray {
     /**
      * Returns the character that is at the specified position in the array. There is no bounds checking on this method
      * so be sure to pass in a sensible value.
+     *
+     * @param pos
+     *            the pos
+     *
+     * @return the char
      */
     public char charAt(int pos) {
         return buffer[pos];
@@ -87,6 +102,8 @@ public class CharArray {
 
     /**
      * Returns the current length of the character array.
+     *
+     * @return the int
      */
     public int length() {
         return size;
@@ -95,6 +112,11 @@ public class CharArray {
     /**
      * Appends an existing CharArray on to this one. Passing in a <code>null</code> CharArray will result in a
      * <code>NullPointerException</code>.
+     *
+     * @param chars
+     *            the chars
+     *
+     * @return the char array
      */
     public CharArray append(CharArray chars) {
         return append(chars.buffer, 0, chars.size);
@@ -102,11 +124,28 @@ public class CharArray {
 
     /**
      * Appends the supplied characters to the end of the array.
+     *
+     * @param chars
+     *            the chars
+     *
+     * @return the char array
      */
     public CharArray append(char[] chars) {
         return append(chars, 0, chars.length);
     }
 
+    /**
+     * Append.
+     *
+     * @param chars
+     *            the chars
+     * @param position
+     *            the position
+     * @param length
+     *            the length
+     *
+     * @return the char array
+     */
     public CharArray append(char[] chars, int position, int length) {
         int requiredSize = length + size;
         if (requiredSize >= buffer.length) {
@@ -119,6 +158,11 @@ public class CharArray {
 
     /**
      * Appends a single character to the end of the character array.
+     *
+     * @param c
+     *            the c
+     *
+     * @return the char array
      */
     public CharArray append(char c) {
         if (buffer.length == size) {
@@ -131,6 +175,11 @@ public class CharArray {
     /**
      * Appends the supplied string to the end of this character array. Passing in a <code>null</code> string will result
      * in a <code>NullPointerException</code>.
+     *
+     * @param str
+     *            the str
+     *
+     * @return the char array
      */
     public CharArray append(String str) {
         int requiredSize = str.length() + size;
@@ -148,6 +197,13 @@ public class CharArray {
 
     /**
      * Returns a substring from within this character array. Note that NO range checking is performed!
+     *
+     * @param begin
+     *            the begin
+     * @param end
+     *            the end
+     *
+     * @return the string
      */
     public String substring(int begin, int end) {
         return new String(buffer, begin, end - begin);
@@ -169,6 +225,8 @@ public class CharArray {
 
     /**
      * Returns the substring that was specified by the {@link #setSubstr(int, int)} call.
+     *
+     * @return the lower substr
      */
     public String getLowerSubstr() {
         for (int i = subStrStart; i < subStrStart + subStrLen; i++) {
@@ -180,6 +238,11 @@ public class CharArray {
     /**
      * This compares a substring of this character array (as specified by the {@link #setSubstr(int, int)} method call)
      * with the supplied string. The supplied string <em>must</em> be lowercase, otherwise the comparison will fail.
+     *
+     * @param lowerStr
+     *            the lower str
+     *
+     * @return true, if successful
      */
     public boolean compareLowerSubstr(String lowerStr) {
         // Range check
@@ -200,6 +263,8 @@ public class CharArray {
      * Returns the hashcode for a <em>lowercase</em> version of the array's substring (as set by the
      * {@link #setSubstr(int, int)} method). This uses the same calculation as the <code>String.hashCode()</code> method
      * so that it remains compatible with the hashcodes of normal strings.
+     *
+     * @return the int
      */
     public int substrHashCode() {
         int hash = 0;
@@ -220,6 +285,13 @@ public class CharArray {
      * <p>
      * If (and only if) the supplied string and the relevant portion of the character array are considered equal, this
      * method will return <code>true</code>.
+     *
+     * @param lowerStr
+     *            the lower str
+     * @param offset
+     *            the offset
+     *
+     * @return true, if successful
      */
     public boolean compareLower(String lowerStr, int offset) {
         // Range check
@@ -239,6 +311,9 @@ public class CharArray {
     /**
      * Grows the internal array by either ~100% or minSize (whichever is larger), up to a maximum size of
      * Integer.MAX_VALUE.
+     *
+     * @param minSize
+     *            the min size
      */
     private final void grow(int minSize) {
         int newCapacity = (buffer.length + 1) * 2;
@@ -259,6 +334,12 @@ public class CharArray {
         size = 0;
     }
 
+    /**
+     * Write to.
+     *
+     * @param writer
+     *            the writer
+     */
     public void writeTo(PrintWriter writer) {
         writer.write(buffer, 0, size);
     }

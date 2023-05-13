@@ -16,10 +16,20 @@ package com.opensymphony.module.sitemesh.html.rules;
 import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.Tag;
 
+/**
+ * The Class FramesetRule.
+ */
 public class FramesetRule extends BasicRule {
 
+    /** The page. */
     private final PageBuilder page;
 
+    /**
+     * Instantiates a new frameset rule.
+     *
+     * @param page
+     *            the page
+     */
     public FramesetRule(PageBuilder page) {
         super(new String[] { "frame", "frameset" });
         this.page = page;
