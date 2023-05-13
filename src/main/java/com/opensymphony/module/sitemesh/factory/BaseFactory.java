@@ -161,7 +161,7 @@ public abstract class BaseFactory extends Factory {
      */
     protected DecoratorMapper getDecoratorMapper(Class<?> decoratorMapperClass)
             throws InstantiationException, IllegalAccessException {
-        return (DecoratorMapper) decoratorMapperClass.newInstance();
+        return (DecoratorMapper) decoratorMapperClass.getDeclaredConstructor().newInstance();
     }
 
     /** Clear all PageParser mappings. */
@@ -183,7 +183,8 @@ public abstract class BaseFactory extends Factory {
             return; // Backwards compatability - this can safely be ignored.
         }
         try {
-            PageParser pp = (PageParser) ClassLoaderUtil.loadClass(className, getClass()).newInstance();
+            PageParser pp = (PageParser) ClassLoaderUtil.loadClass(className, getClass()).getDeclaredConstructor()
+                    .newInstance();
             // Store the parser even if the content type is NULL. [This
             // is most probably the legacy default page parser which
             // we no longer have a use for]
