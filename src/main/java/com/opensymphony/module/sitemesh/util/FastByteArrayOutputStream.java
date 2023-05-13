@@ -169,7 +169,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
 
     @Override
     public String toString() {
-        return new String(toByteArray(), StandardCharsets.UTF_8));
+        return new String(toByteArray(), StandardCharsets.UTF_8);
     }
 
     @Override
