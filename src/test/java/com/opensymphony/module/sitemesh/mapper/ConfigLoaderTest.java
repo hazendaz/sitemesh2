@@ -35,6 +35,9 @@ public class ConfigLoaderTest {
 
     /**
      * Setup the unit tests.
+     *
+     * @throws Exception
+     *             the exception
      */
     @Before
     public void setUp() throws Exception {
@@ -93,6 +96,9 @@ public class ConfigLoaderTest {
 
     /**
      * Cleanup the unit tests.
+     *
+     * @throws Exception
+     *             the exception
      */
     @After
     public void tearDown() throws Exception {
