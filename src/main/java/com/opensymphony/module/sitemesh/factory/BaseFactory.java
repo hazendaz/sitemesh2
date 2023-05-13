@@ -29,6 +29,7 @@ import com.opensymphony.module.sitemesh.PageParser;
 import com.opensymphony.module.sitemesh.mapper.PathMapper;
 import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -158,9 +159,13 @@ public abstract class BaseFactory extends Factory {
      *             the instantiation exception
      * @throws IllegalAccessException
      *             the illegal access exception
+     * @throws InvocationTargetException
+     *             the invocation target exception
+     * @throws NoSuchMethodException
+     *             the no such method exception
      */
     protected DecoratorMapper getDecoratorMapper(Class<?> decoratorMapperClass)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         return (DecoratorMapper) decoratorMapperClass.getDeclaredConstructor().newInstance();
     }
 
