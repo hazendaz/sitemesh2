@@ -13,7 +13,6 @@
  */
 package com.opensymphony.module.sitemesh.taglib.decorator;
 
-import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.taglib.AbstractTag;
 
 import java.io.IOException;
