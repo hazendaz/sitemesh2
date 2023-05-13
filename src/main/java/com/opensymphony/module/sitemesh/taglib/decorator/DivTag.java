@@ -13,6 +13,7 @@
  */
 package com.opensymphony.module.sitemesh.taglib.decorator;
 
+import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.taglib.AbstractTag;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ import javax.servlet.jsp.JspException;
 /**
  * Write a HTMLPage div to out.
  *
- * @see com.opensymphony.module.sitemesh.HTMLPage#writeHead(java.io.Writer)
+ * @see HTMLPage#writeHead(java.io.Writer)
  */
 public class DivTag extends AbstractTag {
 
