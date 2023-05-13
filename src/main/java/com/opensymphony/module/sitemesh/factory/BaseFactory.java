@@ -109,6 +109,7 @@ public abstract class BaseFactory extends Factory {
      * otherwise returns <code>false</code>.
      *
      * @param path
+     *            The path.
      *
      * @return whether the path is excluded
      */

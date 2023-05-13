@@ -51,6 +51,12 @@ public class DivExtractingPageParserTest extends TestCase {
         assertEquals("<div id='two'>World<br><div id=inner>Great</div></div>", page.getProperty("div.two"));
     }
 
+    /**
+     * Test extract attributes.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public void testExtractAttributes() throws IOException {
         String input = "" + "<html>\n" + "  <head><title>Title</title></head>\n" + "  <body>\n"
                 + "    <div id='one' class='c_one' align='center'>Hello</div>\n" + "    Blah\n"
