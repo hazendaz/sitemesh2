@@ -24,7 +24,7 @@ public class StateTest {
     /**
      * The Class DummyRule.
      */
-    class DummyRule extends BasicRule {
+    private static final class DummyRule extends BasicRule {
 
         /**
          * Instantiates a new dummy rule.
