@@ -62,9 +62,6 @@ public class OutputConverter {
      *            the input string
      *
      * @return the string
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
      */
     public static String convert(String inputString) {
         if (Boolean.getBoolean(WORK_AROUND_RESIN_I18N_BUG)) {
@@ -121,9 +118,6 @@ public class OutputConverter {
      *            the input string
      * @param writer
      *            the writer
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
      */
     private static void resinConvert(String inputString, Writer writer) {
         // does this need to be made configurable? Or are these two always correct?
