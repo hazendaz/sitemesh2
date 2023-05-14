@@ -1,5 +1,5 @@
 *************************************
-** OpenSymphony SiteMesh 2.5       **
+** OpenSymphony SiteMesh 2.5.0     **
 *************************************
 
 SiteMesh is a web-page layout system that can be used to abstract common look
@@ -25,7 +25,7 @@ specification. Versions prior to 2.3 are not enough.
 Currently known containers that support this and SiteMesh was tested with:
 
 * Orion 1.5.4 and up                         - http://www.orionserver.com
-* Tomcat 4.0, 4.1 and 5.0.19                 - http://jakarta.apache.org/tomcat
+* Tomcat 8.5.x and up                        - http://tomcat.apache.org
 * Resin 2.1.11, 2.1.12, 2.1.13 and 3.0.7     - http://www.caucho.com
 * Oracle OC4J 2                              - http://www.oracle.com
 * WebLogic 7.0 SP2, 8.1 and 8.1 SP2          - http://www.bea.com
@@ -162,5 +162,4 @@ Thank these guys:
 * James Roper             <jamesNOSPAM@jazzy.id.au>
 * Matt Quail              <mquailNOSPAM@atlasian.com>
 * Charles Miller          <cmillerNOSPAM@atlassian.com>
-
-                                            - Joe Walnes <joe@NOSPAMtruemesh.com>
+* Joe Walnes              <joe@NOSPAMtruemesh.com>
