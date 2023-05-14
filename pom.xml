@@ -30,7 +30,7 @@
 
     <name>sitemesh</name>
     <description>Sitemesh web-page layout system.</description>
-    <url>https://hazendaz.github.io/sitemesh/</url>
+    <url>https://hazendaz.github.io/sitemesh2/</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -41,16 +41,16 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</developerConnection>
-        <url>https://github.com/hazendaz/sitemesh</url>
+        <connection>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</developerConnection>
+        <url>https://github.com/hazendaz/sitemesh2</url>
         <tag>sitemesh-2.5.0</tag>
     </scm>
     <distributionManagement>
         <site>
             <id>gh-pages-scm</id>
             <name>sitemesh Distribution Wrapper GitHub Pages</name>
-            <url>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</url>
+            <url>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</url>
         </site>
     </distributionManagement>
 
