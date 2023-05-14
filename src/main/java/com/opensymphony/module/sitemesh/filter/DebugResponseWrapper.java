@@ -25,12 +25,18 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Class DebugResponseWrapper.
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
  */
 public class DebugResponseWrapper extends HttpServletResponseWrapper {
+
+    /** The Logger. */
+    private static final Logger logger = LoggerFactory.getLogger(DebugResponseWrapper.class);
 
     /** The last count. */
     private static int lastCount;
@@ -294,6 +300,6 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
             s.append(arg2);
             s.append("'");
         }
-        System.out.println(s);
+        logger.info("{}", s);
     }
 }

@@ -142,8 +142,8 @@ public class HTMLProcessor {
 
             @Override
             public void warning(String message, int line, int column) {
-                // TODO
-                // System.out.println(line + "," + column + ": " + message);
+                // TODO Enable logging here
+                // logger.info("{},{}: ", line, column, message);
             }
         });
         defaultState.endOfState();
