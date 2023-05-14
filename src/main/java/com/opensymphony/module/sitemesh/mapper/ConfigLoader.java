@@ -345,7 +345,7 @@ public class ConfigLoader {
      * @return the attribute
      */
     private static String getAttribute(Element element, String name) {
-        if (element != null && element.getAttribute(name) != null && element.getAttribute(name).trim() != "") {
+        if (element != null && element.getAttribute(name) != null && !"".equals(element.getAttribute(name).trim())) {
             return element.getAttribute(name).trim();
         }
         return null;
