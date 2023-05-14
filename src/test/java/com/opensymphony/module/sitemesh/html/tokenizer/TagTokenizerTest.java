@@ -30,6 +30,9 @@ public class TagTokenizerTest {
 
     /**
      * The test setup. throws Exception the Exception
+     *
+     * @throws Exception
+     *             the exception
      */
     @Before
     public void setUp() throws Exception {

@@ -27,6 +27,9 @@ public class PathMapperTest {
 
     /**
      * The test setup. throws Exception the exception
+     *
+     * @throws Exception
+     *             the exception
      */
     @Before
     public void setUp() throws Exception {
