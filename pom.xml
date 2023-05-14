@@ -84,6 +84,7 @@
             <groupId>tapestry</groupId>
             <artifactId>tapestry</artifactId>
             <version>4.0.2</version>
+            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
