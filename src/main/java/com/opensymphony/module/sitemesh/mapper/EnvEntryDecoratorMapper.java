@@ -29,6 +29,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The EnvEntryDecoratorMapper allows the reference to a web-app environment entry for the decorator name, and falls
  * back to ConfigDecoratorMapper's behavior if no matching environment entry is found.
@@ -49,6 +52,10 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper
  */
 public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {
+
+    /** The Logger. */
+    private static final Logger logger = LoggerFactory.getLogger(EnvEntryDecoratorMapper.class);
+
     /**
      * Retrieves the {@link com.opensymphony.module.sitemesh.Decorator} specified by the decorator name. If it's not in
      * the environment entries of the web application, assume it's a named decorator from <code>decorators.xml</code>.
@@ -79,13 +86,15 @@ public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {
             if (o != null) {
                 value = o.toString();
             }
-        } catch (NamingException ne) {
+        } catch (NamingException e) {
+            logger.error("", e);
         } finally {
             try {
                 if (ctx != null) {
                     ctx.close();
                 }
-            } catch (NamingException ne) {
+            } catch (NamingException e) {
+                logger.error("", e);
             }
         }
         return value;
