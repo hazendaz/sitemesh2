@@ -116,16 +116,16 @@ public class ConfigLoaderTest {
      */
     @Test
     public void testMappedNames() throws Exception {
-        Assert.assertEquals(configLoader.getMappedName("/info/somepage.html"), "default");
-        Assert.assertEquals(configLoader.getMappedName("/test/somepage.html"), "default");
+        Assert.assertEquals("default", configLoader.getMappedName("/info/somepage.html"));
+        Assert.assertEquals("default", configLoader.getMappedName("/test/somepage.html"));
 
-        Assert.assertEquals(configLoader.getMappedName("/other/someotherpage.html"), "other");
+        Assert.assertEquals("other", configLoader.getMappedName("/other/someotherpage.html"));
 
-        Assert.assertEquals(configLoader.getMappedName("/uri/somepage.html"), "uri");
+        Assert.assertEquals("uri", configLoader.getMappedName("/uri/somepage.html"));
 
-        Assert.assertEquals(configLoader.getMappedName("/rolebased/someotherpage.html"), "rolebaseddeveloper");
+        Assert.assertEquals("rolebaseddeveloper", configLoader.getMappedName("/rolebased/someotherpage.html"));
 
-        Assert.assertEquals(configLoader.getMappedName("/old/someoldpage.html"), "old");
+        Assert.assertEquals("old", configLoader.getMappedName("/old/someoldpage.html"));
     }
 
     /**
