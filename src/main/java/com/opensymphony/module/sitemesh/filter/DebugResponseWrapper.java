@@ -90,12 +90,6 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
         return super.containsHeader(name);
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public String encodeRedirectUrl(String url) {
-        return super.encodeRedirectUrl(url);
-    }
-
     @Override
     public String encodeRedirectURL(String url) {
         return super.encodeRedirectURL(url);
@@ -155,15 +149,6 @@ public class DebugResponseWrapper extends HttpServletResponseWrapper {
             debug("setStatus", String.valueOf(sc), null);
         }
         super.setStatus(sc);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void setStatus(int sc, String msg) {
-        if (enabled()) {
-            debug("setStatus", String.valueOf(sc), msg);
-        }
-        super.setStatus(sc, msg);
     }
 
     @Override
