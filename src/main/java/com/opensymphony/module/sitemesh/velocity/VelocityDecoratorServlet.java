@@ -30,6 +30,7 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
+import org.apache.velocity.tools.view.VelocityViewServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet that allows Velocity templates to be used as decorators.
@@ -49,9 +52,11 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
+    /** The Logger. */
+    private static final Logger logger = LoggerFactory.getLogger(VelocityDecoratorServlet.class);
+
     @Override
-    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context)
-            throws Exception {
+    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context) {
         HTMLPage htmlPage = (HTMLPage) request.getAttribute(RequestConstants.PAGE);
         String template;
 
@@ -71,12 +76,20 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
             context.put("title", OutputConverter.convert(htmlPage.getTitle()));
             {
                 StringWriter buffer = new StringWriter();
-                htmlPage.writeBody(OutputConverter.getWriter(buffer));
+                try {
+                    htmlPage.writeBody(OutputConverter.getWriter(buffer));
+                } catch (IOException e) {
+                    logger.error("", e);
+                }
                 context.put("body", buffer.toString());
             }
             {
                 StringWriter buffer = new StringWriter();
-                htmlPage.writeHead(OutputConverter.getWriter(buffer));
+                try {
+                    htmlPage.writeHead(OutputConverter.getWriter(buffer));
+                } catch (IOException e) {
+                    logger.error("", e);
+                }
                 context.put("head", buffer.toString());
             }
             context.put("page", htmlPage);
