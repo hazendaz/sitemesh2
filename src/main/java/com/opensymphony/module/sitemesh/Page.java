@@ -22,11 +22,11 @@
 
 package com.opensymphony.module.sitemesh;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * The Page object wraps the contents of the original (undecorated) page.

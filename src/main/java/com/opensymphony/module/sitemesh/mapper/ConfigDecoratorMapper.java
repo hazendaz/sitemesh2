@@ -27,10 +27,10 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import java.util.Properties;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

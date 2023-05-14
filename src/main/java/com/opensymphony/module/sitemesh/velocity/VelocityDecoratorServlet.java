@@ -30,10 +30,10 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 
-import java.io.StringWriter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.StringWriter;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;

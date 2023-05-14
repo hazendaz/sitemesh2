@@ -16,13 +16,13 @@ package com.opensymphony.sitemesh.webapp.decorator;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 
-import java.io.IOException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Decorator that dispatches to another path in the Servlet Container (such as a JSP or path mapped to a Servlet).

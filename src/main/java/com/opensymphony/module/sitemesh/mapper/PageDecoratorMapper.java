@@ -27,12 +27,12 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * The PageDecoratorMapper allows the actual Page to determine the Decorator to be used.

@@ -20,12 +20,12 @@ import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.PageParserSelector;
 import com.opensymphony.module.sitemesh.SitemeshBuffer;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * Implementation of HttpServletResponseWrapper that captures page data instead of sending to the writer.

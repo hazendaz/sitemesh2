@@ -22,9 +22,9 @@ import com.opensymphony.module.sitemesh.html.BasicRule;
 import com.opensymphony.module.sitemesh.html.HTMLProcessor;
 import com.opensymphony.module.sitemesh.html.Tag;
 
-import java.io.IOException;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * The Class MultipassReplacementPageParser.

@@ -28,10 +28,10 @@ import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.RequestConstants;
 
-import java.util.Properties;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.util.Properties;
 
 /**
  * The RobotDecoratorMapper will use the specified decorator when the requester is identified as a robot (also known as

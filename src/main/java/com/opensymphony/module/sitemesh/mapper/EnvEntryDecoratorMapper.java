@@ -24,10 +24,11 @@ package com.opensymphony.module.sitemesh.mapper;
 
 import com.opensymphony.module.sitemesh.Decorator;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

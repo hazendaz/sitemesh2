@@ -18,9 +18,9 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
-import java.util.Properties;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Properties;
 
 /**
  * <p>
