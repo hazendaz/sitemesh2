@@ -44,7 +44,7 @@
         <connection>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</developerConnection>
         <url>https://github.com/hazendaz/sitemesh2</url>
-        <tag>sitemesh-2.5.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <site>
