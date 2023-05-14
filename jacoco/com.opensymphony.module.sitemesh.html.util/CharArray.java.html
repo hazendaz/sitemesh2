@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharArray.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html.util</a> &gt; <span class="el_source">CharArray.java</span></div><h1>CharArray.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.html.util;
+
+import java.io.PrintWriter;
+
+/**
+ * A leaner, meaner version of StringBuilder.
+ * &lt;p&gt;
+ * It provides basic functionality to handle dynamically-growing char arrays as quickly as possible. This class is not
+ * threadsafe.
+ *
+ * @author Chris Miller
+ */
+public class CharArray {
+
+    /** The size. */
+<span class="fc" id="L29">    int size = 0;</span>
+
+    /** The buffer. */
+    char[] buffer;
+
+    // These properties allow us to specify a substring within the character array
+    // that we can perform comparisons against. This is here purely for performance -
+    // the comparisons are at the heart of the FastPageParser loop and any speed increase
+    /** The sub str start. */
+    // we can get at this level has a huge impact on performance.
+<span class="fc" id="L39">    int subStrStart = 0;</span>
+
+    /** The sub str len. */
+<span class="fc" id="L42">    int subStrLen = 0;</span>
+
+    /**
+     * Constructs a CharArray that is initialized to the specified size. Do not pass in a negative value because there
+     * is no bounds checking!
+     *
+     * @param size
+     *            the size
+     */
+<span class="fc" id="L51">    public CharArray(int size) {</span>
+<span class="fc" id="L52">        buffer = new char[size];</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Returns a String represenation of the character array.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L60">        return new String(buffer, 0, size);</span>
+    }
+
+    /**
+     * Returns the character that is at the specified position in the array. There is no bounds checking on this method
+     * so be sure to pass in a sensible value.
+     *
+     * @param pos
+     *            the pos
+     *
+     * @return the char
+     */
+    public char charAt(int pos) {
+<span class="fc" id="L73">        return buffer[pos];</span>
+    }
+
+    /**
+     * Changes the size of the character array to the value specified. If the new size is less than the current size,
+     * the data in the internal array will be truncated. If the new size is &amp;lt;= 0, the array will be reset to empty
+     * (but, unlike StringBuilder, the internal array will NOT be shrunk). If the new size is &amp;gt; the current size, the
+     * array will be padded out with null characters (&lt;code&gt;'&amp;#92;u0000'&lt;/code&gt;).
+     *
+     * @param newSize
+     *            the new size of the character array
+     */
+    public void setLength(int newSize) {
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (newSize &lt; 0) {</span>
+<span class="nc" id="L87">            newSize = 0;</span>
+        }
+
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (newSize &lt;= size) {</span>
+<span class="fc" id="L91">            size = newSize;</span>
+        } else {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (newSize &gt;= buffer.length) {</span>
+<span class="nc" id="L94">                grow(newSize);</span>
+            }
+            // Pad the array
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            for (; size &lt; newSize; size++) {</span>
+<span class="nc" id="L98">                buffer[size] = '\0';</span>
+            }
+        }
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Returns the current length of the character array.
+     *
+     * @return the int
+     */
+    public int length() {
+<span class="fc" id="L109">        return size;</span>
+    }
+
+    /**
+     * Appends an existing CharArray on to this one. Passing in a &lt;code&gt;null&lt;/code&gt; CharArray will result in a
+     * &lt;code&gt;NullPointerException&lt;/code&gt;.
+     *
+     * @param chars
+     *            the chars
+     *
+     * @return the char array
+     */
+    public CharArray append(CharArray chars) {
+<span class="fc" id="L122">        return append(chars.buffer, 0, chars.size);</span>
+    }
+
+    /**
+     * Appends the supplied characters to the end of the array.
+     *
+     * @param chars
+     *            the chars
+     *
+     * @return the char array
+     */
+    public CharArray append(char[] chars) {
+<span class="nc" id="L134">        return append(chars, 0, chars.length);</span>
+    }
+
+    /**
+     * Append.
+     *
+     * @param chars
+     *            the chars
+     * @param position
+     *            the position
+     * @param length
+     *            the length
+     *
+     * @return the char array
+     */
+    public CharArray append(char[] chars, int position, int length) {
+<span class="fc" id="L150">        int requiredSize = length + size;</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (requiredSize &gt;= buffer.length) {</span>
+<span class="nc" id="L152">            grow(requiredSize);</span>
+        }
+<span class="fc" id="L154">        System.arraycopy(chars, position, buffer, size, length);</span>
+<span class="fc" id="L155">        size = requiredSize;</span>
+<span class="fc" id="L156">        return this;</span>
+    }
+
+    /**
+     * Appends a single character to the end of the character array.
+     *
+     * @param c
+     *            the c
+     *
+     * @return the char array
+     */
+    public CharArray append(char c) {
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (buffer.length == size) {</span>
+<span class="nc" id="L169">            grow(0);</span>
+        }
+<span class="fc" id="L171">        buffer[size++] = c;</span>
+<span class="fc" id="L172">        return this;</span>
+    }
+
+    /**
+     * Appends the supplied string to the end of this character array. Passing in a &lt;code&gt;null&lt;/code&gt; string will result
+     * in a &lt;code&gt;NullPointerException&lt;/code&gt;.
+     *
+     * @param str
+     *            the str
+     *
+     * @return the char array
+     */
+    public CharArray append(String str) {
+<span class="fc" id="L185">        int requiredSize = str.length() + size;</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (requiredSize &gt;= buffer.length) {</span>
+<span class="fc" id="L187">            grow(requiredSize);</span>
+        }
+
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L191">            buffer[size + i] = str.charAt(i);</span>
+        }
+
+<span class="fc" id="L194">        size = requiredSize;</span>
+<span class="fc" id="L195">        return this;</span>
+    }
+
+    /**
+     * Returns a substring from within this character array. Note that NO range checking is performed!
+     *
+     * @param begin
+     *            the begin
+     * @param end
+     *            the end
+     *
+     * @return the string
+     */
+    public String substring(int begin, int end) {
+<span class="fc" id="L209">        return new String(buffer, begin, end - begin);</span>
+    }
+
+    /**
+     * Allows an arbitrary substring of this character array to be specified. This method should be called prior to
+     * calling {@link #compareLowerSubstr(String)} to set the range of the substring comparison.
+     *
+     * @param begin
+     *            the starting offset into the character array.
+     * @param end
+     *            the ending offset into the character array.
+     */
+    public void setSubstr(int begin, int end) {
+<span class="fc" id="L222">        subStrStart = begin;</span>
+<span class="fc" id="L223">        subStrLen = end - begin;</span>
+<span class="fc" id="L224">    }</span>
+
+    /**
+     * Returns the substring that was specified by the {@link #setSubstr(int, int)} call.
+     *
+     * @return the lower substr
+     */
+    public String getLowerSubstr() {
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        for (int i = subStrStart; i &lt; subStrStart + subStrLen; i++) {</span>
+<span class="fc" id="L233">            buffer[i] |= 32;</span>
+        }
+<span class="fc" id="L235">        return new String(buffer, subStrStart, subStrLen);</span>
+    }
+
+    /**
+     * This compares a substring of this character array (as specified by the {@link #setSubstr(int, int)} method call)
+     * with the supplied string. The supplied string &lt;em&gt;must&lt;/em&gt; be lowercase, otherwise the comparison will fail.
+     *
+     * @param lowerStr
+     *            the lower str
+     *
+     * @return true, if successful
+     */
+    public boolean compareLowerSubstr(String lowerStr) {
+        // Range check
+<span class="pc bpc" id="L249" title="1 of 4 branches missed.">        if (lowerStr.length() != subStrLen || subStrLen &lt;= 0) {</span>
+<span class="fc" id="L250">            return false;</span>
+        }
+
+<span class="fc bfc" id="L253" title="All 2 branches covered.">        for (int i = 0; i &lt; lowerStr.length(); i++) {</span>
+            // | 32 converts from ASCII uppercase to ASCII lowercase
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">            if ((buffer[subStrStart + i] | 32) != lowerStr.charAt(i)) {</span>
+<span class="nc" id="L256">                return false;</span>
+            }
+        }
+<span class="fc" id="L259">        return true;</span>
+    }
+
+    /**
+     * Returns the hashcode for a &lt;em&gt;lowercase&lt;/em&gt; version of the array's substring (as set by the
+     * {@link #setSubstr(int, int)} method). This uses the same calculation as the &lt;code&gt;String.hashCode()&lt;/code&gt; method
+     * so that it remains compatible with the hashcodes of normal strings.
+     *
+     * @return the int
+     */
+    public int substrHashCode() {
+<span class="fc" id="L270">        int hash = 0;</span>
+<span class="fc" id="L271">        int offset = subStrStart;</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        for (int i = 0; i &lt; subStrLen; i++) {</span>
+<span class="fc" id="L273">            hash = 31 * hash + (buffer[offset] | 32);</span>
+<span class="fc" id="L274">            offset++;</span>
+        }
+<span class="fc" id="L276">        return hash;</span>
+    }
+
+    /**
+     * Compares the supplied uppercase string with the contents of the character array, starting at the offset
+     * specified. This is a specialized method to help speed up the FastPageParser slightly.
+     * &lt;p&gt;
+     * The supplied string is assumed to contain only uppercase ASCII characters. The offset indicates the offset into
+     * the character array that the comparison should start from.
+     * &lt;p&gt;
+     * If (and only if) the supplied string and the relevant portion of the character array are considered equal, this
+     * method will return &lt;code&gt;true&lt;/code&gt;.
+     *
+     * @param lowerStr
+     *            the lower str
+     * @param offset
+     *            the offset
+     *
+     * @return true, if successful
+     */
+    public boolean compareLower(String lowerStr, int offset) {
+        // Range check
+<span class="nc bnc" id="L298" title="All 4 branches missed.">        if (offset &lt; 0 || offset + lowerStr.length() &gt; size) {</span>
+<span class="nc" id="L299">            return false;</span>
+        }
+
+<span class="nc bnc" id="L302" title="All 2 branches missed.">        for (int i = 0; i &lt; lowerStr.length(); i++) {</span>
+            // | 32 converts from ASCII uppercase to ASCII lowercase
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            if ((buffer[offset + i] | 32) != lowerStr.charAt(i)) {</span>
+<span class="nc" id="L305">                return false;</span>
+            }
+        }
+<span class="nc" id="L308">        return true;</span>
+    }
+
+    /**
+     * Grows the internal array by either ~100% or minSize (whichever is larger), up to a maximum size of
+     * Integer.MAX_VALUE.
+     *
+     * @param minSize
+     *            the min size
+     */
+    private final void grow(int minSize) {
+<span class="fc" id="L319">        int newCapacity = (buffer.length + 1) * 2;</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">        if (newCapacity &lt; 0) {</span>
+<span class="nc" id="L321">            newCapacity = Integer.MAX_VALUE;</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        } else if (minSize &gt; newCapacity) {</span>
+<span class="nc" id="L323">            newCapacity = minSize;</span>
+        }
+<span class="fc" id="L325">        char newBuffer[] = new char[newCapacity];</span>
+<span class="fc" id="L326">        System.arraycopy(buffer, 0, newBuffer, 0, size);</span>
+<span class="fc" id="L327">        buffer = newBuffer;</span>
+<span class="fc" id="L328">    }</span>
+
+    /**
+     * Clear the contents.
+     */
+    public final void clear() {
+<span class="fc" id="L334">        size = 0;</span>
+<span class="fc" id="L335">    }</span>
+
+    /**
+     * Write to.
+     *
+     * @param writer
+     *            the writer
+     */
+    public void writeTo(PrintWriter writer) {
+<span class="nc" id="L344">        writer.write(buffer, 0, size);</span>
+<span class="nc" id="L345">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

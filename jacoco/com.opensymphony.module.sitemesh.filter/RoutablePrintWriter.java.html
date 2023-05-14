@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoutablePrintWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.filter</a> &gt; <span class="el_source">RoutablePrintWriter.java</span></div><h1>RoutablePrintWriter.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/* This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file. */
+package com.opensymphony.module.sitemesh.filter;
+
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+import com.opensymphony.module.sitemesh.SitemeshWriter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+
+/**
+ * Provides a PrintWriter that routes through to another PrintWriter, however the destination can be changed at any
+ * point. The destination can be passed in using a factory, so it will not be created until it's actually needed.
+ *
+ * @author Joe Walnes
+ */
+public class RoutablePrintWriter extends PrintWriter implements SitemeshWriter {
+
+    /** The destination. */
+    private PrintWriter destination;
+
+    /** The factory. */
+    private DestinationFactory factory;
+
+    /**
+     * Factory to lazily instantiate the destination.
+     */
+    public interface DestinationFactory {
+
+        /**
+         * Activate destination.
+         *
+         * @return the prints the writer
+         *
+         * @throws IOException
+         *             Signals that an I/O exception has occurred.
+         */
+        PrintWriter activateDestination() throws IOException;
+    }
+
+    /**
+     * Instantiates a new routable print writer.
+     *
+     * @param factory
+     *            the factory
+     */
+    public RoutablePrintWriter(DestinationFactory factory) {
+<span class="nc" id="L64">        super(new NullWriter());</span>
+<span class="nc" id="L65">        this.factory = factory;</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * Gets the destination.
+     *
+     * @return the destination
+     */
+    private PrintWriter getDestination() {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (destination == null) {</span>
+            try {
+<span class="nc" id="L76">                destination = factory.activateDestination();</span>
+<span class="nc" id="L77">            } catch (IOException e) {</span>
+<span class="nc" id="L78">                setError();</span>
+<span class="nc" id="L79">            }</span>
+        }
+<span class="nc" id="L81">        return destination;</span>
+    }
+
+    /**
+     * Update destination.
+     *
+     * @param factory
+     *            the factory
+     */
+    public void updateDestination(DestinationFactory factory) {
+<span class="nc" id="L91">        destination = null;</span>
+<span class="nc" id="L92">        this.factory = factory;</span>
+<span class="nc" id="L93">    }</span>
+
+    @Override
+    public void close() {
+<span class="nc" id="L97">        getDestination().close();</span>
+<span class="nc" id="L98">    }</span>
+
+    @Override
+    public void println(Object x) {
+<span class="nc" id="L102">        getDestination().println(x);</span>
+<span class="nc" id="L103">    }</span>
+
+    @Override
+    public void println(String x) {
+<span class="nc" id="L107">        getDestination().println(x);</span>
+<span class="nc" id="L108">    }</span>
+
+    @Override
+    public void println(char x[]) {
+<span class="nc" id="L112">        getDestination().println(x);</span>
+<span class="nc" id="L113">    }</span>
+
+    @Override
+    public void println(double x) {
+<span class="nc" id="L117">        getDestination().println(x);</span>
+<span class="nc" id="L118">    }</span>
+
+    @Override
+    public void println(float x) {
+<span class="nc" id="L122">        getDestination().println(x);</span>
+<span class="nc" id="L123">    }</span>
+
+    @Override
+    public void println(long x) {
+<span class="nc" id="L127">        getDestination().println(x);</span>
+<span class="nc" id="L128">    }</span>
+
+    @Override
+    public void println(int x) {
+<span class="nc" id="L132">        getDestination().println(x);</span>
+<span class="nc" id="L133">    }</span>
+
+    @Override
+    public void println(char x) {
+<span class="nc" id="L137">        getDestination().println(x);</span>
+<span class="nc" id="L138">    }</span>
+
+    @Override
+    public void println(boolean x) {
+<span class="nc" id="L142">        getDestination().println(x);</span>
+<span class="nc" id="L143">    }</span>
+
+    @Override
+    public void println() {
+<span class="nc" id="L147">        getDestination().println();</span>
+<span class="nc" id="L148">    }</span>
+
+    @Override
+    public void print(Object obj) {
+<span class="nc" id="L152">        getDestination().print(obj);</span>
+<span class="nc" id="L153">    }</span>
+
+    @Override
+    public void print(String s) {
+<span class="nc" id="L157">        getDestination().print(s);</span>
+<span class="nc" id="L158">    }</span>
+
+    @Override
+    public void print(char s[]) {
+<span class="nc" id="L162">        getDestination().print(s);</span>
+<span class="nc" id="L163">    }</span>
+
+    @Override
+    public void print(double d) {
+<span class="nc" id="L167">        getDestination().print(d);</span>
+<span class="nc" id="L168">    }</span>
+
+    @Override
+    public void print(float f) {
+<span class="nc" id="L172">        getDestination().print(f);</span>
+<span class="nc" id="L173">    }</span>
+
+    @Override
+    public void print(long l) {
+<span class="nc" id="L177">        getDestination().print(l);</span>
+<span class="nc" id="L178">    }</span>
+
+    @Override
+    public void print(int i) {
+<span class="nc" id="L182">        getDestination().print(i);</span>
+<span class="nc" id="L183">    }</span>
+
+    @Override
+    public void print(char c) {
+<span class="nc" id="L187">        getDestination().print(c);</span>
+<span class="nc" id="L188">    }</span>
+
+    @Override
+    public void print(boolean b) {
+<span class="nc" id="L192">        getDestination().print(b);</span>
+<span class="nc" id="L193">    }</span>
+
+    @Override
+    public void write(String s) {
+<span class="nc" id="L197">        getDestination().write(s);</span>
+<span class="nc" id="L198">    }</span>
+
+    @Override
+    public void write(String s, int off, int len) {
+<span class="nc" id="L202">        getDestination().write(s, off, len);</span>
+<span class="nc" id="L203">    }</span>
+
+    @Override
+    public void write(char buf[]) {
+<span class="nc" id="L207">        getDestination().write(buf);</span>
+<span class="nc" id="L208">    }</span>
+
+    @Override
+    public void write(char buf[], int off, int len) {
+<span class="nc" id="L212">        getDestination().write(buf, off, len);</span>
+<span class="nc" id="L213">    }</span>
+
+    @Override
+    public void write(int c) {
+<span class="nc" id="L217">        getDestination().write(c);</span>
+<span class="nc" id="L218">    }</span>
+
+    @Override
+    public boolean checkError() {
+<span class="nc" id="L222">        return getDestination().checkError();</span>
+    }
+
+    @Override
+    public void flush() {
+<span class="nc" id="L227">        getDestination().flush();</span>
+<span class="nc" id="L228">    }</span>
+
+    /**
+     * Just to keep super constructor for PrintWriter happy - it's never actually used.
+     */
+    private static class NullWriter extends Writer {
+
+        /**
+         * Instantiates a new null writer.
+         */
+<span class="nc" id="L238">        protected NullWriter() {</span>
+<span class="nc" id="L239">        }</span>
+
+        @Override
+        public void write(char cbuf[], int off, int len) throws IOException {
+<span class="nc" id="L243">            throw new UnsupportedOperationException();</span>
+        }
+
+        @Override
+        public void flush() throws IOException {
+<span class="nc" id="L248">            throw new UnsupportedOperationException();</span>
+        }
+
+        @Override
+        public void close() throws IOException {
+<span class="nc" id="L253">            throw new UnsupportedOperationException();</span>
+        }
+
+    }
+
+    @Override
+    public boolean writeSitemeshBufferFragment(SitemeshBufferFragment bufferFragment) throws IOException {
+<span class="nc" id="L260">        PrintWriter destination = getDestination();</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (destination instanceof SitemeshWriter) {</span>
+<span class="nc" id="L262">            return ((SitemeshWriter) destination).writeSitemeshBufferFragment(bufferFragment);</span>
+        }
+<span class="nc" id="L264">        bufferFragment.writeTo(destination);</span>
+<span class="nc" id="L265">        return true;</span>
+    }
+
+    @Override
+    public SitemeshBuffer getSitemeshBuffer() {
+<span class="nc" id="L270">        PrintWriter destination = getDestination();</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (destination instanceof SitemeshWriter) {</span>
+<span class="nc" id="L272">            return ((SitemeshWriter) destination).getSitemeshBuffer();</span>
+        }
+<span class="nc" id="L274">        throw new IllegalStateException(&quot;Print writer is not a sitemesh buffer&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

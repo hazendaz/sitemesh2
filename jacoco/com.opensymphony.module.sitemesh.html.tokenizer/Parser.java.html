@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Parser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html.tokenizer</a> &gt; <span class="el_source">Parser.java</span></div><h1>Parser.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * IF YOU ARE HAVING TROUBLE COMPILING THIS CLASS, IT IS PROBABLY BECAUSE Lexer.java IS MISSING.
+ *
+ * Use 'ant jflex' to generate the file, which will reside in build/java
+ */
+
+package com.opensymphony.module.sitemesh.html.tokenizer;
+
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+import com.opensymphony.module.sitemesh.html.Tag;
+import com.opensymphony.module.sitemesh.html.Text;
+import com.opensymphony.module.sitemesh.html.util.CharArray;
+import com.opensymphony.module.sitemesh.util.CharArrayReader;
+
+import java.io.IOException;
+
+/**
+ * Looks for patterns of tokens in the Lexer and translates these to calls to pass to the TokenHandler.
+ *
+ * @author Joe Walnes
+ *
+ * @see TagTokenizer
+ */
+public class Parser extends Lexer {
+
+    /** The attribute buffer. */
+<span class="fc" id="L41">    private final CharArray attributeBuffer = new CharArray(64);</span>
+
+    /** The reusable token. */
+<span class="fc" id="L44">    private final ReusableToken reusableToken = new ReusableToken();</span>
+
+    /** The pushback token. */
+<span class="fc" id="L47">    private int pushbackToken = -1;</span>
+
+    /** The pushback text. */
+    private String pushbackText;
+
+    /** The Constant SLASH. */
+    public static final short SLASH = 257;
+
+    /** The Constant WHITESPACE. */
+    public static final short WHITESPACE = 258;
+
+    /** The Constant EQUALS. */
+    public static final short EQUALS = 259;
+
+    /** The Constant QUOTE. */
+    public static final short QUOTE = 260;
+
+    /** The Constant WORD. */
+    public static final short WORD = 261;
+
+    /** The Constant TEXT. */
+    public static final short TEXT = 262;
+
+    /** The Constant QUOTED. */
+    public static final short QUOTED = 263;
+
+    /** The Constant LT. */
+    public static final short LT = 264;
+
+    /** The Constant GT. */
+    public static final short GT = 265;
+
+    /** The Constant LT_OPEN_MAGIC_COMMENT. */
+    public static final short LT_OPEN_MAGIC_COMMENT = 266;
+
+    /** The Constant LT_CLOSE_MAGIC_COMMENT. */
+    public static final short LT_CLOSE_MAGIC_COMMENT = 267;
+
+    /** The input. */
+    private final char[] input;
+
+    /** The handler. */
+    private TokenHandler handler;
+
+    /** The position. */
+    private int position;
+
+    /** The length. */
+    private int length;
+
+    /** The name. */
+    private String name;
+
+    /** The type. */
+    private int type;
+
+    /**
+     * Instantiates a new parser.
+     *
+     * @param input
+     *            the input
+     * @param length
+     *            the length
+     * @param handler
+     *            the handler
+     */
+    public Parser(char[] input, int length, TokenHandler handler) {
+<span class="fc" id="L114">        super(new CharArrayReader(input, 0, length));</span>
+<span class="fc" id="L115">        this.input = input;</span>
+<span class="fc" id="L116">        this.handler = handler;</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Text.
+     *
+     * @return the string
+     */
+    private String text() {
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (pushbackToken == -1) {</span>
+<span class="fc" id="L126">            return yytext();</span>
+        }
+<span class="nc" id="L128">        return pushbackText;</span>
+    }
+
+    /**
+     * Skip white space.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private void skipWhiteSpace() throws IOException {
+        while (true) {
+            int next;
+<span class="fc bfc" id="L140" title="All 2 branches covered.">            if (pushbackToken == -1) {</span>
+<span class="fc" id="L141">                next = yylex();</span>
+            } else {
+<span class="fc" id="L143">                next = pushbackToken;</span>
+<span class="fc" id="L144">                pushbackToken = -1;</span>
+            }
+<span class="fc bfc" id="L146" title="All 2 branches covered.">            if (next != Parser.WHITESPACE) {</span>
+<span class="fc" id="L147">                pushBack(next);</span>
+<span class="fc" id="L148">                break;</span>
+            }
+<span class="fc" id="L150">        }</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Push back.
+     *
+     * @param next
+     *            the next
+     */
+    private void pushBack(int next) {
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">        if (pushbackToken != -1) {</span>
+<span class="nc" id="L161">            reportError(&quot;Cannot pushback more than once&quot;, line(), column());</span>
+        }
+<span class="fc" id="L163">        pushbackToken = next;</span>
+<span class="fc bfc" id="L164" title="All 8 branches covered.">        if (next == Parser.WORD || next == Parser.QUOTED || next == Parser.SLASH || next == Parser.EQUALS) {</span>
+<span class="fc" id="L165">            pushbackText = yytext();</span>
+        } else {
+<span class="fc" id="L167">            pushbackText = null;</span>
+        }
+<span class="fc" id="L169">    }</span>
+
+    /**
+     * Start.
+     */
+    public void start() {
+        try {
+            while (true) {
+                int token;
+<span class="fc bfc" id="L178" title="All 2 branches covered.">                if (pushbackToken == -1) {</span>
+<span class="fc" id="L179">                    token = yylex();</span>
+                } else {
+<span class="fc" id="L181">                    token = pushbackToken;</span>
+<span class="fc" id="L182">                    pushbackToken = -1;</span>
+                }
+<span class="fc bfc" id="L184" title="All 6 branches covered.">                switch (token) {</span>
+                    case 0:
+                        // EOF
+<span class="fc" id="L187">                        return;</span>
+                    case Parser.TEXT:
+                        // Got some text
+<span class="fc" id="L190">                        parsedText(position(), length());</span>
+<span class="fc" id="L191">                        break;</span>
+                    case Parser.LT:
+                        // Token &quot;&lt;&quot; - start of tag
+<span class="fc" id="L194">                        parseTag(Tag.OPEN);</span>
+<span class="fc" id="L195">                        break;</span>
+                    case Parser.LT_OPEN_MAGIC_COMMENT:
+                        // Token &quot;&lt;!--[&quot; - start of open magic comment
+<span class="fc" id="L198">                        parseTag(Tag.OPEN_MAGIC_COMMENT);</span>
+<span class="fc" id="L199">                        break;</span>
+                    case Parser.LT_CLOSE_MAGIC_COMMENT:
+                        // Token &quot;&lt;![&quot; - start of close magic comment
+<span class="fc" id="L202">                        parseTag(Tag.CLOSE_MAGIC_COMMENT);</span>
+<span class="fc" id="L203">                        break;</span>
+                    default:
+<span class="fc" id="L205">                        reportError(&quot;Unexpected token from lexer, was expecting TEXT or LT&quot;, line(), column());</span>
+                        break;
+                }
+<span class="fc" id="L208">            }</span>
+<span class="nc" id="L209">        } catch (IOException e) {</span>
+<span class="nc" id="L210">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    /**
+     * Parses the tag.
+     *
+     * @param type
+     *            the type
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private void parseTag(int type) throws IOException {
+        // Start parsing a TAG
+
+<span class="fc" id="L226">        int start = position();</span>
+<span class="fc" id="L227">        skipWhiteSpace();</span>
+        int token;
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        if (pushbackToken == -1) {</span>
+<span class="nc" id="L230">            token = yylex();</span>
+        } else {
+<span class="fc" id="L232">            token = pushbackToken;</span>
+<span class="fc" id="L233">            pushbackToken = -1;</span>
+        }
+
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (token == Parser.SLASH) {</span>
+            // Token &quot;/&quot; - it's a closing tag
+<span class="fc" id="L238">            type = Tag.CLOSE;</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">            if (pushbackToken == -1) {</span>
+<span class="fc" id="L240">                token = yylex();</span>
+            } else {
+<span class="nc" id="L242">                token = pushbackToken;</span>
+<span class="nc" id="L243">                pushbackToken = -1;</span>
+            }
+        }
+
+<span class="pc bpc" id="L247" title="1 of 4 branches missed.">        switch (token) {</span>
+            case Parser.WORD: {
+                // Token WORD - name of tag
+<span class="fc" id="L250">                String name = text();</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">                if (handler.shouldProcessTag(name)) {</span>
+<span class="fc" id="L252">                    parseFullTag(type, name, start);</span>
+                } else {
+<span class="fc" id="L254">                    resetLexerState();</span>
+<span class="fc" id="L255">                    pushBack(yylex()); // take and replace the next token, so the position is correct</span>
+<span class="fc" id="L256">                    parsedText(start, position() - start);</span>
+                }
+<span class="fc" id="L258">                break;</span>
+            }
+            case Parser.GT:
+<span class="fc" id="L261">                break;</span>
+            case 0:
+<span class="fc" id="L263">                parsedText(start, position() - start); // eof</span>
+<span class="fc" id="L264">                break;</span>
+            default:
+<span class="nc" id="L266">                reportError(&quot;Could not recognise tag&quot;, line(), column());</span>
+                break;
+        }
+<span class="fc" id="L269">    }</span>
+
+    /**
+     * Parses the full tag.
+     *
+     * @param type
+     *            the type
+     * @param name
+     *            the name
+     * @param start
+     *            the start
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private void parseFullTag(int type, String name, int start) throws IOException {
+        int token;
+        while (true) {
+<span class="fc" id="L287">            skipWhiteSpace();</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">            if (pushbackToken == -1) {</span>
+<span class="nc" id="L289">                token = yylex();</span>
+            } else {
+<span class="fc" id="L291">                token = pushbackToken;</span>
+<span class="fc" id="L292">                pushbackToken = -1;</span>
+            }
+<span class="fc" id="L294">            pushBack(token);</span>
+
+<span class="fc bfc" id="L296" title="All 4 branches covered.">            if (token == Parser.SLASH || token == Parser.GT) {</span>
+<span class="fc" id="L297">                break; // no more attributes here</span>
+            }
+<span class="fc bfc" id="L299" title="All 2 branches covered.">            if (token == Parser.WORD) {</span>
+<span class="fc" id="L300">                parseAttribute(); // start of an attribute</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">            } else if (token == 0) {</span>
+<span class="fc" id="L302">                parsedText(start, position() - start); // eof</span>
+<span class="fc" id="L303">                return;</span>
+            } else {
+<span class="fc" id="L305">                reportError(&quot;Illegal tag&quot;, line(), column());</span>
+<span class="fc" id="L306">                break;</span>
+            }
+        }
+
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">        if (pushbackToken == -1) {</span>
+<span class="nc" id="L311">            token = yylex();</span>
+        } else {
+<span class="fc" id="L313">            token = pushbackToken;</span>
+<span class="fc" id="L314">            pushbackToken = -1;</span>
+        }
+<span class="fc bfc" id="L316" title="All 2 branches covered.">        if (token == Parser.SLASH) {</span>
+            // Token &quot;/&quot; - it's an empty tag
+<span class="fc" id="L318">            type = Tag.EMPTY;</span>
+<span class="pc bpc" id="L319" title="1 of 2 branches missed.">            if (pushbackToken == -1) {</span>
+<span class="fc" id="L320">                token = yylex();</span>
+            } else {
+<span class="nc" id="L322">                token = pushbackToken;</span>
+<span class="nc" id="L323">                pushbackToken = -1;</span>
+            }
+        }
+
+<span class="fc bfc" id="L327" title="All 2 branches covered.">        if (token == Parser.GT) {</span>
+            // Token &quot;&gt;&quot; - YAY! end of tag.. process it!
+<span class="fc" id="L329">            parsedTag(type, name, start, position() - start + 1);</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">        } else if (token == 0) {</span>
+<span class="fc" id="L331">            parsedText(start, position() - start); // eof</span>
+        } else {
+<span class="fc" id="L333">            reportError(&quot;Expected end of tag&quot;, line(), column());</span>
+<span class="fc" id="L334">            parsedTag(type, name, start, position() - start + 1);</span>
+        }
+<span class="fc" id="L336">    }</span>
+
+    /**
+     * Parses the attribute.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private void parseAttribute() throws IOException {
+        int token;
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">        if (pushbackToken == -1) {</span>
+<span class="nc" id="L347">            token = yylex();</span>
+        } else {
+<span class="fc" id="L349">            token = pushbackToken;</span>
+<span class="fc" id="L350">            pushbackToken = -1;</span>
+        }
+        // Token WORD - start of an attribute
+<span class="fc" id="L353">        String attributeName = text();</span>
+<span class="fc" id="L354">        skipWhiteSpace();</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">        if (pushbackToken == -1) {</span>
+<span class="nc" id="L356">            token = yylex();</span>
+        } else {
+<span class="fc" id="L358">            token = pushbackToken;</span>
+<span class="fc" id="L359">            pushbackToken = -1;</span>
+        }
+<span class="pc bpc" id="L361" title="1 of 4 branches missed.">        switch (token) {</span>
+            case Parser.EQUALS:
+                // Token &quot;=&quot; - the attribute has a value
+<span class="fc" id="L364">                skipWhiteSpace();</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">                if (pushbackToken == -1) {</span>
+<span class="nc" id="L366">                    token = yylex();</span>
+                } else {
+<span class="fc" id="L368">                    token = pushbackToken;</span>
+<span class="fc" id="L369">                    pushbackToken = -1;</span>
+                }
+<span class="fc bfc" id="L371" title="All 2 branches covered.">                if (token == Parser.QUOTED) {</span>
+                    // token QUOTED - a quoted literal as the attribute value
+<span class="fc" id="L373">                    parsedAttribute(attributeName, text(), true);</span>
+<span class="fc bfc" id="L374" title="All 4 branches covered.">                } else if (token == Parser.WORD || token == Parser.SLASH) {</span>
+                    // unquoted word
+<span class="fc" id="L376">                    attributeBuffer.clear();</span>
+<span class="fc" id="L377">                    attributeBuffer.append(text());</span>
+                    while (true) {
+                        int next;
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">                        if (pushbackToken == -1) {</span>
+<span class="fc" id="L381">                            next = yylex();</span>
+                        } else {
+<span class="nc" id="L383">                            next = pushbackToken;</span>
+<span class="nc" id="L384">                            pushbackToken = -1;</span>
+                        }
+<span class="fc bfc" id="L386" title="All 6 branches covered.">                        if ((next != Parser.WORD) &amp;&amp; (next != Parser.EQUALS) &amp;&amp; (next != Parser.SLASH)) {</span>
+<span class="fc" id="L387">                            pushBack(next);</span>
+<span class="fc" id="L388">                            break;</span>
+                        }
+<span class="fc" id="L390">                        attributeBuffer.append(text());</span>
+<span class="fc" id="L391">                    }</span>
+<span class="fc" id="L392">                    parsedAttribute(attributeName, attributeBuffer.toString(), false);</span>
+<span class="pc bpc" id="L393" title="2 of 4 branches missed.">                } else if (token == Parser.SLASH || token == Parser.GT) {</span>
+                    // no more attributes
+<span class="nc" id="L395">                    pushBack(token);</span>
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">                } else if (token == 0) {</span>
+<span class="fc" id="L397">                    return;</span>
+                } else {
+<span class="nc" id="L399">                    reportError(&quot;Illegal attribute value&quot;, line(), column());</span>
+                }
+<span class="nc" id="L401">                break;</span>
+            case Parser.SLASH:
+            case Parser.GT:
+            case Parser.WORD:
+                // it was a value-less HTML style attribute
+<span class="fc" id="L406">                parsedAttribute(attributeName, null, false);</span>
+<span class="fc" id="L407">                pushBack(token);</span>
+<span class="fc" id="L408">                break;</span>
+            case 0:
+<span class="fc" id="L410">                return;</span>
+            default:
+<span class="nc" id="L412">                reportError(&quot;Illegal attribute name&quot;, line(), column());</span>
+                break;
+        }
+<span class="fc" id="L415">    }</span>
+
+    /**
+     * Parsed text.
+     *
+     * @param position
+     *            the position
+     * @param length
+     *            the length
+     */
+    protected void parsedText(int position, int length) {
+<span class="fc" id="L426">        this.position = position;</span>
+<span class="fc" id="L427">        this.length = length;</span>
+<span class="fc" id="L428">        handler.text(reusableToken);</span>
+<span class="fc" id="L429">    }</span>
+
+    /**
+     * Parsed tag.
+     *
+     * @param type
+     *            the type
+     * @param name
+     *            the name
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     */
+    protected void parsedTag(int type, String name, int start, int length) {
+<span class="fc" id="L444">        this.type = type;</span>
+<span class="fc" id="L445">        this.name = name;</span>
+<span class="fc" id="L446">        this.position = start;</span>
+<span class="fc" id="L447">        this.length = length;</span>
+<span class="fc" id="L448">        handler.tag(reusableToken);</span>
+<span class="fc" id="L449">        reusableToken.attributeCount = 0;</span>
+<span class="fc" id="L450">    }</span>
+
+    /**
+     * Parsed attribute.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param quoted
+     *            the quoted
+     */
+    protected void parsedAttribute(String name, String value, boolean quoted) {
+<span class="fc bfc" id="L463" title="All 2 branches covered.">        if (reusableToken.attributeCount + 2 &gt;= reusableToken.attributes.length) {</span>
+<span class="fc" id="L464">            String[] newAttributes = new String[reusableToken.attributeCount * 2];</span>
+<span class="fc" id="L465">            System.arraycopy(reusableToken.attributes, 0, newAttributes, 0, reusableToken.attributeCount);</span>
+<span class="fc" id="L466">            reusableToken.attributes = newAttributes;</span>
+        }
+<span class="fc" id="L468">        reusableToken.attributes[reusableToken.attributeCount++] = name;</span>
+<span class="fc bfc" id="L469" title="All 2 branches covered.">        if (quoted) {</span>
+<span class="fc" id="L470">            reusableToken.attributes[reusableToken.attributeCount++] = value.substring(1, value.length() - 1);</span>
+        } else {
+<span class="fc" id="L472">            reusableToken.attributes[reusableToken.attributeCount++] = value;</span>
+        }
+<span class="fc" id="L474">    }</span>
+
+    @Override
+    protected void reportError(String message, int line, int column) {
+<span class="fc" id="L478">        handler.warning(message, line, column);</span>
+<span class="fc" id="L479">    }</span>
+
+    /**
+     * The Class ReusableToken.
+     */
+<span class="fc" id="L484">    public class ReusableToken implements Tag, Text {</span>
+
+        /** The attribute count. */
+<span class="fc" id="L487">        public int attributeCount = 0;</span>
+
+        /** The attributes. */
+<span class="fc" id="L490">        public String[] attributes = new String[10]; // name1, value1, name2, value2...</span>
+
+        @Override
+        public String getName() {
+<span class="fc" id="L494">            return name;</span>
+        }
+
+        @Override
+        public int getType() {
+<span class="fc" id="L499">            return type;</span>
+        }
+
+        @Override
+        public String getContents() {
+<span class="fc" id="L504">            return new String(input, position, length);</span>
+        }
+
+        @Override
+        public void writeTo(SitemeshBufferFragment.Builder buffer, int position) {
+<span class="nc" id="L509">            buffer.insert(position, SitemeshBufferFragment.builder().setBuffer(new DefaultSitemeshBuffer(input))</span>
+<span class="nc" id="L510">                    .setStart(position).setLength(length).build());</span>
+<span class="nc" id="L511">        }</span>
+
+        @Override
+        public int getAttributeCount() {
+<span class="fc" id="L515">            return attributeCount / 2;</span>
+        }
+
+        @Override
+        public int getAttributeIndex(String name, boolean caseSensitive) {
+<span class="pc bpc" id="L520" title="1 of 2 branches missed.">            if (attributeCount == 0) {</span>
+<span class="nc" id="L521">                return -1;</span>
+            }
+<span class="fc" id="L523">            final int len = attributeCount;</span>
+<span class="fc bfc" id="L524" title="All 2 branches covered.">            for (int i = 0; i &lt; len; i += 2) {</span>
+<span class="fc" id="L525">                final String current = attributes[i];</span>
+<span class="pc bpc" id="L526" title="3 of 6 branches missed.">                if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {</span>
+<span class="fc" id="L527">                    return i / 2;</span>
+                }
+            }
+<span class="fc" id="L530">            return -1;</span>
+        }
+
+        @Override
+        public String getAttributeName(int index) {
+<span class="fc" id="L535">            return attributes[index * 2];</span>
+        }
+
+        @Override
+        public String getAttributeValue(int index) {
+<span class="fc" id="L540">            return attributes[index * 2 + 1];</span>
+        }
+
+        @Override
+        public String getAttributeValue(String name, boolean caseSensitive) {
+<span class="fc bfc" id="L545" title="All 2 branches covered.">            if (attributeCount == 0) {</span>
+<span class="fc" id="L546">                return null;</span>
+            }
+<span class="fc" id="L548">            final int len = attributeCount;</span>
+<span class="pc bpc" id="L549" title="1 of 2 branches missed.">            for (int i = 0; i &lt; len; i += 2) {</span>
+<span class="fc" id="L550">                final String current = attributes[i];</span>
+<span class="pc bpc" id="L551" title="3 of 6 branches missed.">                if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {</span>
+<span class="fc" id="L552">                    return attributes[i + 1];</span>
+                }
+            }
+<span class="nc" id="L555">            return null;</span>
+        }
+
+        @Override
+        public boolean hasAttribute(String name, boolean caseSensitive) {
+<span class="fc bfc" id="L560" title="All 2 branches covered.">            return getAttributeIndex(name, caseSensitive) &gt; -1;</span>
+        }
+
+        @Override
+        public int getPosition() {
+<span class="fc" id="L565">            return position;</span>
+        }
+
+        @Override
+        public int getLength() {
+<span class="fc" id="L570">            return length;</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

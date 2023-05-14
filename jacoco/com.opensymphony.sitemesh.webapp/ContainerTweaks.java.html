@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ContainerTweaks.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.sitemesh.webapp</a> &gt; <span class="el_source">ContainerTweaks.java</span></div><h1>ContainerTweaks.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.sitemesh.webapp;
+
+import com.opensymphony.module.sitemesh.util.Container;
+
+/**
+ * Provides details of which tweaks should be used in SiteMesh - necessary because containers behave subtly different.
+ *
+ * @author Joe Walnes
+ *
+ * @since SiteMesh 3
+ */
+<span class="nc" id="L25">public class ContainerTweaks {</span>
+
+    // TODO: Externalize these into a config file (optional of course!), allowing users to change them at runtime if
+    // needed.
+
+    /** The container. */
+<span class="nc" id="L31">    private final int container = Container.get();</span>
+
+    /**
+     * Should auto create session.
+     *
+     * @return true, if successful
+     */
+    public boolean shouldAutoCreateSession() {
+<span class="nc" id="L39">        return false;</span>
+        // return container == Container.TOMCAT; - this is removed due to SIM-151.
+    }
+
+    /**
+     * Should log unhandled exceptions.
+     *
+     * @return true, if successful
+     */
+    public boolean shouldLogUnhandledExceptions() {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        return container == Container.TOMCAT;</span>
+    }
+
+    /**
+     * Should ignore illegal state exception on error page.
+     *
+     * @return true, if successful
+     */
+    public boolean shouldIgnoreIllegalStateExceptionOnErrorPage() {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        return container == Container.WEBLOGIC;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

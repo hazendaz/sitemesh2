@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigDecoratorMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">ConfigDecoratorMapper.java</span></div><h1>ConfigDecoratorMapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        ConfigDecoratorMapper
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.mapper;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.Page;
+
+import java.util.Properties;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Default implementation of DecoratorMapper. Reads decorators and mappings from the &lt;code&gt;config&lt;/code&gt; property
+ * (default '/WEB-INF/decorators.xml').
+ *
+ * @author &lt;a href=&quot;joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ * @author &lt;a href=&quot;mcannon@internet.com&quot;&gt;Mike Cannon-Brookes&lt;/a&gt;
+ *
+ * @see com.opensymphony.module.sitemesh.DecoratorMapper
+ * @see com.opensymphony.module.sitemesh.mapper.DefaultDecorator
+ * @see com.opensymphony.module.sitemesh.mapper.ConfigLoader
+ */
+<span class="nc" id="L49">public class ConfigDecoratorMapper extends AbstractDecoratorMapper {</span>
+
+    /** The Logger. */
+<span class="nc" id="L52">    private static final Logger logger = LoggerFactory.getLogger(ConfigDecoratorMapper.class);</span>
+
+    /** The config loader. */
+<span class="nc" id="L55">    private ConfigLoader configLoader = null;</span>
+
+    /** Create new ConfigLoader using '/WEB-INF/decorators.xml' file. */
+    @Override
+    public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
+<span class="nc" id="L60">        super.init(config, properties, parent);</span>
+        try {
+<span class="nc" id="L62">            String fileName = properties.getProperty(&quot;config&quot;, &quot;/WEB-INF/decorators.xml&quot;);</span>
+<span class="nc" id="L63">            configLoader = new ConfigLoader(fileName, config);</span>
+<span class="nc" id="L64">        } catch (Exception e) {</span>
+<span class="nc" id="L65">            throw new InstantiationException(e.toString());</span>
+<span class="nc" id="L66">        }</span>
+<span class="nc" id="L67">    }</span>
+
+    /** Retrieve {@link com.opensymphony.module.sitemesh.Decorator} based on 'pattern' tag. */
+    @Override
+    public Decorator getDecorator(HttpServletRequest request, Page page) {
+<span class="nc" id="L72">        String thisPath = request.getServletPath();</span>
+
+        // getServletPath() returns null unless the mapping corresponds to a servlet
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (thisPath == null) {</span>
+<span class="nc" id="L76">            String requestURI = request.getRequestURI();</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (request.getPathInfo() != null) {</span>
+                // strip the pathInfo from the requestURI
+<span class="nc" id="L79">                thisPath = requestURI.substring(0, requestURI.indexOf(request.getPathInfo()));</span>
+            } else {
+<span class="nc" id="L81">                thisPath = requestURI;</span>
+            }
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        } else if (&quot;&quot;.equals(thisPath)) {</span>
+            // in servlet 2.4, if a request is mapped to '/*', getServletPath returns null (SIM-130)
+<span class="nc" id="L85">            thisPath = request.getPathInfo();</span>
+        }
+
+<span class="nc" id="L88">        String name = null;</span>
+        try {
+<span class="nc" id="L90">            name = configLoader.getMappedName(thisPath);</span>
+<span class="nc" id="L91">        } catch (ServletException e) {</span>
+<span class="nc" id="L92">            logger.error(&quot;&quot;, e);</span>
+<span class="nc" id="L93">        }</span>
+
+<span class="nc" id="L95">        Decorator result = getNamedDecorator(request, name);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        return result == null ? super.getDecorator(request, page) : result;</span>
+    }
+
+    /** Retrieve Decorator named in 'name' attribute. Checks the role if specified. */
+    @Override
+    public Decorator getNamedDecorator(HttpServletRequest request, String name) {
+<span class="nc" id="L102">        Decorator result = null;</span>
+        try {
+<span class="nc" id="L104">            result = configLoader.getDecoratorByName(name);</span>
+<span class="nc" id="L105">        } catch (ServletException e) {</span>
+<span class="nc" id="L106">            logger.error(&quot;&quot;, e);</span>
+<span class="nc" id="L107">        }</span>
+
+<span class="nc bnc" id="L109" title="All 6 branches missed.">        if (result == null || result.getRole() != null &amp;&amp; !request.isUserInRole(result.getRole())) {</span>
+            // if the result is null or the user is not in the role
+<span class="nc" id="L111">            return super.getNamedDecorator(request, name);</span>
+        }
+<span class="nc" id="L113">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

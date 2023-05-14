@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TagReplaceRule.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html.rules</a> &gt; <span class="el_source">TagReplaceRule.java</span></div><h1>TagReplaceRule.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.html.rules;
+
+import com.opensymphony.module.sitemesh.html.BasicRule;
+import com.opensymphony.module.sitemesh.html.CustomTag;
+import com.opensymphony.module.sitemesh.html.Tag;
+
+/**
+ * Very simple rule for replacing all occurences of one tag with another.
+ * &lt;p&gt;
+ * For example, to convert all &amp;lt;b&amp;gt; tags to &amp;lt;strong&amp;gt;:
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * html.addRule(new TagReplaceRule(&quot;b&quot;, &quot;strong&quot;));
+ * &lt;/p&gt;
+ *
+ * @author Joe Walnes
+ */
+public class TagReplaceRule extends BasicRule {
+
+    /** The new tag name. */
+    private final String newTagName;
+
+    /**
+     * Instantiates a new tag replace rule.
+     *
+     * @param originalTagName
+     *            the original tag name
+     * @param newTagName
+     *            the new tag name
+     */
+    public TagReplaceRule(String originalTagName, String newTagName) {
+<span class="fc" id="L45">        super(originalTagName);</span>
+<span class="fc" id="L46">        this.newTagName = newTagName;</span>
+<span class="fc" id="L47">    }</span>
+
+    @Override
+    public void process(Tag tag) {
+<span class="fc" id="L51">        currentBuffer().delete(tag.getPosition(), tag.getLength());</span>
+<span class="fc" id="L52">        CustomTag customTag = new CustomTag(tag);</span>
+<span class="fc" id="L53">        customTag.setName(newTagName);</span>
+<span class="fc" id="L54">        customTag.writeTo(currentBuffer(), tag.getPosition());</span>
+<span class="fc" id="L55">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

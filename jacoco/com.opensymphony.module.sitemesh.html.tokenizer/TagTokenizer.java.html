@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TagTokenizer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html.tokenizer</a> &gt; <span class="el_source">TagTokenizer.java</span></div><h1>TagTokenizer.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.html.tokenizer;
+
+/**
+ * Splits a chunk of HTML into 'text' and 'tag' tokens, for easy processing. Is VERY tolerant to badly formed HTML.
+ * &lt;h2&gt;Usage&lt;/h2&gt;
+ * &lt;p&gt;
+ * You need to supply a custom {@link TokenHandler} that will receive callbacks as text and tags are processed.
+ *
+ * &lt;pre&gt;
+ * char[] input = ...;
+ * HTMLTagTokenizer tokenizer = new HTMLTagTokenizer(input);
+ * TokenHandler handler = new MyTokenHandler();
+ * tokenizer.start(handler);
+ * &lt;/pre&gt;
+ *
+ * @author Joe Walnes
+ *
+ * @see TokenHandler
+ * @see com.opensymphony.module.sitemesh.parser.HTMLPageParser
+ */
+public class TagTokenizer {
+
+    /** The input. */
+    private final char[] input;
+
+    /** The length. */
+    private final int length;
+
+    /**
+     * Instantiates a new tag tokenizer.
+     *
+     * @param input
+     *            the input
+     */
+    public TagTokenizer(char[] input) {
+<span class="fc" id="L49">        this(input, input.length);</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Instantiates a new tag tokenizer.
+     *
+     * @param input
+     *            the input
+     * @param length
+     *            the length
+     */
+<span class="fc" id="L60">    public TagTokenizer(char[] input, int length) {</span>
+<span class="fc" id="L61">        this.input = input;</span>
+<span class="fc" id="L62">        this.length = length;</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Instantiates a new tag tokenizer.
+     *
+     * @param input
+     *            the input
+     */
+    public TagTokenizer(String input) {
+<span class="fc" id="L72">        this(input.toCharArray());</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Start.
+     *
+     * @param handler
+     *            the handler
+     */
+    public void start(TokenHandler handler) {
+<span class="fc" id="L82">        Parser parser = new Parser(input, length, handler);</span>
+<span class="fc" id="L83">        parser.start();</span>
+<span class="fc" id="L84">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsePageTEI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.taglib.decorator</a> &gt; <span class="el_source">UsePageTEI.java</span></div><h1>UsePageTEI.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        UsePageTEI
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.taglib.decorator;
+
+import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
+
+/**
+ * TagExtraInfo implementation to expose Page object as variable.
+ *
+ * @author &lt;a href=&quot;joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ *
+ * @see UsePageTag
+ * @see UseHTMLPageTEI
+ */
+<span class="nc" id="L37">public class UsePageTEI extends TagExtraInfo {</span>
+
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    protected String getType() {
+<span class="nc" id="L45">        return &quot;com.opensymphony.module.sitemesh.Page&quot;;</span>
+    }
+
+    @Override
+    public VariableInfo[] getVariableInfo(TagData data) {
+<span class="nc" id="L50">        String id = data.getAttributeString(&quot;id&quot;);</span>
+<span class="nc" id="L51">        return new VariableInfo[] { new VariableInfo(id, getType(), true, VariableInfo.AT_END) };</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

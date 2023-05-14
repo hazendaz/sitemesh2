@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.factory</a> &gt; <span class="el_source">BaseFactory.java</span></div><h1>BaseFactory.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        BaseFactory
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.factory;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.mapper.PathMapper;
+import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * Base Factory implementation. Provides utility methods for implementation.
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ */
+public abstract class BaseFactory extends Factory {
+
+    /** The config is of type ServletConfig or FilterConfig. */
+    protected Config config;
+
+    /**
+     * Instance of {@link com.opensymphony.module.sitemesh.DecoratorMapper}. Because it is thread-safe, it can be shared
+     * by multiple clients. This is only the last DecoratorMapper in the chain, and all parents will be automatically
+     * delegated to it.
+     */
+    protected DecoratorMapper decoratorMapper;
+
+    /** Map that associates content-types with PageParser instances. */
+    protected Map&lt;Object, Object&gt; pageParsers;
+
+    /** A map of paths that are excluded from decoration. */
+    protected PathMapper excludeUrls;
+
+    /**
+     * Constructor for default implementation of Factory. Should never be called by client. Singleton instance should be
+     * obtained instead.
+     *
+     * @param config
+     *            the config
+     *
+     * @see #getInstance(com.opensymphony.module.sitemesh.Config config)
+     */
+<span class="nc" id="L69">    protected BaseFactory(Config config) {</span>
+<span class="nc" id="L70">        this.config = config;</span>
+<span class="nc" id="L71">        clearDecoratorMappers();</span>
+<span class="nc" id="L72">        clearParserMappings();</span>
+<span class="nc" id="L73">        clearExcludeUrls();</span>
+<span class="nc" id="L74">    }</span>
+
+    /** Return instance of DecoratorMapper. */
+    @Override
+    public DecoratorMapper getDecoratorMapper() {
+<span class="nc" id="L79">        return decoratorMapper;</span>
+    }
+
+    /**
+     * Create a PageParser suitable for the given content-type.
+     * &lt;p&gt;
+     * For example, if the supplied parameter is &lt;code&gt;text/html&lt;/code&gt; a parser shall be returned that can parse HTML
+     * accordingly. Returns null if no parser can be found for the supplied content type.
+     * &lt;/p&gt;
+     *
+     * @param contentType
+     *            The MIME content-type of the data to be parsed
+     *
+     * @return Appropriate &lt;code&gt;PageParser&lt;/code&gt; for reading data, or &lt;code&gt;null&lt;/code&gt; if no suitable parser was
+     *         found.
+     */
+    @Override
+    public PageParser getPageParser(String contentType) {
+<span class="nc" id="L97">        return (PageParser) pageParsers.get(contentType);</span>
+    }
+
+    /**
+     * Determine whether a Page of given content-type should be parsed or not.
+     */
+    @Override
+    public boolean shouldParsePage(String contentType) {
+<span class="nc" id="L105">        return pageParsers.containsKey(contentType);</span>
+    }
+
+    /**
+     * Returns &lt;code&gt;true&lt;/code&gt; if the supplied path matches one of the exclude URLs specified in sitemesh.xml,
+     * otherwise returns &lt;code&gt;false&lt;/code&gt;.
+     *
+     * @param path
+     *            The path.
+     *
+     * @return whether the path is excluded
+     */
+    @Override
+    public boolean isPathExcluded(String path) {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        return excludeUrls.get(path) != null;</span>
+    }
+
+    /**
+     * Clear all current DecoratorMappers.
+     */
+    protected void clearDecoratorMappers() {
+<span class="nc" id="L126">        decoratorMapper = null;</span>
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * Push new DecoratorMapper onto end of chain.
+     *
+     * @param className
+     *            the class name
+     * @param properties
+     *            the properties
+     */
+    protected void pushDecoratorMapper(String className, Properties properties) {
+        try {
+<span class="nc" id="L139">            Class&lt;?&gt; decoratorMapperClass = ClassLoaderUtil.loadClass(className, getClass());</span>
+<span class="nc" id="L140">            DecoratorMapper newMapper = getDecoratorMapper(decoratorMapperClass);</span>
+<span class="nc" id="L141">            newMapper.init(config, properties, decoratorMapper);</span>
+<span class="nc" id="L142">            decoratorMapper = newMapper;</span>
+<span class="nc" id="L143">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L144">            throw new FactoryException(&quot;Could not load DecoratorMapper class : &quot; + className, e);</span>
+<span class="nc" id="L145">        } catch (Exception e) {</span>
+<span class="nc" id="L146">            throw new FactoryException(&quot;Could not initialize DecoratorMapper : &quot; + className, e);</span>
+<span class="nc" id="L147">        }</span>
+<span class="nc" id="L148">    }</span>
+
+    /**
+     * Gets the decorator mapper.
+     *
+     * @param decoratorMapperClass
+     *            the decorator mapper class
+     *
+     * @return the decorator mapper
+     *
+     * @throws InstantiationException
+     *             the instantiation exception
+     * @throws IllegalAccessException
+     *             the illegal access exception
+     * @throws InvocationTargetException
+     *             the invocation target exception
+     * @throws NoSuchMethodException
+     *             the no such method exception
+     */
+    protected DecoratorMapper getDecoratorMapper(Class&lt;?&gt; decoratorMapperClass)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+<span class="nc" id="L169">        return (DecoratorMapper) decoratorMapperClass.getDeclaredConstructor().newInstance();</span>
+    }
+
+    /** Clear all PageParser mappings. */
+    protected void clearParserMappings() {
+<span class="nc" id="L174">        pageParsers = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Map new PageParser to given content-type. contentType = null signifies default PageParser for unknown
+     * content-types.
+     *
+     * @param contentType
+     *            the content type
+     * @param className
+     *            the class name
+     */
+    protected void mapParser(String contentType, String className) {
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (className.endsWith(&quot;.DefaultPageParser&quot;)) {</span>
+<span class="nc" id="L188">            return; // Backwards compatability - this can safely be ignored.</span>
+        }
+        try {
+<span class="nc" id="L191">            PageParser pp = (PageParser) ClassLoaderUtil.loadClass(className, getClass()).getDeclaredConstructor()</span>
+<span class="nc" id="L192">                    .newInstance();</span>
+            // Store the parser even if the content type is NULL. [This
+            // is most probably the legacy default page parser which
+            // we no longer have a use for]
+<span class="nc" id="L196">            pageParsers.put(contentType, pp);</span>
+<span class="nc" id="L197">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L198">            throw new FactoryException(&quot;Could not load PageParser class : &quot; + className, e);</span>
+<span class="nc" id="L199">        } catch (Exception e) {</span>
+<span class="nc" id="L200">            throw new FactoryException(&quot;Could not instantiate PageParser : &quot; + className, e);</span>
+<span class="nc" id="L201">        }</span>
+<span class="nc" id="L202">    }</span>
+
+    /**
+     * Adds the exclude url.
+     *
+     * @param path
+     *            the path
+     */
+    protected void addExcludeUrl(String path) {
+<span class="nc" id="L211">        excludeUrls.put(&quot;&quot;, path);</span>
+<span class="nc" id="L212">    }</span>
+
+    /**
+     * Clears all exclude URLs.
+     */
+    protected void clearExcludeUrls() {
+<span class="nc" id="L218">        excludeUrls = new PathMapper();</span>
+<span class="nc" id="L219">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

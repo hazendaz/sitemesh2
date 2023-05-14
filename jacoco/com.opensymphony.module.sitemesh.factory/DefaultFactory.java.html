@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.factory</a> &gt; <span class="el_source">DefaultFactory.java</span></div><h1>DefaultFactory.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        DefaultFactory
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.factory;
+
+import com.opensymphony.module.sitemesh.Config;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
+
+/**
+ * DefaultFactory, reads configuration from the &lt;code&gt;sitemesh.configfile&lt;/code&gt; init param, or
+ * &lt;code&gt;/WEB-INF/sitemesh.xml&lt;/code&gt; if not specified, or uses the default configuration if &lt;code&gt;sitemesh.xml&lt;/code&gt;
+ * does not exist.
+ * &lt;p&gt;
+ * To use the &lt;code&gt;sitemesh.configfile&lt;/code&gt; parameter, add the following to your web.xml:
+ *
+ * &lt;pre&gt;
+ * &amp;lt;context-param&amp;gt;
+ *      &amp;lt;param-name&amp;gt;sitemesh.configfile&amp;lt;/param-name&amp;gt;
+ *      &amp;lt;param-value&amp;gt;/WEB-INF/etc/sitemesh.xml&amp;lt;/param-value&amp;gt;
+ *  &amp;lt;/context-param&amp;gt;
+ * &lt;/pre&gt;
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:pathos@pandora.be&quot;&gt;Mathias Bogaert&lt;/a&gt;
+ */
+public class DefaultFactory extends BaseFactory {
+
+    /** The config file name. */
+    String configFileName;
+
+    /** The Constant DEFAULT_CONFIG_FILENAME. */
+    private static final String DEFAULT_CONFIG_FILENAME = &quot;/WEB-INF/sitemesh.xml&quot;;
+
+    /** The config file. */
+    File configFile;
+
+    /** The config last modified. */
+    long configLastModified;
+
+    /** The config last check. */
+<span class="nc" id="L76">    private long configLastCheck = 0L;</span>
+
+    /** The config check millis. */
+<span class="fc" id="L79">    public static long configCheckMillis = 3000L;</span>
+
+    /** The config props. */
+<span class="nc" id="L82">    Map&lt;Object, Object&gt; configProps = new HashMap&lt;&gt;();</span>
+
+    /** The excludes file name. */
+    String excludesFileName;
+
+    /** The excludes file. */
+    File excludesFile;
+
+    /**
+     * Instantiates a new default factory.
+     *
+     * @param config
+     *            the config
+     */
+    public DefaultFactory(Config config) {
+<span class="nc" id="L97">        super(config);</span>
+
+<span class="nc" id="L99">        configFileName = config.getServletContext().getInitParameter(&quot;sitemesh.configfile&quot;);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (configFileName == null) {</span>
+<span class="nc" id="L101">            configFileName = DEFAULT_CONFIG_FILENAME;</span>
+        }
+
+        // configFilePath is null if loaded from war file
+<span class="nc" id="L105">        String initParamConfigFile = config.getConfigFile();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (initParamConfigFile != null) {</span>
+<span class="nc" id="L107">            configFileName = initParamConfigFile;</span>
+        }
+
+<span class="nc" id="L110">        String configFilePath = config.getServletContext().getRealPath(configFileName);</span>
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (configFilePath != null) { // disable config auto reloading for .war files</span>
+<span class="nc" id="L113">            configFile = new File(configFilePath);</span>
+        }
+
+<span class="nc" id="L116">        loadConfig();</span>
+<span class="nc" id="L117">    }</span>
+
+    /** Load configuration from file. */
+    private synchronized void loadConfig() {
+        try {
+            // Load and parse the sitemesh.xml file
+<span class="nc" id="L123">            Element root = loadSitemeshXML();</span>
+
+<span class="nc" id="L125">            NodeList sections = root.getChildNodes();</span>
+            // Loop through child elements of root node
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            for (int i = 0; i &lt; sections.getLength(); i++) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                if (sections.item(i) instanceof Element) {</span>
+<span class="nc" id="L129">                    Element curr = (Element) sections.item(i);</span>
+<span class="nc" id="L130">                    NodeList children = curr.getChildNodes();</span>
+
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                    if (&quot;config-refresh&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+<span class="nc" id="L133">                        String seconds = curr.getAttribute(&quot;seconds&quot;);</span>
+<span class="nc" id="L134">                        configCheckMillis = Long.parseLong(seconds) * 1000L;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                    } else if (&quot;property&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+<span class="nc" id="L136">                        String name = curr.getAttribute(&quot;name&quot;);</span>
+<span class="nc" id="L137">                        String value = curr.getAttribute(&quot;value&quot;);</span>
+<span class="nc bnc" id="L138" title="All 4 branches missed.">                        if (!&quot;&quot;.equals(name) &amp;&amp; !&quot;&quot;.equals(value)) {</span>
+<span class="nc" id="L139">                            configProps.put(&quot;${&quot; + name + &quot;}&quot;, value);</span>
+                        }
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                    } else if (&quot;page-parsers&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+                        // handle &lt;page-parsers&gt;
+<span class="nc" id="L143">                        loadPageParsers(children);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                    } else if (&quot;decorator-mappers&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+                        // handle &lt;decorator-mappers&gt;
+<span class="nc" id="L146">                        loadDecoratorMappers(children);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                    } else if (&quot;excludes&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+                        // handle &lt;excludes&gt;
+<span class="nc" id="L149">                        String fileName = replaceProperties(curr.getAttribute(&quot;file&quot;));</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                        if (!&quot;&quot;.equals(fileName)) {</span>
+<span class="nc" id="L151">                            excludesFileName = fileName;</span>
+<span class="nc" id="L152">                            loadExcludes();</span>
+                        }
+                    }
+                }
+            }
+<span class="nc" id="L157">        } catch (ParserConfigurationException e) {</span>
+<span class="nc" id="L158">            throw new FactoryException(&quot;Could not get XML parser&quot;, e);</span>
+<span class="nc" id="L159">        } catch (IOException e) {</span>
+<span class="nc" id="L160">            throw new FactoryException(&quot;Could not read config file : &quot; + configFileName, e);</span>
+<span class="nc" id="L161">        } catch (SAXException e) {</span>
+<span class="nc" id="L162">            throw new FactoryException(&quot;Could not parse config file : &quot; + configFileName, e);</span>
+<span class="nc" id="L163">        }</span>
+<span class="nc" id="L164">    }</span>
+
+    /**
+     * Load sitemesh XML.
+     *
+     * @return the element
+     *
+     * @throws ParserConfigurationException
+     *             the parser configuration exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws SAXException
+     *             the SAX exception
+     */
+    private Element loadSitemeshXML() throws ParserConfigurationException, IOException, SAXException {
+<span class="nc" id="L179">        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
+<span class="nc" id="L180">        factory.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span>
+<span class="nc" id="L181">        DocumentBuilder builder = factory.newDocumentBuilder();</span>
+
+<span class="nc" id="L183">        InputStream is = null;</span>
+
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (configFile == null) {</span>
+<span class="nc" id="L186">            is = config.getServletContext().getResourceAsStream(configFileName);</span>
+<span class="nc bnc" id="L187" title="All 4 branches missed.">        } else if (configFile.exists() &amp;&amp; configFile.canRead()) {</span>
+<span class="nc" id="L188">            is = configFile.toURI().toURL().openStream();</span>
+        }
+
+        // load the default sitemesh configuration
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L193">            is = getClass().getClassLoader()</span>
+<span class="nc" id="L194">                    .getResourceAsStream(&quot;com/opensymphony/module/sitemesh/factory/sitemesh-default.xml&quot;);</span>
+        }
+
+        // load the default sitemesh configuration using another classloader
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L199">            is = Thread.currentThread().getContextClassLoader()</span>
+<span class="nc" id="L200">                    .getResourceAsStream(&quot;com/opensymphony/module/sitemesh/factory/sitemesh-default.xml&quot;);</span>
+        }
+
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L204">            throw new IllegalStateException(&quot;Cannot load default configuration from jar&quot;);</span>
+        }
+
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (configFile != null) {</span>
+<span class="nc" id="L208">            configLastModified = configFile.lastModified();</span>
+        }
+
+<span class="nc" id="L211">        Document doc = builder.parse(is);</span>
+<span class="nc" id="L212">        Element root = doc.getDocumentElement();</span>
+        // Verify root element
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (!&quot;sitemesh&quot;.equalsIgnoreCase(root.getTagName())) {</span>
+<span class="nc" id="L215">            throw new FactoryException(&quot;Root element of sitemesh configuration file not &lt;sitemesh&gt;&quot;, null);</span>
+        }
+<span class="nc" id="L217">        return root;</span>
+    }
+
+    /**
+     * Load excludes.
+     *
+     * @throws ParserConfigurationException
+     *             the parser configuration exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws SAXException
+     *             the SAX exception
+     */
+    private void loadExcludes() throws ParserConfigurationException, IOException, SAXException {
+<span class="nc" id="L231">        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
+<span class="nc" id="L232">        factory.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span>
+<span class="nc" id="L233">        DocumentBuilder builder = factory.newDocumentBuilder();</span>
+
+<span class="nc" id="L235">        InputStream is = null;</span>
+
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (excludesFile == null) {</span>
+<span class="nc" id="L238">            is = config.getServletContext().getResourceAsStream(excludesFileName);</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (is == null) {</span>
+<span class="nc" id="L240">                String excludesFilePath = config.getServletContext().getRealPath(excludesFileName);// getResourceAsStream</span>
+                                                                                                   // does not work on
+                                                                                                   // weblogic 10.3.5
+<span class="nc bnc" id="L243" title="All 2 branches missed.">                if (excludesFilePath != null) {</span>
+<span class="nc" id="L244">                    excludesFile = new File(excludesFilePath);</span>
+<span class="nc" id="L245">                    is = excludesFile.toURI().toURL().openStream();</span>
+                }
+<span class="nc" id="L247">            }</span>
+<span class="nc bnc" id="L248" title="All 4 branches missed.">        } else if (excludesFile.exists() &amp;&amp; excludesFile.canRead()) {</span>
+<span class="nc" id="L249">            is = excludesFile.toURI().toURL().openStream();</span>
+        }
+
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L253">            throw new IllegalStateException(&quot;Cannot load excludes configuration file \&quot;&quot; + excludesFileName</span>
+                    + &quot;\&quot; as specified in \&quot;sitemesh.xml\&quot; or \&quot;sitemesh-default.xml\&quot;&quot;);
+        }
+
+<span class="nc" id="L257">        Document document = builder.parse(is);</span>
+<span class="nc" id="L258">        Element root = document.getDocumentElement();</span>
+<span class="nc" id="L259">        NodeList sections = root.getChildNodes();</span>
+
+        // Loop through child elements of root node looking for the &lt;excludes&gt; block
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        for (int i = 0; i &lt; sections.getLength(); i++) {</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">            if (sections.item(i) instanceof Element) {</span>
+<span class="nc" id="L264">                Element curr = (Element) sections.item(i);</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">                if (&quot;excludes&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+<span class="nc" id="L266">                    loadExcludeUrls(curr.getChildNodes());</span>
+                }
+            }
+        }
+<span class="nc" id="L270">    }</span>
+
+    /**
+     * Loop through children of 'page-parsers' element and add all 'parser' mappings.
+     *
+     * @param nodes
+     *            the nodes
+     */
+    private void loadPageParsers(NodeList nodes) {
+<span class="nc" id="L279">        clearParserMappings();</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if (nodes.item(i) instanceof Element) {</span>
+<span class="nc" id="L282">                Element curr = (Element) nodes.item(i);</span>
+
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                if (&quot;parser&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+<span class="nc" id="L285">                    String className = curr.getAttribute(&quot;class&quot;);</span>
+<span class="nc" id="L286">                    String contentType = curr.getAttribute(&quot;content-type&quot;);</span>
+<span class="nc" id="L287">                    mapParser(contentType, className);</span>
+                }
+            }
+        }
+<span class="nc" id="L291">    }</span>
+
+    /**
+     * Load decorator mappers.
+     *
+     * @param nodes
+     *            the nodes
+     */
+    private void loadDecoratorMappers(NodeList nodes) {
+<span class="nc" id="L300">        clearDecoratorMappers();</span>
+<span class="nc" id="L301">        Properties emptyProps = new Properties();</span>
+
+<span class="nc" id="L303">        pushDecoratorMapper(&quot;com.opensymphony.module.sitemesh.mapper.NullDecoratorMapper&quot;, emptyProps);</span>
+
+        // note, this works from the bottom node up.
+<span class="nc bnc" id="L306" title="All 2 branches missed.">        for (int i = nodes.getLength() - 1; i &gt; 0; i--) {</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">            if (nodes.item(i) instanceof Element) {</span>
+<span class="nc" id="L308">                Element curr = (Element) nodes.item(i);</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                if (&quot;mapper&quot;.equalsIgnoreCase(curr.getTagName())) {</span>
+<span class="nc" id="L310">                    String className = curr.getAttribute(&quot;class&quot;);</span>
+<span class="nc" id="L311">                    Properties props = new Properties();</span>
+                    // build properties from &lt;param&gt; tags.
+<span class="nc" id="L313">                    NodeList children = curr.getChildNodes();</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                    for (int j = 0; j &lt; children.getLength(); j++) {</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">                        if (children.item(j) instanceof Element) {</span>
+<span class="nc" id="L316">                            Element currC = (Element) children.item(j);</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">                            if (&quot;param&quot;.equalsIgnoreCase(currC.getTagName())) {</span>
+<span class="nc" id="L318">                                String value = currC.getAttribute(&quot;value&quot;);</span>
+<span class="nc" id="L319">                                props.put(currC.getAttribute(&quot;name&quot;), replaceProperties(value));</span>
+                            }
+                        }
+                    }
+                    // add mapper
+<span class="nc" id="L324">                    pushDecoratorMapper(className, props);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L329">        pushDecoratorMapper(&quot;com.opensymphony.module.sitemesh.mapper.InlineDecoratorMapper&quot;, emptyProps);</span>
+<span class="nc" id="L330">    }</span>
+
+    /**
+     * Reads in all the url patterns to exclude from decoration.
+     *
+     * @param nodes
+     *            the nodes
+     */
+    private void loadExcludeUrls(NodeList nodes) {
+<span class="nc" id="L339">        clearExcludeUrls();</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">        for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
+<span class="nc bnc" id="L341" title="All 2 branches missed.">            if (nodes.item(i) instanceof Element) {</span>
+<span class="nc" id="L342">                Element p = (Element) nodes.item(i);</span>
+<span class="nc bnc" id="L343" title="All 4 branches missed.">                if (&quot;pattern&quot;.equalsIgnoreCase(p.getTagName()) || &quot;url-pattern&quot;.equalsIgnoreCase(p.getTagName())) {</span>
+<span class="nc" id="L344">                    Text patternText = (Text) p.getFirstChild();</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">                    if (patternText != null) {</span>
+<span class="nc" id="L346">                        String pattern = patternText.getData().trim();</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">                        if (pattern != null) {</span>
+<span class="nc" id="L348">                            addExcludeUrl(pattern);</span>
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L354">    }</span>
+
+    /**
+     * Check if configuration file has been modified, and if so reload it.
+     */
+    @Override
+    public void refresh() {
+<span class="nc" id="L361">        long time = System.currentTimeMillis();</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (time - configLastCheck &lt; configCheckMillis) {</span>
+<span class="nc" id="L363">            return;</span>
+        }
+<span class="nc" id="L365">        configLastCheck = time;</span>
+
+<span class="nc bnc" id="L367" title="All 4 branches missed.">        if (configFile != null &amp;&amp; configLastModified != configFile.lastModified()) {</span>
+<span class="nc" id="L368">            loadConfig();</span>
+        }
+<span class="nc" id="L370">    }</span>
+
+    /**
+     * Replaces any properties that appear in the supplied string with their actual values.
+     *
+     * @param str
+     *            the string to replace the properties in
+     *
+     * @return the same string but with any properties expanded out to their actual values
+     */
+    private String replaceProperties(String str) {
+        int idx;
+<span class="nc bnc" id="L382" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : configProps.entrySet()) {</span>
+<span class="nc" id="L383">            String key = (String) entry.getKey();</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">            while ((idx = str.indexOf(key)) &gt;= 0) {</span>
+<span class="nc" id="L385">                StringBuilder buf = new StringBuilder(100);</span>
+<span class="nc" id="L386">                buf.append(str.substring(0, idx));</span>
+<span class="nc" id="L387">                buf.append(entry.getValue());</span>
+<span class="nc" id="L388">                buf.append(str.substring(idx + key.length()));</span>
+<span class="nc" id="L389">                str = buf.toString();</span>
+<span class="nc" id="L390">            }</span>
+<span class="nc" id="L391">        }</span>
+<span class="nc" id="L392">        return str;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

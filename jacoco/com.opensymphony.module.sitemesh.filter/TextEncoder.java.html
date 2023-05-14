@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TextEncoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.filter</a> &gt; <span class="el_source">TextEncoder.java</span></div><h1>TextEncoder.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/* This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file. */
+package com.opensymphony.module.sitemesh.filter;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
+
+/**
+ * Converts text stored in byte[] to char[] using specified encoding.
+ *
+ * @author &lt;a href=&quot;mailto:scott@atlassian.com&quot;&gt;Scott Farquhar&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:hani@formicary.net&quot;&gt;Hani Suleiman&lt;/a&gt;
+ * @author Joe Walnes
+ */
+<span class="nc" id="L34">public class TextEncoder {</span>
+
+    /** The Constant DEFAULT_ENCODING. */
+<span class="nc" id="L37">    private static final String DEFAULT_ENCODING = Charset.defaultCharset().displayName();</span>
+
+    /**
+     * Encode.
+     *
+     * @param data
+     *            the data
+     * @param encoding
+     *            the encoding
+     *
+     * @return the char[]
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public char[] encode(byte[] data, String encoding) throws IOException {
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (encoding == null) {</span>
+<span class="nc" id="L54">            encoding = DEFAULT_ENCODING;</span>
+        }
+<span class="nc" id="L56">        return getBuffer(data, encoding);</span>
+    }
+
+    /**
+     * Gets the buffer.
+     *
+     * @param data
+     *            the data
+     * @param encoding
+     *            the encoding
+     *
+     * @return the buffer
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private char[] getBuffer(byte[] data, String encoding) throws IOException {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (!Charset.isSupported(encoding)) {</span>
+<span class="nc" id="L74">            throw new IOException(&quot;Unsupported encoding &quot; + encoding);</span>
+        }
+<span class="nc" id="L76">        Charset charset = Charset.forName(encoding);</span>
+<span class="nc" id="L77">        CharsetDecoder cd = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE)</span>
+<span class="nc" id="L78">                .onUnmappableCharacter(CodingErrorAction.REPLACE);</span>
+<span class="nc" id="L79">        int en = (int) (cd.maxCharsPerByte() * data.length);</span>
+<span class="nc" id="L80">        char[] ca = new char[en];</span>
+<span class="nc" id="L81">        ByteBuffer bb = ByteBuffer.wrap(data);</span>
+<span class="nc" id="L82">        CharBuffer cb = CharBuffer.wrap(ca);</span>
+<span class="nc" id="L83">        CoderResult cr = cd.decode(bb, cb, true);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (!cr.isUnderflow()) {</span>
+<span class="nc" id="L85">            cr.throwException();</span>
+        }
+<span class="nc" id="L87">        cr = cd.flush(cb);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (!cr.isUnderflow()) {</span>
+<span class="nc" id="L89">            cr.throwException();</span>
+        }
+<span class="nc" id="L91">        return trim(ca, cb.position());</span>
+    }
+
+    /**
+     * Trim.
+     *
+     * @param ca
+     *            the ca
+     * @param len
+     *            the len
+     *
+     * @return the char[]
+     */
+    private char[] trim(char[] ca, int len) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (len == ca.length) {</span>
+<span class="nc" id="L106">            return ca;</span>
+        }
+<span class="nc" id="L108">        char[] tca = new char[len];</span>
+<span class="nc" id="L109">        System.arraycopy(ca, 0, tca, 0, len);</span>
+<span class="nc" id="L110">        return tca;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

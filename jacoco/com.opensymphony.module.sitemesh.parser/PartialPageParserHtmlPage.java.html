@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PartialPageParserHtmlPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.parser</a> &gt; <span class="el_source">PartialPageParserHtmlPage.java</span></div><h1>PartialPageParserHtmlPage.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.parser;
+
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Map;
+
+/**
+ * The Class PartialPageParserHtmlPage.
+ */
+public class PartialPageParserHtmlPage extends PartialPageParserPage implements HTMLPage {
+
+    /** The head. */
+    private final SitemeshBufferFragment head;
+
+    /**
+     * Instantiates a new partial page parser html page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     * @param body
+     *            the body
+     * @param bodyProperties
+     *            the body properties
+     */
+    public PartialPageParserHtmlPage(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment body,
+            Map&lt;String, String&gt; bodyProperties) {
+<span class="fc" id="L45">        this(sitemeshBuffer, body, bodyProperties, null, null, null, null);</span>
+<span class="fc" id="L46">    }</span>
+
+    /**
+     * Instantiates a new partial page parser html page.
+     *
+     * @param sitemeshBuffer
+     *            The buffer for the page
+     * @param body
+     *            The body fragment
+     * @param bodyProperties
+     *            The properties of the body
+     * @param head
+     *            The head section
+     * @param title
+     *            The title
+     * @param metaAttributes
+     *            The meta attributes found in the head section
+     * @param pageProperties
+     *            The page properties extracted from the head section
+     */
+    public PartialPageParserHtmlPage(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment body,
+            Map&lt;String, String&gt; bodyProperties, SitemeshBufferFragment head, String title,
+            Map&lt;String, String&gt; metaAttributes, Map&lt;String, String&gt; pageProperties) {
+<span class="fc" id="L69">        super(sitemeshBuffer, body);</span>
+<span class="fc" id="L70">        this.head = head;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (title == null) {</span>
+<span class="fc" id="L72">            title = &quot;&quot;;</span>
+        }
+<span class="fc" id="L74">        addProperty(&quot;title&quot;, title);</span>
+<span class="fc" id="L75">        addProperties(metaAttributes, &quot;meta.&quot;);</span>
+<span class="fc" id="L76">        addProperties(bodyProperties, &quot;body.&quot;);</span>
+<span class="fc" id="L77">        addProperties(pageProperties, &quot;page.&quot;);</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Adds the properties.
+     *
+     * @param properties
+     *            the properties
+     * @param prefix
+     *            the prefix
+     */
+    private void addProperties(Map&lt;String, String&gt; properties, String prefix) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (properties != null) {</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            for (Map.Entry&lt;String, String&gt; property : properties.entrySet()) {</span>
+<span class="fc" id="L91">                addProperty(prefix + property.getKey(), property.getValue());</span>
+<span class="fc" id="L92">            }</span>
+        }
+<span class="fc" id="L94">    }</span>
+
+    @Override
+    public void writeHead(Writer out) throws IOException {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (head != null) {</span>
+<span class="fc" id="L99">            head.writeTo(out);</span>
+        }
+<span class="fc" id="L101">    }</span>
+
+    @Override
+    public String getHead() {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (head == null) {</span>
+<span class="nc" id="L106">            return &quot;&quot;;</span>
+        }
+<span class="nc" id="L108">        StringWriter headString = new StringWriter();</span>
+        try {
+<span class="nc" id="L110">            head.writeTo(headString);</span>
+<span class="nc" id="L111">        } catch (IOException e) {</span>
+<span class="nc" id="L112">            throw new RuntimeException(&quot;IOException occured while writing to buffer?&quot;, e);</span>
+<span class="nc" id="L113">        }</span>
+<span class="nc" id="L114">        return headString.toString();</span>
+    }
+
+    @Override
+    public boolean isFrameSet() {
+<span class="nc" id="L119">        return false;</span>
+    }
+
+    @Override
+    public void setFrameSet(boolean frameset) {
+<span class="nc" id="L124">        throw new UnsupportedOperationException();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

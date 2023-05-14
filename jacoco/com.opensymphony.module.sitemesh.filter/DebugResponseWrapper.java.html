@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DebugResponseWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.filter</a> &gt; <span class="el_source">DebugResponseWrapper.java</span></div><h1>DebugResponseWrapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/* This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file. */
+package com.opensymphony.module.sitemesh.filter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Locale;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+/**
+ * The Class DebugResponseWrapper.
+ *
+ * @author &lt;a href=&quot;joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ */
+public class DebugResponseWrapper extends HttpServletResponseWrapper {
+
+    /** The last count. */
+    private static int lastCount;
+
+    /** The count. */
+    private int count;
+
+    /**
+     * Instantiates a new debug response wrapper.
+     *
+     * @param response
+     *            the response
+     */
+    public DebugResponseWrapper(HttpServletResponse response) {
+<span class="nc" id="L48">        super(response);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L50">            lastCount++;</span>
+<span class="nc" id="L51">            count = lastCount;</span>
+<span class="nc" id="L52">            debug(&quot;&lt;CONSTRUCT&gt;&quot;, null, null);</span>
+        }
+<span class="nc" id="L54">    }</span>
+
+    @Override
+    public void addCookie(Cookie cookie) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L59">            debug(&quot;addCookie&quot;, cookie.getName(), cookie.toString());</span>
+        }
+<span class="nc" id="L61">        super.addCookie(cookie);</span>
+<span class="nc" id="L62">    }</span>
+
+    @Override
+    public void addDateHeader(String name, long date) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L67">            debug(&quot;addDateHeader&quot;, name, String.valueOf(date));</span>
+        }
+<span class="nc" id="L69">        super.addDateHeader(name, date);</span>
+<span class="nc" id="L70">    }</span>
+
+    @Override
+    public void addHeader(String name, String value) {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L75">            debug(&quot;addHeader&quot;, name, value);</span>
+        }
+<span class="nc" id="L77">        super.addHeader(name, value);</span>
+<span class="nc" id="L78">    }</span>
+
+    @Override
+    public void addIntHeader(String name, int value) {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L83">            debug(&quot;addIntHeader&quot;, name, String.valueOf(value));</span>
+        }
+<span class="nc" id="L85">        super.addIntHeader(name, value);</span>
+<span class="nc" id="L86">    }</span>
+
+    @Override
+    public boolean containsHeader(String name) {
+<span class="nc" id="L90">        return super.containsHeader(name);</span>
+    }
+
+    @SuppressWarnings(&quot;deprecation&quot;)
+    @Override
+    public String encodeRedirectUrl(String url) {
+<span class="nc" id="L96">        return super.encodeRedirectUrl(url);</span>
+    }
+
+    @Override
+    public String encodeRedirectURL(String url) {
+<span class="nc" id="L101">        return super.encodeRedirectURL(url);</span>
+    }
+
+    @Override
+    public void sendError(int sc) throws IOException {
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L107">            debug(&quot;sendError&quot;, String.valueOf(sc), null);</span>
+        }
+<span class="nc" id="L109">        super.sendError(sc);</span>
+<span class="nc" id="L110">    }</span>
+
+    @Override
+    public void sendError(int sc, String msg) throws IOException {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L115">            debug(&quot;sendError&quot;, String.valueOf(sc), msg);</span>
+        }
+<span class="nc" id="L117">        super.sendError(sc, msg);</span>
+<span class="nc" id="L118">    }</span>
+
+    @Override
+    public void sendRedirect(String location) throws IOException {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L123">            debug(&quot;sendRedirect&quot;, location, null);</span>
+        }
+<span class="nc" id="L125">        super.sendRedirect(location);</span>
+<span class="nc" id="L126">    }</span>
+
+    @Override
+    public void setDateHeader(String name, long date) {
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L131">            debug(&quot;setDateHeader&quot;, name, String.valueOf(date));</span>
+        }
+<span class="nc" id="L133">        super.setDateHeader(name, date);</span>
+<span class="nc" id="L134">    }</span>
+
+    @Override
+    public void setHeader(String name, String value) {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L139">            debug(&quot;setHeader&quot;, name, value);</span>
+        }
+<span class="nc" id="L141">        super.setHeader(name, value);</span>
+<span class="nc" id="L142">    }</span>
+
+    @Override
+    public void setIntHeader(String name, int value) {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L147">            debug(&quot;setIntHeader&quot;, name, String.valueOf(value));</span>
+        }
+<span class="nc" id="L149">        super.setIntHeader(name, value);</span>
+<span class="nc" id="L150">    }</span>
+
+    @Override
+    public void setStatus(int sc) {
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L155">            debug(&quot;setStatus&quot;, String.valueOf(sc), null);</span>
+        }
+<span class="nc" id="L157">        super.setStatus(sc);</span>
+<span class="nc" id="L158">    }</span>
+
+    @SuppressWarnings(&quot;deprecation&quot;)
+    @Override
+    public void setStatus(int sc, String msg) {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L164">            debug(&quot;setStatus&quot;, String.valueOf(sc), msg);</span>
+        }
+<span class="nc" id="L166">        super.setStatus(sc, msg);</span>
+<span class="nc" id="L167">    }</span>
+
+    @Override
+    public void flushBuffer() throws IOException {
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L172">            debug(&quot;flushBuffer&quot;, null, null);</span>
+        }
+<span class="nc" id="L174">        super.flushBuffer();</span>
+<span class="nc" id="L175">    }</span>
+
+    @Override
+    public int getBufferSize() {
+        //
+<span class="nc" id="L180">        return super.getBufferSize();</span>
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        //
+<span class="nc" id="L186">        return super.getCharacterEncoding();</span>
+    }
+
+    @Override
+    public Locale getLocale() {
+        //
+<span class="nc" id="L192">        return super.getLocale();</span>
+    }
+
+    @Override
+    public ServletOutputStream getOutputStream() throws IOException {
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L198">            debug(&quot;getOutputStream&quot;, null, null);</span>
+        }
+<span class="nc" id="L200">        return super.getOutputStream();</span>
+    }
+
+    @Override
+    public PrintWriter getWriter() throws IOException {
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L206">            debug(&quot;getWriter&quot;, null, null);</span>
+        }
+<span class="nc" id="L208">        return super.getWriter();</span>
+    }
+
+    @Override
+    public boolean isCommitted() {
+        //
+<span class="nc" id="L214">        return super.isCommitted();</span>
+    }
+
+    @Override
+    public void reset() {
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L220">            debug(&quot;reset&quot;, null, null);</span>
+        }
+<span class="nc" id="L222">        super.reset();</span>
+<span class="nc" id="L223">    }</span>
+
+    /*
+     * public void resetBuffer() { super.resetBuffer(); }
+     */
+
+    @Override
+    public void setBufferSize(int size) {
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L232">            debug(&quot;setBufferSize&quot;, String.valueOf(size), null);</span>
+        }
+<span class="nc" id="L234">        super.setBufferSize(size);</span>
+<span class="nc" id="L235">    }</span>
+
+    @Override
+    public void setContentLength(int len) {
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L240">            debug(&quot;setContentLength&quot;, String.valueOf(len), null);</span>
+        }
+<span class="nc" id="L242">        super.setContentLength(len);</span>
+<span class="nc" id="L243">    }</span>
+
+    @Override
+    public void setContentType(String type) {
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L248">            debug(&quot;setContentType&quot;, type, null);</span>
+        }
+<span class="nc" id="L250">        super.setContentType(type);</span>
+<span class="nc" id="L251">    }</span>
+
+    @Override
+    public void setLocale(Locale locale) {
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (enabled()) {</span>
+<span class="nc" id="L256">            debug(&quot;setBufferSize&quot;, locale.getDisplayName(), null);</span>
+        }
+<span class="nc" id="L258">        super.setLocale(locale);</span>
+<span class="nc" id="L259">    }</span>
+
+    /**
+     * Enabled.
+     *
+     * @return true, if successful
+     */
+    private boolean enabled() {
+<span class="nc" id="L267">        return true;</span>
+    }
+
+    /**
+     * Debug.
+     *
+     * @param methodName
+     *            the method name
+     * @param arg1
+     *            the arg 1
+     * @param arg2
+     *            the arg 2
+     */
+    private void debug(String methodName, String arg1, String arg2) {
+<span class="nc" id="L281">        StringBuilder s = new StringBuilder();</span>
+<span class="nc" id="L282">        s.append(&quot;[debug &quot;);</span>
+<span class="nc" id="L283">        s.append(count);</span>
+<span class="nc" id="L284">        s.append(&quot;] &quot;);</span>
+<span class="nc" id="L285">        s.append(methodName);</span>
+<span class="nc" id="L286">        s.append(&quot;()&quot;);</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">        if (arg1 != null) {</span>
+<span class="nc" id="L288">            s.append(&quot; : '&quot;);</span>
+<span class="nc" id="L289">            s.append(arg1);</span>
+<span class="nc" id="L290">            s.append(&quot;'&quot;);</span>
+        }
+<span class="nc bnc" id="L292" title="All 2 branches missed.">        if (arg2 != null) {</span>
+<span class="nc" id="L293">            s.append(&quot; = '&quot;);</span>
+<span class="nc" id="L294">            s.append(arg2);</span>
+<span class="nc" id="L295">            s.append(&quot;'&quot;);</span>
+        }
+<span class="nc" id="L297">        System.out.println(s);</span>
+<span class="nc" id="L298">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

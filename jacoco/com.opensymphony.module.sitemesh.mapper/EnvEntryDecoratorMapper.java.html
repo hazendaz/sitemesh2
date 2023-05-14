@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnvEntryDecoratorMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">EnvEntryDecoratorMapper.java</span></div><h1>EnvEntryDecoratorMapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        EnvEntryDecoratorMapper
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.mapper;
+
+import com.opensymphony.module.sitemesh.Decorator;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * The EnvEntryDecoratorMapper allows the reference to a web-app environment entry for the decorator name, and falls
+ * back to ConfigDecoratorMapper's behavior if no matching environment entry is found.
+ * &lt;p&gt;
+ * In some cases, it's desirable to allow a deployer, as opposed to a developer, to specify a decorator. In a .WAR file,
+ * this can be very difficult, since decorator mappings are specified in &lt;code&gt;decorators.xml&lt;/code&gt; (more or less).
+ * This mapper corrects that by allowing two types of mapping. If the decorator name is found in an
+ * &lt;code&gt;&amp;lt;env-entry&amp;gt;&lt;/code&gt;, the entry's value is used as the decorator reference.
+ * &lt;p&gt;
+ * Known Issues:
+ * &lt;ol&gt;
+ * &lt;li&gt;It still uses the decorator path (from &lt;code&gt;decorators.xml&lt;/code&gt;). This needs to be corrected for full
+ * functionality. If anyone has a suggestion on how...&lt;/li&gt;
+ * &lt;/ol&gt;
+ *
+ * @author &lt;a href=&quot;mailto:joeo@enigmastation.com&quot;&gt;Joseph B. Ottinger&lt;/a&gt;
+ *
+ * @see com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper
+ */
+<span class="nc" id="L54">public class EnvEntryDecoratorMapper extends ConfigDecoratorMapper {</span>
+
+    /** The Logger. */
+<span class="nc" id="L57">    private static final Logger logger = LoggerFactory.getLogger(EnvEntryDecoratorMapper.class);</span>
+
+    /**
+     * Retrieves the {@link com.opensymphony.module.sitemesh.Decorator} specified by the decorator name. If it's not in
+     * the environment entries of the web application, assume it's a named decorator from &lt;code&gt;decorators.xml&lt;/code&gt;.
+     */
+    @Override
+    public Decorator getNamedDecorator(HttpServletRequest request, String name) {
+<span class="nc" id="L65">        String resourceValue = getStringResource(name);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (resourceValue == null) {</span>
+<span class="nc" id="L67">            return super.getNamedDecorator(request, name);</span>
+        }
+<span class="nc" id="L69">        return new DefaultDecorator(name, resourceValue, null);</span>
+    }
+
+    /**
+     * This pulls a value out of the web-app environment. If the value isn't there, returns null.
+     *
+     * @param name
+     *            the name
+     *
+     * @return the string resource
+     */
+    public static String getStringResource(String name) {
+<span class="nc" id="L81">        String value = null;</span>
+<span class="nc" id="L82">        Context ctx = null;</span>
+        try {
+<span class="nc" id="L84">            ctx = new InitialContext();</span>
+<span class="nc" id="L85">            Object o = ctx.lookup(&quot;java:comp/env/&quot; + name);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (o != null) {</span>
+<span class="nc" id="L87">                value = o.toString();</span>
+            }
+<span class="nc" id="L89">        } catch (NamingException e) {</span>
+<span class="nc" id="L90">            logger.error(&quot;&quot;, e);</span>
+        } finally {
+            try {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                if (ctx != null) {</span>
+<span class="nc" id="L94">                    ctx.close();</span>
+                }
+<span class="nc" id="L96">            } catch (NamingException e) {</span>
+<span class="nc" id="L97">                logger.error(&quot;&quot;, e);</span>
+<span class="nc" id="L98">            }</span>
+        }
+<span class="nc" id="L100">        return value;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">ConfigLoader.java</span></div><h1>ConfigLoader.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        ConfigLoader
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.mapper;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.factory.DefaultFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
+
+/**
+ * The ConfigLoader reads a configuration XML file that contains Decorator definitions (name, url, init-params) and
+ * path-mappings (pattern, name).
+ * &lt;p&gt;
+ * These can then be accessed by the getDecoratorByName() methods and getMappedName() methods respectively.
+ * &lt;p&gt;
+ * The DTD for the configuration file in old (deprecated) format is located at
+ * &lt;a href=&quot;http://www.opensymphony.com/dtds/sitemesh_1_0_decorators.dtd&quot;&gt;
+ * http://www.opensymphony.com/dtds/sitemesh_1_0_decorators.dtd &lt;/a&gt;.
+ * &lt;p&gt;
+ * The DTD for the configuration file in new format is located at
+ * &lt;a href=&quot;http://www.opensymphony.com/dtds/sitemesh_1_5_decorators.dtd&quot;&gt;
+ * http://www.opensymphony.com/dtds/sitemesh_1_5_decorators.dtd &lt;/a&gt;.
+ * &lt;p&gt;
+ * Editing the config file will cause it to be auto-reloaded.
+ * &lt;p&gt;
+ * This class is used by ConfigDecoratorMapper, and uses PathMapper for pattern matching.
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:pathos@pandora.be&quot;&gt;Mathias Bogaert&lt;/a&gt;
+ *
+ * @see com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper
+ * @see com.opensymphony.module.sitemesh.mapper.PathMapper
+ */
+public class ConfigLoader {
+
+    /**
+     * State visibile across threads stored in a single container so that we can efficiently atomically access it with
+     * the guarantee that we wont see a partially loaded configuration in the face of one thread reloading the
+     * configuration while others are trying to read it.
+     */
+<span class="fc" id="L77">    private static class State {</span>
+        /**
+         * Timestamp of the last time we checked for an update to the configuration file used to rate limit the
+         * frequency at which we check for efficiency.
+         */
+<span class="fc" id="L82">        long lastModificationCheck = System.currentTimeMillis();</span>
+
+        /**
+         * Timestamp of the modification time of the configuration file when we generated the state.
+         */
+        long lastModified;
+
+        /**
+         * Whether a thread is currently checking if the configuration file has been modified and potentially reloading
+         * it and therefore others shouldn't attempt the same till it's done.
+         */
+<span class="fc" id="L93">        boolean checking = false;</span>
+
+        /** The decorators. */
+<span class="fc" id="L96">        Map&lt;String, Decorator&gt; decorators = new HashMap&lt;String, Decorator&gt;();</span>
+
+        /** The path mapper. */
+<span class="fc" id="L99">        PathMapper pathMapper = new PathMapper();</span>
+    }
+
+    /**
+     * Mark volatile so that the installation of new versions is guaranteed to be visible across threads.
+     */
+    private volatile State state;
+
+    /** The config file. */
+<span class="pc" id="L108">    private File configFile = null;</span>
+
+    /** The config file name. */
+<span class="pc" id="L111">    private String configFileName = null;</span>
+
+    /** The config. */
+<span class="pc" id="L114">    private Config config = null;</span>
+
+    /**
+     * Create new ConfigLoader using supplied File.
+     *
+     * @param configFile
+     *            the config file
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
+<span class="fc" id="L125">    public ConfigLoader(File configFile) throws ServletException {</span>
+<span class="fc" id="L126">        this.configFile = configFile;</span>
+<span class="fc" id="L127">        this.configFileName = configFile.getName();</span>
+<span class="fc" id="L128">        state = loadConfig();</span>
+<span class="fc" id="L129">    }</span>
+
+    /**
+     * Create new ConfigLoader using supplied filename and config.
+     *
+     * @param configFileName
+     *            the config file name
+     * @param config
+     *            the config
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
+<span class="nc" id="L142">    public ConfigLoader(String configFileName, Config config) throws ServletException {</span>
+<span class="nc" id="L143">        this.config = config;</span>
+<span class="nc" id="L144">        this.configFileName = configFileName;</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (config.getServletContext().getRealPath(configFileName) != null) {</span>
+<span class="nc" id="L146">            this.configFile = new File(config.getServletContext().getRealPath(configFileName));</span>
+        }
+<span class="nc" id="L148">        state = loadConfig();</span>
+<span class="nc" id="L149">    }</span>
+
+    /**
+     * Retrieve Decorator based on name specified in configuration file.
+     *
+     * @param name
+     *            the name
+     *
+     * @return the decorator by name
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
+    public Decorator getDecoratorByName(String name) throws ServletException {
+<span class="fc" id="L163">        return (Decorator) refresh().decorators.get(name);</span>
+    }
+
+    /**
+     * Get name of Decorator mapped to given path.
+     *
+     * @param path
+     *            the path
+     *
+     * @return the mapped name
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
+    public String getMappedName(String path) throws ServletException {
+<span class="fc" id="L178">        return refresh().pathMapper.get(path);</span>
+    }
+
+    /**
+     * Load configuration from file.
+     *
+     * @return the state
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
+    private State loadConfig() throws ServletException {
+        // The new state which we build up and atomically replace the old state
+        // with atomically to avoid other threads seeing partial modifications.
+<span class="fc" id="L192">        State newState = new State();</span>
+        try {
+            // Build a document from the file
+<span class="fc" id="L195">            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L196">            DocumentBuilder builder = factory.newDocumentBuilder();</span>
+
+            Document document;
+<span class="pc bpc" id="L199" title="2 of 4 branches missed.">            if (configFile != null &amp;&amp; configFile.canRead()) {</span>
+                // Keep time we read the file to check if the file was modified
+<span class="fc" id="L201">                newState.lastModified = configFile.lastModified();</span>
+<span class="fc" id="L202">                document = builder.parse(configFile);</span>
+            } else {
+<span class="nc" id="L204">                document = builder.parse(config.getServletContext().getResourceAsStream(configFileName));</span>
+            }
+
+            // Parse the configuration document
+<span class="fc" id="L208">            parseConfig(newState, document);</span>
+
+<span class="fc" id="L210">            return newState;</span>
+<span class="nc" id="L211">        } catch (ParserConfigurationException e) {</span>
+<span class="nc" id="L212">            throw new ServletException(&quot;Could not get XML parser&quot;, e);</span>
+<span class="nc" id="L213">        } catch (IOException e) {</span>
+<span class="nc" id="L214">            throw new ServletException(&quot;Could not read the config file: &quot; + configFileName, e);</span>
+<span class="nc" id="L215">        } catch (SAXException e) {</span>
+<span class="nc" id="L216">            throw new ServletException(&quot;Could not parse the config file: &quot; + configFileName, e);</span>
+<span class="nc" id="L217">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L218">            throw new ServletException(&quot;Could not find the config file: &quot; + configFileName, e);</span>
+        }
+    }
+
+    /**
+     * Parses the config.
+     *
+     * @param newState
+     *            the new state
+     * @param document
+     *            the document
+     */
+    private void parseConfig(State newState, Document document) {
+<span class="fc" id="L231">        Element root = document.getDocumentElement();</span>
+
+        // get the default directory for the decorators
+<span class="fc" id="L234">        String defaultDir = getAttribute(root, &quot;defaultdir&quot;);</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if (defaultDir == null) {</span>
+<span class="nc" id="L236">            defaultDir = getAttribute(root, &quot;defaultDir&quot;);</span>
+        }
+
+        // Get decorators
+<span class="fc" id="L240">        NodeList decoratorNodes = root.getElementsByTagName(&quot;decorator&quot;);</span>
+        Element decoratorElement;
+
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        for (int i = 0; i &lt; decoratorNodes.getLength(); i++) {</span>
+<span class="fc" id="L244">            String name, page, uriPath = null, role = null;</span>
+
+            // get the current decorator element
+<span class="fc" id="L247">            decoratorElement = (Element) decoratorNodes.item(i);</span>
+
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            if (getAttribute(decoratorElement, &quot;name&quot;) != null) {</span>
+                // The new format is used
+<span class="fc" id="L251">                name = getAttribute(decoratorElement, &quot;name&quot;);</span>
+<span class="fc" id="L252">                page = getAttribute(decoratorElement, &quot;page&quot;);</span>
+<span class="fc" id="L253">                uriPath = getAttribute(decoratorElement, &quot;webapp&quot;);</span>
+<span class="fc" id="L254">                role = getAttribute(decoratorElement, &quot;role&quot;);</span>
+
+                // Append the defaultDir
+<span class="pc bpc" id="L257" title="3 of 8 branches missed.">                if (defaultDir != null &amp;&amp; page != null &amp;&amp; page.length() &gt; 0 &amp;&amp; !page.startsWith(&quot;/&quot;)) {</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">                    if (page.charAt(0) == '/') {</span>
+<span class="nc" id="L259">                        page = defaultDir + page;</span>
+                    } else {
+<span class="fc" id="L261">                        page = defaultDir + '/' + page;</span>
+                    }
+                }
+
+                // The uriPath must begin with a slash
+<span class="pc bpc" id="L266" title="2 of 6 branches missed.">                if ((uriPath != null &amp;&amp; uriPath.length() &gt; 0) &amp;&amp; (uriPath.charAt(0) != '/')) {</span>
+<span class="fc" id="L267">                    uriPath = '/' + uriPath;</span>
+                }
+
+                // Get all &lt;pattern&gt;...&lt;/pattern&gt; and &lt;url-pattern&gt;...&lt;/url-pattern&gt; nodes and add a mapping
+<span class="fc" id="L271">                populatePathMapper(newState, decoratorElement.getElementsByTagName(&quot;pattern&quot;), role, name);</span>
+<span class="fc" id="L272">                populatePathMapper(newState, decoratorElement.getElementsByTagName(&quot;url-pattern&quot;), role, name);</span>
+            } else {
+                // NOTE: Deprecated format
+<span class="fc" id="L275">                name = getContainedText(decoratorNodes.item(i), &quot;decorator-name&quot;);</span>
+<span class="fc" id="L276">                page = getContainedText(decoratorNodes.item(i), &quot;resource&quot;);</span>
+                // We have this here because the use of jsp-file is deprecated, but we still want
+                // it to work.
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">                if (page == null) {</span>
+<span class="nc" id="L280">                    page = getContainedText(decoratorNodes.item(i), &quot;jsp-file&quot;);</span>
+                }
+            }
+
+<span class="fc" id="L284">            Map&lt;Object, Object&gt; params = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L286">            NodeList paramNodes = decoratorElement.getElementsByTagName(&quot;init-param&quot;);</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">            for (int ii = 0; ii &lt; paramNodes.getLength(); ii++) {</span>
+<span class="nc" id="L288">                String paramName = getContainedText(paramNodes.item(ii), &quot;param-name&quot;);</span>
+<span class="nc" id="L289">                String paramValue = getContainedText(paramNodes.item(ii), &quot;param-value&quot;);</span>
+<span class="nc" id="L290">                params.put(paramName, paramValue);</span>
+            }
+<span class="fc" id="L292">            storeDecorator(newState, new DefaultDecorator(name, page, uriPath, role, params));</span>
+        }
+
+        // Get (deprecated format) decorator-mappings
+<span class="fc" id="L296">        NodeList mappingNodes = root.getElementsByTagName(&quot;decorator-mapping&quot;);</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        for (int i = 0; i &lt; mappingNodes.getLength(); i++) {</span>
+<span class="fc" id="L298">            Element n = (Element) mappingNodes.item(i);</span>
+<span class="fc" id="L299">            String name = getContainedText(mappingNodes.item(i), &quot;decorator-name&quot;);</span>
+
+            // Get all &lt;url-pattern&gt;...&lt;/url-pattern&gt; nodes and add a mapping
+<span class="fc" id="L302">            populatePathMapper(newState, n.getElementsByTagName(&quot;url-pattern&quot;), null, name);</span>
+        }
+<span class="fc" id="L304">    }</span>
+
+    /**
+     * Populate path mapper.
+     *
+     * @param newState
+     *            the new state
+     * @param patternNodes
+     *            the pattern nodes
+     * @param role
+     *            the role
+     * @param name
+     *            the name
+     */
+    private void populatePathMapper(State newState, NodeList patternNodes, String role, String name) {
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        for (int j = 0; j &lt; patternNodes.getLength(); j++) {</span>
+<span class="fc" id="L320">            Element p = (Element) patternNodes.item(j);</span>
+<span class="fc" id="L321">            Text patternText = (Text) p.getFirstChild();</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">            if (patternText != null) {</span>
+<span class="fc" id="L323">                String pattern = patternText.getData().trim();</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">                if (pattern != null) {</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">                    if (role != null) {</span>
+                        // concatenate name and role to allow more
+                        // than one decorator per role
+<span class="fc" id="L328">                        newState.pathMapper.put(name + role, pattern);</span>
+                    } else {
+<span class="fc" id="L330">                        newState.pathMapper.put(name, pattern);</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L335">    }</span>
+
+    /**
+     * Gets the attribute.
+     *
+     * @param element
+     *            the element
+     * @param name
+     *            the name
+     *
+     * @return the attribute
+     */
+    private static String getAttribute(Element element, String name) {
+<span class="pc bpc" id="L348" title="2 of 6 branches missed.">        if (element != null &amp;&amp; element.getAttribute(name) != null &amp;&amp; !&quot;&quot;.equals(element.getAttribute(name).trim())) {</span>
+<span class="fc" id="L349">            return element.getAttribute(name).trim();</span>
+        }
+<span class="fc" id="L351">        return null;</span>
+    }
+
+    /**
+     * Gets the contained text.
+     *
+     * @param parent
+     *            the parent
+     * @param childTagName
+     *            the child tag name
+     *
+     * @return the contained text
+     */
+    private static String getContainedText(Node parent, String childTagName) {
+        try {
+<span class="fc" id="L366">            Node tag = ((Element) parent).getElementsByTagName(childTagName).item(0);</span>
+<span class="fc" id="L367">            return ((Text) tag.getFirstChild()).getData();</span>
+<span class="nc" id="L368">        } catch (Exception e) {</span>
+<span class="nc" id="L369">            return null;</span>
+        }
+    }
+
+    /**
+     * Store decorator.
+     *
+     * @param newState
+     *            the new state
+     * @param d
+     *            the d
+     */
+    private void storeDecorator(State newState, Decorator d) {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (d.getRole() != null) {</span>
+<span class="fc" id="L383">            newState.decorators.put(d.getName() + d.getRole(), d);</span>
+        } else {
+<span class="fc" id="L385">            newState.decorators.put(d.getName(), d);</span>
+        }
+<span class="fc" id="L387">    }</span>
+
+    /**
+     * Check if configuration file has been updated, and if so, reload.
+     *
+     * @return the state
+     *
+     * @throws ServletException
+     *             the servlet exception
+     */
+    private State refresh() throws ServletException {
+        // Read the current state just once since another thread can swap
+        // another version in at any time.
+<span class="fc" id="L400">        State currentState = state;</span>
+<span class="pc bpc" id="L401" title="1 of 2 branches missed.">        if (configFile == null) {</span>
+<span class="nc" id="L402">            return currentState;</span>
+        }
+
+        // Rate limit the stat'ing of the config file to find its
+        // modification time to once every five seconds to reduce the
+        // number of system calls made. We grab the monitor of currentState
+        // so that we can safely read the values shared across threads and
+        // so that only one thread is performing the modification check at
+        // a time.
+<span class="fc" id="L411">        long current = System.currentTimeMillis();</span>
+        long oldLastModified;
+
+<span class="fc" id="L414">        boolean check = false;</span>
+<span class="fc" id="L415">        synchronized (currentState) {</span>
+<span class="fc" id="L416">            oldLastModified = currentState.lastModified;</span>
+<span class="pc bpc" id="L417" title="2 of 4 branches missed.">            if (!currentState.checking</span>
+                    &amp;&amp; current &gt;= currentState.lastModificationCheck + DefaultFactory.configCheckMillis) {
+<span class="nc" id="L419">                currentState.lastModificationCheck = current;</span>
+<span class="nc" id="L420">                currentState.checking = true;</span>
+<span class="nc" id="L421">                check = true;</span>
+            }
+<span class="fc" id="L423">        }</span>
+
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">        if (check) {</span>
+            // Perform the file stat'ing system call without holding a lock
+            // on the current state.
+<span class="nc" id="L428">            State newState = null;</span>
+            try {
+<span class="nc" id="L430">                long currentLastModified = configFile.lastModified();</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">                if (currentLastModified != oldLastModified) {</span>
+                    // The configuration file has been modified since we last
+                    // read it so reload the configuration without holding a
+                    // lock on the current state and then slam down the new
+                    // state for other threads to see. The State.checking flag
+                    // being set on currentState will prevent other threads
+                    // from attempting to reload the state while we are and
+                    // the new state will have the flag cleared so that we can
+                    // continue checking if the configuration file is modified.
+<span class="nc" id="L440">                    newState = loadConfig();</span>
+<span class="nc" id="L441">                    state = newState;</span>
+<span class="nc" id="L442">                    return newState;</span>
+                }
+            } finally {
+                // In the event of a failure of the modification time check,
+                // or while reloading the configuration file, mark that we're no
+                // longer checking if the modification time or reloading so that
+                // we'll retry.
+<span class="nc bnc" id="L449" title="All 2 branches missed.">                if (newState == null) {</span>
+<span class="nc" id="L450">                    synchronized (currentState) {</span>
+<span class="nc" id="L451">                        currentState.checking = false;</span>
+<span class="nc" id="L452">                    }</span>
+                }
+            }
+
+        }
+<span class="fc" id="L457">        return currentState;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

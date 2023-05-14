@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractDecoratorMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">AbstractDecoratorMapper.java</span></div><h1>AbstractDecoratorMapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        AbstractDecoratorMapper
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.mapper;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.Page;
+
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * Abstract DecoratorMapper implementation for easy creation of new DecoratorMappers.
+ * &lt;p&gt;
+ * Typically, an implementation would override getNamedDecorator() &lt;b&gt;or&lt;/b&gt; getDecorator(). If a Decorator cannot be
+ * returned from either of these, then they should delegate to their superclass.
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ *
+ * @see com.opensymphony.module.sitemesh.DecoratorMapper
+ */
+<span class="nc" id="L44">public abstract class AbstractDecoratorMapper implements DecoratorMapper {</span>
+
+    /** Parent DecoratorMapper. */
+    protected DecoratorMapper parent;
+
+    /** The config. */
+    protected Config config;
+
+    @Override
+    public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
+<span class="nc" id="L54">        this.parent = parent;</span>
+<span class="nc" id="L55">        this.config = config;</span>
+<span class="nc" id="L56">    }</span>
+
+    @Override
+    public Decorator getDecorator(HttpServletRequest request, Page page) {
+<span class="nc" id="L60">        return parent.getDecorator(request, page);</span>
+    }
+
+    @Override
+    public Decorator getNamedDecorator(HttpServletRequest request, String name) {
+<span class="nc" id="L65">        return parent.getNamedDecorator(request, name);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

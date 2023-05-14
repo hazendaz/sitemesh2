@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplyDecoratorTag.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.taglib.page</a> &gt; <span class="el_source">ApplyDecoratorTag.java</span></div><h1>ApplyDecoratorTag.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        ApplyDecoratorTag
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.taglib.page;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.PageParserSelector;
+import com.opensymphony.module.sitemesh.RequestConstants;
+import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
+import com.opensymphony.module.sitemesh.filter.PageRequestWrapper;
+import com.opensymphony.module.sitemesh.filter.PageResponseWrapper;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+
+/**
+ * This tag inserts an external resource as a panel into the current Page.
+ * &lt;p&gt;
+ * The page attribute should point to the panel resource which should expose an entire page (e.g. another JSP file
+ * producing HTML). This attribute can be relative to the page it is being called from or an absolute path from the
+ * context-root.
+ * &lt;p&gt;
+ * &lt;strong&gt;OR&lt;/strong&gt;
+ * &lt;p&gt;
+ * If the page attribute is not specified, the body content is parsed into the
+ * {@link com.opensymphony.module.sitemesh.Page} object and has the {@link com.opensymphony.module.sitemesh.Decorator}
+ * applied.
+ * &lt;p&gt;
+ * The (optional) decorator attribute is the name of the {@link com.opensymphony.module.sitemesh.Decorator} to apply to
+ * the included page. Note that the implementation of {@link com.opensymphony.module.sitemesh.DecoratorMapper} can
+ * overide this.
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ */
+<span class="nc" id="L74">public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstants {</span>
+
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
+
+    /** The page. */
+<span class="nc" id="L80">    private String page = null;</span>
+
+    /** The decorator. */
+<span class="nc" id="L83">    private String decorator = null;</span>
+
+    /** The content type. */
+<span class="nc" id="L86">    private String contentType = null;</span>
+
+    /** The encoding. */
+<span class="nc" id="L89">    private String encoding = null;</span>
+
+    /** The params. */
+<span class="nc" id="L92">    private Map&lt;String, String&gt; params = new HashMap&lt;String, String&gt;(6);</span>
+
+    /** The config. */
+<span class="nc" id="L95">    private Config config = null;</span>
+
+    /** The decorator mapper. */
+<span class="nc" id="L98">    private DecoratorMapper decoratorMapper = null;</span>
+
+    /** The factory. */
+    private Factory factory;
+
+    /**
+     * Tag attribute: URI of page to include. Can be relative to page being called from, or absolute path from
+     * context-root of web-app.
+     *
+     * @param page
+     *            the new page
+     */
+    public void setPage(String page) {
+<span class="nc" id="L111">        this.page = page;</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * Add a parameter to the page. This has a package level access modifier so ParamTag can also call it.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     */
+    void addParam(String name, String value) {
+<span class="nc" id="L123">        params.put(name, value);</span>
+<span class="nc" id="L124">    }</span>
+
+    /**
+     * Tag attribute: If set, this value will override the 'title' property of the page. This is a convenience utility
+     * and is identical to specifing a 'page:param name=title' tag.
+     *
+     * @param title
+     *            the new title
+     */
+    public void setTitle(String title) {
+<span class="nc" id="L134">        addParam(&quot;title&quot;, title);</span>
+<span class="nc" id="L135">    }</span>
+
+    /**
+     * Tag attribute: If set, this value will override the 'id' property of the page. This is a convenience utility and
+     * is identical to specifing a 'page:param name=id' tag.
+     */
+    @Override
+    public void setId(String id) {
+<span class="nc" id="L143">        addParam(&quot;id&quot;, id);</span>
+<span class="nc" id="L144">    }</span>
+
+    /**
+     * Tag attribute: Name of Decorator to apply to Page. This is passed to DecoratorMapper to retrieve appropriate
+     * Decorator. DecoratorMapper may override if needed.
+     *
+     * @param decorator
+     *            the new name
+     *
+     * @see com.opensymphony.module.sitemesh.DecoratorMapper
+     */
+    public void setName(String decorator) {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (decorator != null) {</span>
+<span class="nc" id="L157">            this.decorator = decorator;</span>
+        }
+<span class="nc" id="L159">    }</span>
+
+    /**
+     * Sets the decorator.
+     *
+     * @param decorator
+     *            the new decorator
+     *
+     * @deprecated Use setName() instead.
+     */
+    @Deprecated
+    public void setDecorator(String decorator) {
+<span class="nc" id="L171">        setName(decorator);</span>
+<span class="nc" id="L172">    }</span>
+
+    /**
+     * Sets the content type.
+     *
+     * @param contentType
+     *            the new content type
+     */
+    public void setContentType(String contentType) {
+<span class="nc" id="L181">        this.contentType = contentType;</span>
+<span class="nc" id="L182">    }</span>
+
+    /**
+     * Sets the encoding.
+     *
+     * @param encoding
+     *            the new encoding
+     */
+    public void setEncoding(String encoding) {
+<span class="nc" id="L191">        this.encoding = encoding;</span>
+<span class="nc" id="L192">    }</span>
+
+    @Override
+    public int doStartTag() {
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (config == null) {</span>
+            // set context if not already set
+<span class="nc" id="L198">            config = new Config(pageContext.getServletConfig());</span>
+<span class="nc" id="L199">            factory = Factory.getInstance(config);</span>
+<span class="nc" id="L200">            decoratorMapper = factory.getDecoratorMapper();</span>
+        }
+        // return page == null ? EVAL_BODY_BUFFERED : SKIP_BODY;
+<span class="nc" id="L203">        return EVAL_BODY_BUFFERED;</span>
+    }
+
+    /** Ensure that external page contents are included in bodycontent. */
+    @Override
+    public int doAfterBody() throws JspException {
+<span class="nc" id="L209">        return SKIP_BODY;</span>
+    }
+
+    /** Standard taglib method: apply decorator to page. */
+    @Override
+    public int doEndTag() throws JspException {
+        try {
+            // if composite decorator, remember last page
+<span class="nc" id="L217">            Page oldPage = (Page) pageContext.getRequest().getAttribute(PAGE);</span>
+
+            // parse bodycontent into Page object
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            PageParser parser = getParserSelector().getPageParser(contentType != null ? contentType : &quot;text/html&quot;);</span>
+            Page pageObj;
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            if (page == null) {</span>
+                // inline content
+<span class="nc bnc" id="L225" title="All 2 branches missed.">                if (bodyContent != null) {</span>
+                    // Would be nice if we could do our own buffering...
+<span class="nc" id="L227">                    SitemeshBufferWriter sitemeshWriter = new SitemeshBufferWriter();</span>
+<span class="nc" id="L228">                    bodyContent.writeOut(sitemeshWriter);</span>
+<span class="nc" id="L229">                    pageObj = parser.parse(sitemeshWriter.getSitemeshBuffer());</span>
+<span class="nc" id="L230">                } else {</span>
+<span class="nc" id="L231">                    pageObj = parser.parse(new DefaultSitemeshBuffer(new char[] {}));</span>
+                }
+<span class="nc bnc" id="L233" title="All 4 branches missed.">            } else if (page.startsWith(&quot;http://&quot;) || page.startsWith(&quot;https://&quot;)) {</span>
+                try {
+<span class="nc" id="L235">                    URL url = new URL(page);</span>
+<span class="nc" id="L236">                    URLConnection urlConn = url.openConnection();</span>
+<span class="nc" id="L237">                    urlConn.setUseCaches(true);</span>
+
+<span class="nc" id="L239">                    try (BufferedReader in = new BufferedReader(</span>
+<span class="nc" id="L240">                            new InputStreamReader(urlConn.getInputStream(), Charset.forName(encoding)));</span>
+<span class="nc" id="L241">                            SitemeshBufferWriter sitemeshWriter = new SitemeshBufferWriter()) {</span>
+<span class="nc" id="L242">                        char[] buf = new char[1000];</span>
+                        for (;;) {
+<span class="nc" id="L244">                            int moved = in.read(buf);</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">                            if (moved &lt; 0) {</span>
+<span class="nc" id="L246">                                break;</span>
+                            }
+<span class="nc" id="L248">                            sitemeshWriter.write(buf, 0, moved);</span>
+<span class="nc" id="L249">                        }</span>
+<span class="nc" id="L250">                        pageObj = parser.parse(sitemeshWriter.getSitemeshBuffer());</span>
+                    }
+<span class="nc" id="L252">                } catch (IOException e) {</span>
+<span class="nc" id="L253">                    throw new JspException(e);</span>
+<span class="nc" id="L254">                }</span>
+            } else {
+                // external content
+<span class="nc" id="L257">                String fullPath = page;</span>
+<span class="nc bnc" id="L258" title="All 4 branches missed.">                if (fullPath.length() &gt; 0 &amp;&amp; fullPath.charAt(0) != '/') {</span>
+<span class="nc" id="L259">                    HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();</span>
+
+                    // find absolute path if relative supplied
+<span class="nc" id="L262">                    String thisPath = request.getServletPath();</span>
+
+                    // check if it did not return null (could occur when the servlet container
+                    // does not use a servlet to serve the requested resouce)
+<span class="nc bnc" id="L266" title="All 2 branches missed.">                    if (thisPath == null) {</span>
+<span class="nc" id="L267">                        String requestURI = request.getRequestURI();</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                        if (request.getPathInfo() != null) {</span>
+                            // strip the pathInfo from the requestURI
+<span class="nc" id="L270">                            thisPath = requestURI.substring(0, requestURI.indexOf(request.getPathInfo()));</span>
+                        } else {
+<span class="nc" id="L272">                            thisPath = requestURI;</span>
+                        }
+                    }
+
+<span class="nc" id="L276">                    fullPath = thisPath.substring(0, thisPath.lastIndexOf('/') + 1) + fullPath;</span>
+                    int dotdot;
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                    while ((dotdot = fullPath.indexOf(&quot;..&quot;)) &gt; -1) {</span>
+<span class="nc" id="L279">                        int prevSlash = fullPath.lastIndexOf('/', dotdot - 2);</span>
+<span class="nc" id="L280">                        fullPath = fullPath.substring(0, prevSlash) + fullPath.substring(dotdot + 2);</span>
+<span class="nc" id="L281">                    }</span>
+                }
+
+                // include page using filter response
+<span class="nc" id="L285">                RequestDispatcher rd = pageContext.getServletContext().getRequestDispatcher(fullPath);</span>
+<span class="nc" id="L286">                PageRequestWrapper pageRequest = new PageRequestWrapper((HttpServletRequest) pageContext.getRequest());</span>
+<span class="nc" id="L287">                PageResponseWrapper pageResponse = new PageResponseWrapper(</span>
+<span class="nc" id="L288">                        (HttpServletResponse) pageContext.getResponse(), factory);</span>
+
+<span class="nc bnc" id="L290" title="All 2 branches missed.">                StringBuilder sb = new StringBuilder(contentType != null ? contentType : &quot;text/html&quot;);</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">                if (encoding != null) {</span>
+<span class="nc" id="L292">                    sb.append(&quot;;charset=&quot;).append(encoding);</span>
+                }
+<span class="nc" id="L294">                pageResponse.setContentType(sb.toString());</span>
+
+                // if rd == null, then the panel was not found, but this isn't correct, so we need to spit out
+                // something appropriate. What this is, well...I don't know yet.
+<span class="nc bnc" id="L298" title="All 2 branches missed.">                if (rd == null) {</span>
+<span class="nc" id="L299">                    throw new ApplyDecoratorException(</span>
+                            &quot;The specified resource in applyDecorator tag (&quot; + fullPath + &quot;) was not found.&quot;);
+                }
+<span class="nc" id="L302">                rd.include(pageRequest, pageResponse);</span>
+<span class="nc" id="L303">                pageObj = pageResponse.getPage();</span>
+            }
+
+            // If pageObj == null, then the panel source had some weird error in
+            // it. Stop writing bugs like this. They're ugly and they make you smell funny.
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            if (pageObj == null) {</span>
+<span class="nc" id="L309">                throw new ApplyDecoratorException(page + &quot; did not create a valid page to decorate.&quot;);</span>
+            }
+
+            // add extra params to Page
+<span class="nc" id="L313">            Iterator&lt;String&gt; paramKeys = params.keySet().iterator();</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">            while (paramKeys.hasNext()) {</span>
+<span class="nc" id="L315">                String k = (String) paramKeys.next();</span>
+<span class="nc" id="L316">                String v = (String) params.get(k);</span>
+<span class="nc" id="L317">                pageObj.addProperty(k, v);</span>
+<span class="nc" id="L318">            }</span>
+
+            // get decorator
+<span class="nc bnc" id="L321" title="All 2 branches missed.">            if (decorator == null) {</span>
+<span class="nc" id="L322">                decorator = &quot;&quot;;</span>
+            }
+<span class="nc" id="L324">            pageObj.setRequest((HttpServletRequest) pageContext.getRequest());</span>
+<span class="nc" id="L325">            pageContext.getRequest().setAttribute(DECORATOR, decorator);</span>
+<span class="nc" id="L326">            Decorator d = decoratorMapper.getDecorator((HttpServletRequest) pageContext.getRequest(), pageObj);</span>
+<span class="nc" id="L327">            pageContext.getRequest().removeAttribute(DECORATOR);</span>
+
+            // apply decorator
+<span class="nc bnc" id="L330" title="All 4 branches missed.">            if ((d == null) || (d.getPage() == null)) {</span>
+<span class="nc" id="L331">                throw new JspException(&quot;Cannot locate inline Decorator: &quot; + decorator);</span>
+            }
+<span class="nc" id="L333">            pageContext.getRequest().setAttribute(PAGE, pageObj);</span>
+<span class="nc" id="L334">            pageContext.include(d.getPage());</span>
+
+            // clean up
+<span class="nc" id="L337">            pageContext.getRequest().setAttribute(PAGE, oldPage);</span>
+<span class="nc" id="L338">            params.clear(); // params need to be cleared between invocations - SIM-191</span>
+<span class="nc" id="L339">        } catch (IOException | ServletException e) {</span>
+<span class="nc" id="L340">            throw new JspException(e);</span>
+<span class="nc" id="L341">        } catch (ApplyDecoratorException e) {</span>
+            try {
+<span class="nc" id="L343">                pageContext.getOut().println(e.getMessage());</span>
+<span class="nc" id="L344">            } catch (IOException ioe) {</span>
+<span class="nc" id="L345">                System.err.println(&quot;IOException thrown in applyDecorator tag: &quot; + e.toString());</span>
+<span class="nc" id="L346">            }</span>
+<span class="nc" id="L347">        }</span>
+<span class="nc" id="L348">        return EVAL_PAGE;</span>
+    }
+
+    /**
+     * Gets the parser selector.
+     *
+     * @return the parser selector
+     */
+    private PageParserSelector getParserSelector() {
+<span class="nc" id="L357">        return Factory.getInstance(config);</span>
+    }
+
+    /**
+     * The Class ApplyDecoratorException.
+     */
+    class ApplyDecoratorException extends Exception {
+
+        /** The Constant serialVersionUID. */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Instantiates a new apply decorator exception.
+         *
+         * @param s
+         *            the s
+         */
+<span class="nc" id="L374">        public ApplyDecoratorException(String s) {</span>
+<span class="nc" id="L375">            super(s);</span>
+<span class="nc" id="L376">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SiteMeshFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.sitemesh.webapp</a> &gt; <span class="el_source">SiteMeshFilter.java</span></div><h1>SiteMeshFilter.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.sitemesh.webapp;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.sitemesh.Content;
+import com.opensymphony.sitemesh.ContentProcessor;
+import com.opensymphony.sitemesh.Decorator;
+import com.opensymphony.sitemesh.DecoratorSelector;
+import com.opensymphony.sitemesh.compatability.DecoratorMapper2DecoratorSelector;
+import com.opensymphony.sitemesh.compatability.PageParser2ContentProcessor;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Core Filter for integrating SiteMesh into a Java web application.
+ *
+ * @author Joe Walnes
+ * @author Scott Farquhar
+ *
+ * @since SiteMesh 3
+ */
+<span class="nc" id="L45">public class SiteMeshFilter implements Filter {</span>
+
+    /** The filter config. */
+    private FilterConfig filterConfig;
+
+    /** The container tweaks. */
+    private ContainerTweaks containerTweaks;
+
+    /** The Constant ALREADY_APPLIED_KEY. */
+    private static final String ALREADY_APPLIED_KEY = &quot;com.opensymphony.sitemesh.APPLIED_ONCE&quot;;
+
+    @Override
+    public void init(FilterConfig filterConfig) {
+<span class="nc" id="L58">        this.filterConfig = filterConfig;</span>
+<span class="nc" id="L59">        containerTweaks = new ContainerTweaks();</span>
+<span class="nc" id="L60">    }</span>
+
+    @Override
+    public void destroy() {
+<span class="nc" id="L64">        filterConfig = null;</span>
+<span class="nc" id="L65">        containerTweaks = null;</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * Main method of the Filter.
+     * &lt;p&gt;
+     * Checks if the Filter has been applied this request. If not, parses the page and applies
+     * {@link com.opensymphony.module.sitemesh.Decorator} (if found).
+     */
+    @Override
+    public void doFilter(ServletRequest rq, ServletResponse rs, FilterChain chain)
+            throws IOException, ServletException {
+
+<span class="nc" id="L78">        HttpServletRequest request = (HttpServletRequest) rq;</span>
+<span class="nc" id="L79">        HttpServletResponse response = (HttpServletResponse) rs;</span>
+<span class="nc" id="L80">        ServletContext servletContext = filterConfig.getServletContext();</span>
+
+<span class="nc" id="L82">        SiteMeshWebAppContext webAppContext = new SiteMeshWebAppContext(request, response, servletContext);</span>
+
+<span class="nc" id="L84">        ContentProcessor contentProcessor = initContentProcessor(webAppContext);</span>
+<span class="nc" id="L85">        DecoratorSelector decoratorSelector = initDecoratorSelector(webAppContext);</span>
+
+<span class="nc bnc" id="L87" title="All 4 branches missed.">        if (filterAlreadyAppliedForRequest(request) || !contentProcessor.handles(webAppContext)) {</span>
+            // Optimization: If the content doesn't need to be processed, bypass SiteMesh.
+<span class="nc" id="L89">            chain.doFilter(request, response);</span>
+<span class="nc" id="L90">            return;</span>
+        }
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (containerTweaks.shouldAutoCreateSession()) {</span>
+            // Some containers (such as Tomcat 4) will not allow sessions to be created in the decorator.
+            // (i.e after the response has been committed).
+<span class="nc" id="L96">            request.getSession(true);</span>
+        }
+
+        try {
+
+<span class="nc" id="L101">            Content content = obtainContent(contentProcessor, webAppContext, request, response, chain);</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (content == null) {</span>
+<span class="nc" id="L104">                request.setAttribute(ALREADY_APPLIED_KEY, null);</span>
+<span class="nc" id="L105">                return;</span>
+            }
+
+<span class="nc" id="L108">            Decorator decorator = decoratorSelector.selectDecorator(content, webAppContext);</span>
+<span class="nc" id="L109">            decorator.render(content, webAppContext);</span>
+
+<span class="nc" id="L111">        } catch (IllegalStateException e) {</span>
+            // Some containers (such as WebLogic) throw an IllegalStateException when an error page is served.
+            // It may be ok to ignore this. However, for safety it is propegated if possible.
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (!containerTweaks.shouldIgnoreIllegalStateExceptionOnErrorPage()) {</span>
+<span class="nc" id="L115">                throw e;</span>
+            }
+<span class="nc" id="L117">        } catch (RuntimeException e) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (containerTweaks.shouldLogUnhandledExceptions()) {</span>
+                // Some containers (such as Tomcat 4) swallow RuntimeExceptions in filters.
+<span class="nc" id="L120">                servletContext.log(&quot;Unhandled exception occurred whilst decorating page&quot;, e);</span>
+            }
+<span class="nc" id="L122">            throw e;</span>
+<span class="nc" id="L123">        } catch (ServletException e) {</span>
+<span class="nc" id="L124">            request.setAttribute(ALREADY_APPLIED_KEY, null);</span>
+<span class="nc" id="L125">            throw e;</span>
+<span class="nc" id="L126">        }</span>
+
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Inits the content processor.
+     *
+     * @param webAppContext
+     *            the web app context
+     *
+     * @return the content processor
+     */
+    protected ContentProcessor initContentProcessor(SiteMeshWebAppContext webAppContext) {
+        // TODO: Remove heavy coupling on horrible SM2 Factory
+<span class="nc" id="L140">        Factory factory = Factory.getInstance(new Config(filterConfig));</span>
+<span class="nc" id="L141">        factory.refresh();</span>
+<span class="nc" id="L142">        return new PageParser2ContentProcessor(factory);</span>
+    }
+
+    /**
+     * Inits the decorator selector.
+     *
+     * @param webAppContext
+     *            the web app context
+     *
+     * @return the decorator selector
+     */
+    protected DecoratorSelector initDecoratorSelector(SiteMeshWebAppContext webAppContext) {
+        // TODO: Remove heavy coupling on horrible SM2 Factory
+<span class="nc" id="L155">        Factory factory = Factory.getInstance(new Config(filterConfig));</span>
+<span class="nc" id="L156">        factory.refresh();</span>
+<span class="nc" id="L157">        return new DecoratorMapper2DecoratorSelector(factory.getDecoratorMapper());</span>
+    }
+
+    /**
+     * Continue in filter-chain, writing all content to buffer and parsing into returned
+     * {@link com.opensymphony.module.sitemesh.Page} object. If {@link com.opensymphony.module.sitemesh.Page} is not
+     * parseable, null is returned.
+     *
+     * @param contentProcessor
+     *            the content processor
+     * @param webAppContext
+     *            the web app context
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param chain
+     *            the chain
+     *
+     * @return the content
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws ServletException
+     *             the servlet exception
+     */
+    private Content obtainContent(ContentProcessor contentProcessor, SiteMeshWebAppContext webAppContext,
+            HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+<span class="nc" id="L187">        ContentBufferingResponse contentBufferingResponse = new ContentBufferingResponse(response, contentProcessor,</span>
+                webAppContext);
+<span class="nc" id="L189">        chain.doFilter(request, contentBufferingResponse);</span>
+        // TODO: check if another servlet or filter put a page object in the request
+        // Content result = request.getAttribute(PAGE);
+        // if (result == null) {
+        // // parse the page
+        // result = pageResponse.getPage();
+        // }
+<span class="nc" id="L196">        webAppContext.setUsingStream(contentBufferingResponse.isUsingStream());</span>
+<span class="nc" id="L197">        return contentBufferingResponse.getContent();</span>
+    }
+
+    /**
+     * Filter already applied for request.
+     *
+     * @param request
+     *            the request
+     *
+     * @return true, if successful
+     */
+    private boolean filterAlreadyAppliedForRequest(HttpServletRequest request) {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (request.getAttribute(ALREADY_APPLIED_KEY) == Boolean.TRUE) {</span>
+<span class="nc" id="L210">            return true;</span>
+        }
+<span class="nc" id="L212">        request.setAttribute(ALREADY_APPLIED_KEY, Boolean.TRUE);</span>
+<span class="nc" id="L213">        return false;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

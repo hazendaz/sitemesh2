@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>RegexReplacementTextFilterTest xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../testapidocs/com/opensymphony/module/sitemesh/html/rules/RegexReplacementTextFilterTest.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * sitemesh2 (<a href="https://github.com/hazendaz/sitemesh2)" target="alexandria_uri">https://github.com/hazendaz/sitemesh2)</a></em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2023 Hazendaz.</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * All rights reserved. This program and the accompanying materials</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * are made available under the terms of The Apache Software License,</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * Version 2.0 which accompanies this distribution, and is available at</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * <a href="https://www.apache.org/licenses/LICENSE-2.0.txt" target="alexandria_uri">https://www.apache.org/licenses/LICENSE-2.0.txt</a></em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * Contributors:</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *     Hazendaz (Jeremy Landis).</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">package</strong> com.opensymphony.module.sitemesh.html.rules;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> com.opensymphony.module.sitemesh.SitemeshBuffer;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.opensymphony.module.sitemesh.html.HTMLProcessor;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * The Class RegexReplacementTextFilterTest.</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="RegexReplacementTextFilterTest" href="../../../../../../com/opensymphony/module/sitemesh/html/rules/RegexReplacementTextFilterTest.html#RegexReplacementTextFilterTest">RegexReplacementTextFilterTest</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <em class="jxr_javadoccomment">/** The body. */</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">private</strong> SitemeshBufferFragment.Builder body;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">     * Creates the processor.</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">     * @param input</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">     *            the input</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">     * @return the HTML processor</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> HTMLProcessor createProcessor(String input) {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          SitemeshBuffer buffer = <strong class="jxr_keyword">new</strong> DefaultSitemeshBuffer(input.toCharArray());
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          body = SitemeshBufferFragment.builder().setBuffer(buffer);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> HTMLProcessor(buffer, body);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">     * Test replaces text content matched by regular expression.</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">     * @throws IOException</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment">     *             Signals that an I/O exception has occurred.</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      @Test
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testReplacesTextContentMatchedByRegularExpression() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          HTMLProcessor processor = createProcessor(<span class="jxr_string">"&lt;hello&gt;Today is DATE so hi&lt;/hello&gt;"</span>);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          processor.addTextFilter(<strong class="jxr_keyword">new</strong> RegexReplacementTextFilter(<span class="jxr_string">"DATE"</span>, <span class="jxr_string">"1-jan-2009"</span>));
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          processor.process();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello&gt;Today is 1-jan-2009 so hi&lt;/hello&gt;"</span>, body.build().getStringContent());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">     * Test allows matched group to be used in subsitution.</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">     * @throws IOException</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">     *             Signals that an I/O exception has occurred.</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      @Test
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAllowsMatchedGroupToBeUsedInSubsitution() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          HTMLProcessor processor = createProcessor(<span class="jxr_string">"&lt;hello&gt;I think JIRA:SIM-1234 is the way forward&lt;/hello&gt;"</span>);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          processor.addTextFilter(<strong class="jxr_keyword">new</strong> RegexReplacementTextFilter(<span class="jxr_string">"JIRA:([A-Z]+&#92;&#92;-[0-9]+)"</span>,
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  <span class="jxr_string">"&lt;a href='http://jira.opensymhony.com/browse/$1'&gt;$1&lt;/a&gt;"</span>));
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          processor.process();
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          Assert.assertEquals(
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                  <span class="jxr_string">"&lt;hello&gt;I think &lt;a href='http://jira.opensymhony.com/browse/SIM-1234'&gt;SIM-1234&lt;/a&gt; is the way forward&lt;/hello&gt;"</span>,
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                  body.build().getStringContent());
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2011&#x2013;2023 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
+</body>
+</html>

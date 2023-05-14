@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OutputConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.util</a> &gt; <span class="el_source">OutputConverter.java</span></div><h1>OutputConverter.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.util;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * A converter from one character type to another
+ * &lt;p&gt;
+ * This class is not threadsafe.
+ */
+<span class="nc" id="L28">public class OutputConverter {</span>
+    /**
+     * Resin versions 2.1.12 and previously have encoding problems for internationalisation.
+     * &lt;p&gt;
+     * This is fixed in Resin 2.1.13. Once 2.1.13 is used more widely, this parameter (and class) can be removed.
+     */
+    public static final String WORK_AROUND_RESIN_I18N_BUG = &quot;sitemesh.resin.i18n.workaround&quot;;
+
+    /**
+     * Gets the writer.
+     *
+     * @param out
+     *            the out
+     *
+     * @return the writer
+     */
+    public static Writer getWriter(Writer out) {
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (&quot;true&quot;.equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG))) {</span>
+<span class="nc" id="L46">            return new ResinWriter(out);</span>
+        }
+<span class="nc" id="L48">        return out;</span>
+    }
+
+    /**
+     * Convert.
+     *
+     * @param inputString
+     *            the input string
+     *
+     * @return the string
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public static String convert(String inputString) throws IOException {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (&quot;true&quot;.equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG))) {</span>
+<span class="nc" id="L64">            StringWriter sr = new StringWriter();</span>
+<span class="nc" id="L65">            resinConvert(inputString, sr);</span>
+<span class="nc" id="L66">            return sr.getBuffer().toString();</span>
+        }
+<span class="nc" id="L68">        return inputString;</span>
+    }
+
+    /**
+     * To get internationalised characters to work on Resin, some conversions need to take place.
+     */
+    static class ResinWriter extends Writer {
+
+        /** The target. */
+        private final Writer target;
+
+        /** The buffer. */
+<span class="nc" id="L80">        private final CharArrayWriter buffer = new CharArrayWriter();</span>
+
+        /**
+         * Instantiates a new resin writer.
+         *
+         * @param target
+         *            the target
+         */
+<span class="nc" id="L88">        public ResinWriter(Writer target) {</span>
+<span class="nc" id="L89">            this.target = target;</span>
+<span class="nc" id="L90">        }</span>
+
+        @Override
+        public void close() throws IOException {
+<span class="nc" id="L94">            flush();</span>
+<span class="nc" id="L95">        }</span>
+
+        @Override
+        public void flush() throws IOException {
+<span class="nc" id="L99">            resinConvert(buffer.toString(), target);</span>
+<span class="nc" id="L100">            buffer.reset();</span>
+<span class="nc" id="L101">        }</span>
+
+        @Override
+        public void write(char cbuf[], int off, int len) throws IOException {
+<span class="nc" id="L105">            buffer.write(cbuf, off, len);</span>
+<span class="nc" id="L106">            flush();</span>
+<span class="nc" id="L107">        }</span>
+    }
+
+    /**
+     * Resin convert.
+     *
+     * @param inputString
+     *            the input string
+     * @param writer
+     *            the writer
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private static void resinConvert(String inputString, Writer writer) throws IOException {
+        // does this need to be made configurable? Or are these two always correct?
+<span class="nc" id="L123">        InputStreamReader reader = new InputStreamReader(</span>
+<span class="nc" id="L124">                new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8)), StandardCharsets.ISO_8859_1);</span>
+        int i;
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        while ((i = reader.read()) != -1) {</span>
+<span class="nc" id="L127">            writer.write(i);</span>
+        }
+<span class="nc" id="L129">        writer.flush();</span>
+<span class="nc" id="L130">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

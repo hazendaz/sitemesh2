@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PageParser2ContentProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.sitemesh.compatability</a> &gt; <span class="el_source">PageParser2ContentProcessor.java</span></div><h1>PageParser2ContentProcessor.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.sitemesh.compatability;
+
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.filter.HttpContentType;
+import com.opensymphony.sitemesh.Content;
+import com.opensymphony.sitemesh.ContentProcessor;
+import com.opensymphony.sitemesh.SiteMeshContext;
+import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * Adapts a SiteMesh 2 {@link PageParser} to a SiteMesh 3 {@link ContentProcessor}.
+ *
+ * @author Joe Walnes
+ *
+ * @since SiteMesh 3
+ */
+public class PageParser2ContentProcessor implements ContentProcessor {
+
+    /** The factory. */
+    private final Factory factory;
+
+    /**
+     * Instantiates a new page parser 2 content processor.
+     *
+     * @param factory
+     *            the factory
+     */
+<span class="nc" id="L49">    public PageParser2ContentProcessor(Factory factory) {</span>
+<span class="nc" id="L50">        this.factory = factory;</span>
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Handles.
+     *
+     * @param context
+     *            the context
+     *
+     * @return true, if successful
+     */
+    @Override
+    public boolean handles(SiteMeshContext context) {
+<span class="nc" id="L63">        SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        return !factory.isPathExcluded(extractRequestPath(webAppContext.getRequest()));</span>
+    }
+
+    /**
+     * Extract request path.
+     *
+     * @param request
+     *            the request
+     *
+     * @return the string
+     */
+    private String extractRequestPath(HttpServletRequest request) {
+<span class="nc" id="L76">        String servletPath = request.getServletPath();</span>
+<span class="nc" id="L77">        String pathInfo = request.getPathInfo();</span>
+<span class="nc" id="L78">        String query = request.getQueryString();</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">        return (servletPath == null ? &quot;&quot; : servletPath) + (pathInfo == null ? &quot;&quot; : pathInfo)</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                + (query == null ? &quot;&quot; : &quot;?&quot; + query);</span>
+    }
+
+    @Override
+    public boolean handles(String contentType) {
+<span class="nc" id="L85">        return factory.shouldParsePage(contentType);</span>
+    }
+
+    /**
+     * Builds the.
+     *
+     * @param buffer
+     *            the buffer
+     * @param context
+     *            the context
+     *
+     * @return the content
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    @Override
+    public Content build(SitemeshBuffer buffer, SiteMeshContext context) throws IOException {
+<span class="nc" id="L103">        HttpContentType httpContentType = new HttpContentType(context.getContentType());</span>
+<span class="nc" id="L104">        PageParser pageParser = factory.getPageParser(httpContentType.getType());</span>
+<span class="nc" id="L105">        Page page = pageParser.parse(buffer);</span>
+<span class="nc" id="L106">        return new HTMLPage2Content((HTMLPage) page);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

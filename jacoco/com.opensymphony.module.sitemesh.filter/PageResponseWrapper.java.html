@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PageResponseWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.filter</a> &gt; <span class="el_source">PageResponseWrapper.java</span></div><h1>PageResponseWrapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/* This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file. */
+package com.opensymphony.module.sitemesh.filter;
+
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParserSelector;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+/**
+ * Implementation of HttpServletResponseWrapper that captures page data instead of sending to the writer.
+ * &lt;p&gt;
+ * Should be used in filter-chains or when forwarding/including pages using a RequestDispatcher.
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:scott@atlassian.com&quot;&gt;Scott Farquhar&lt;/a&gt;
+ */
+public class PageResponseWrapper extends HttpServletResponseWrapper {
+
+    /** The routable print writer. */
+    private final RoutablePrintWriter routablePrintWriter;
+
+    /** The routable servlet output stream. */
+    private final RoutableServletOutputStream routableServletOutputStream;
+
+    /** The parser selector. */
+    private final PageParserSelector parserSelector;
+
+    /** The buffer. */
+    private Buffer buffer;
+
+    /** The aborted. */
+    private boolean aborted;
+
+    /** The parseable page. */
+    private boolean parseablePage;
+
+    /**
+     * Instantiates a new page response wrapper.
+     *
+     * @param response
+     *            the response
+     * @param parserSelector
+     *            the parser selector
+     */
+    public PageResponseWrapper(final HttpServletResponse response, PageParserSelector parserSelector) {
+<span class="nc" id="L67">        super(response);</span>
+<span class="nc" id="L68">        this.parserSelector = parserSelector;</span>
+
+<span class="nc" id="L70">        routablePrintWriter = new RoutablePrintWriter(response::getWriter);</span>
+<span class="nc" id="L71">        routableServletOutputStream = new RoutableServletOutputStream(response::getOutputStream);</span>
+
+<span class="nc" id="L73">    }</span>
+
+    /**
+     * Set the content-type of the request and store it so it can be passed to the
+     * {@link com.opensymphony.module.sitemesh.PageParser}.
+     */
+    @Override
+    public void setContentType(String type) {
+<span class="nc" id="L81">        super.setContentType(type);</span>
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (type != null) {</span>
+<span class="nc" id="L84">            HttpContentType httpContentType = new HttpContentType(type);</span>
+
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (parserSelector.shouldParsePage(httpContentType.getType())) {</span>
+<span class="nc" id="L87">                activateSiteMesh(httpContentType.getType(), httpContentType.getEncoding());</span>
+            } else {
+<span class="nc" id="L89">                deactivateSiteMesh();</span>
+            }
+        }
+
+<span class="nc" id="L93">    }</span>
+
+    /**
+     * Activate site mesh.
+     *
+     * @param contentType
+     *            the content type
+     * @param encoding
+     *            the encoding
+     */
+    public void activateSiteMesh(String contentType, String encoding) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (parseablePage) {</span>
+<span class="nc" id="L105">            return; // already activated</span>
+        }
+<span class="nc" id="L107">        buffer = new Buffer(parserSelector.getPageParser(contentType), encoding);</span>
+<span class="nc" id="L108">        routablePrintWriter.updateDestination(buffer::getWriter);</span>
+<span class="nc" id="L109">        routableServletOutputStream.updateDestination(buffer::getOutputStream);</span>
+<span class="nc" id="L110">        parseablePage = true;</span>
+<span class="nc" id="L111">    }</span>
+
+    /**
+     * Deactivate site mesh.
+     */
+    private void deactivateSiteMesh() {
+<span class="nc" id="L117">        parseablePage = false;</span>
+<span class="nc" id="L118">        buffer = null;</span>
+<span class="nc" id="L119">        routablePrintWriter.updateDestination(() -&gt; getResponse().getWriter());</span>
+<span class="nc" id="L120">        routableServletOutputStream.updateDestination(() -&gt; getResponse().getOutputStream());</span>
+<span class="nc" id="L121">    }</span>
+
+    /**
+     * Prevent content-length being set if page is parseable.
+     */
+    @Override
+    public void setContentLength(int contentLength) {
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (!parseablePage) {</span>
+<span class="nc" id="L129">            super.setContentLength(contentLength);</span>
+        }
+<span class="nc" id="L131">    }</span>
+
+    /**
+     * Prevent buffer from being flushed if this is a page being parsed.
+     */
+    @Override
+    public void flushBuffer() throws IOException {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (!parseablePage) {</span>
+<span class="nc" id="L139">            super.flushBuffer();</span>
+        }
+<span class="nc" id="L141">    }</span>
+
+    /**
+     * Prevent content-length being set if page is parseable.
+     */
+    @Override
+    public void setHeader(String name, String value) {
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (name.equalsIgnoreCase(&quot;content-type&quot;)) { // ensure ContentType is always set through setContentType()</span>
+<span class="nc" id="L149">            setContentType(value);</span>
+<span class="nc bnc" id="L150" title="All 4 branches missed.">        } else if (!parseablePage || !name.equalsIgnoreCase(&quot;content-length&quot;)) {</span>
+<span class="nc" id="L151">            super.setHeader(name, value);</span>
+        }
+<span class="nc" id="L153">    }</span>
+
+    /**
+     * Prevent content-length being set if page is parseable.
+     */
+    @Override
+    public void addHeader(String name, String value) {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (name.equalsIgnoreCase(&quot;content-type&quot;)) { // ensure ContentType is always set through setContentType()</span>
+<span class="nc" id="L161">            setContentType(value);</span>
+<span class="nc bnc" id="L162" title="All 4 branches missed.">        } else if (!parseablePage || !name.equalsIgnoreCase(&quot;content-length&quot;)) {</span>
+<span class="nc" id="L163">            super.addHeader(name, value);</span>
+        }
+<span class="nc" id="L165">    }</span>
+
+    /**
+     * If 'not modified' (304) HTTP status is being sent - then abort parsing, as there shouldn't be any body
+     */
+    @Override
+    public void setStatus(int sc) {
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (sc == HttpServletResponse.SC_NOT_MODIFIED) {</span>
+<span class="nc" id="L173">            aborted = true;</span>
+            // route any content back to the original writer. There shouldn't be any content, but just to be safe
+<span class="nc" id="L175">            deactivateSiteMesh();</span>
+        }
+<span class="nc" id="L177">        super.setStatus(sc);</span>
+<span class="nc" id="L178">    }</span>
+
+    @Override
+    public ServletOutputStream getOutputStream() {
+<span class="nc" id="L182">        return routableServletOutputStream;</span>
+    }
+
+    @Override
+    public PrintWriter getWriter() {
+<span class="nc" id="L187">        return routablePrintWriter;</span>
+    }
+
+    /**
+     * Gets the page.
+     *
+     * @return the page
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public Page getPage() throws IOException {
+<span class="nc bnc" id="L199" title="All 4 branches missed.">        if (aborted || !parseablePage) {</span>
+<span class="nc" id="L200">            return null;</span>
+        }
+<span class="nc" id="L202">        return buffer.parse();</span>
+    }
+
+    @Override
+    public void sendError(int sc) throws IOException {
+<span class="nc" id="L207">        aborted = true;</span>
+<span class="nc" id="L208">        super.sendError(sc);</span>
+<span class="nc" id="L209">    }</span>
+
+    @Override
+    public void sendError(int sc, String msg) throws IOException {
+<span class="nc" id="L213">        aborted = true;</span>
+<span class="nc" id="L214">        super.sendError(sc, msg);</span>
+<span class="nc" id="L215">    }</span>
+
+    @Override
+    public void sendRedirect(String location) throws IOException {
+<span class="nc" id="L219">        aborted = true;</span>
+<span class="nc" id="L220">        super.sendRedirect(location);</span>
+<span class="nc" id="L221">    }</span>
+
+    /**
+     * Checks if is using stream.
+     *
+     * @return true, if is using stream
+     */
+    public boolean isUsingStream() {
+<span class="nc bnc" id="L229" title="All 4 branches missed.">        return buffer != null &amp;&amp; buffer.isUsingStream();</span>
+    }
+
+    /**
+     * Gets the contents.
+     *
+     * @return the contents
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public SitemeshBuffer getContents() throws IOException {
+<span class="nc bnc" id="L241" title="All 4 branches missed.">        if (aborted || !parseablePage) {</span>
+<span class="nc" id="L242">            return null;</span>
+        }
+<span class="nc" id="L244">        return buffer.getContents();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

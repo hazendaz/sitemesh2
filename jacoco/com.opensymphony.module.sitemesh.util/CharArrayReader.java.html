@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharArrayReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.util</a> &gt; <span class="el_source">CharArrayReader.java</span></div><h1>CharArrayReader.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.util;
+
+import java.io.IOException;
+import java.io.Reader;
+
+/**
+ * This class implements a character buffer that can be used as a character-input stream. Modified from the JDK source
+ * in that it gets rid of the ensureOpen() method, so we get unexpected behaviour if the reader is closed.
+ * &lt;p&gt;
+ * The second modification is that since this class is used internally by FastPageParser in a single thread, we don't
+ * need any locking or synchronization. Using this class instead of the standard CharArrayReader improves FastPageParser
+ * performance by 15-20%.
+ *
+ * @author Hani Suleiman
+ */
+public class CharArrayReader extends Reader {
+    /** The character buffer. */
+    protected char buf[];
+
+    /** The current buffer position. */
+    protected int pos;
+
+    /** The position of mark in buffer. */
+<span class="pc" id="L37">    protected int markedPos = 0;</span>
+
+    /**
+     * The index of the end of this buffer. There is not valid data at or beyond this index.
+     */
+    protected int count;
+
+    /**
+     * Create an CharArrayReader from the specified array of chars.
+     *
+     * @param buf
+     *            Input buffer (not copied)
+     */
+<span class="nc" id="L50">    public CharArrayReader(char buf[]) {</span>
+<span class="nc" id="L51">        this.buf = buf;</span>
+<span class="nc" id="L52">        this.pos = 0;</span>
+<span class="nc" id="L53">        this.count = buf.length;</span>
+<span class="nc" id="L54">    }</span>
+
+    /**
+     * Create an CharArrayReader from the specified array of chars.
+     *
+     * @param buf
+     *            Input buffer (not copied)
+     * @param offset
+     *            Offset of the first char to read
+     * @param length
+     *            Number of chars to read
+     */
+<span class="fc" id="L66">    public CharArrayReader(char buf[], int offset, int length) {</span>
+<span class="pc bpc" id="L67" title="4 of 8 branches missed.">        if (offset &lt; 0 || offset &gt; buf.length || length &lt; 0 || offset + length &lt; 0) {</span>
+<span class="nc" id="L68">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L70">        this.buf = buf;</span>
+<span class="fc" id="L71">        this.pos = offset;</span>
+<span class="fc" id="L72">        this.count = Math.min(offset + length, buf.length);</span>
+<span class="fc" id="L73">        this.markedPos = offset;</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Read a single character.
+     *
+     * @throws IOException
+     *             If an I/O error occurs
+     */
+    @Override
+    public int read() throws IOException {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (pos &gt;= count) {</span>
+<span class="fc" id="L85">            return -1;</span>
+        }
+<span class="fc" id="L87">        return buf[pos++];</span>
+    }
+
+    /**
+     * Read characters into a portion of an array.
+     *
+     * @param b
+     *            Destination buffer
+     * @param off
+     *            Offset at which to start storing characters
+     * @param len
+     *            Maximum number of characters to read
+     *
+     * @return The actual number of characters read, or -1 if the end of the stream has been reached
+     *
+     * @throws IOException
+     *             If an I/O error occurs
+     */
+    @Override
+    public int read(char b[], int off, int len) throws IOException {
+<span class="pc bpc" id="L107" title="5 of 10 branches missed.">        if (off &lt; 0 || off &gt; b.length || len &lt; 0 || off + len &gt; b.length || off + len &lt; 0) {</span>
+<span class="nc" id="L108">            throw new IndexOutOfBoundsException();</span>
+        }
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (len == 0) {</span>
+<span class="nc" id="L111">            return 0;</span>
+        }
+
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (pos &gt;= count) {</span>
+<span class="fc" id="L115">            return -1;</span>
+        }
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (pos + len &gt; count) {</span>
+<span class="fc" id="L118">            len = count - pos;</span>
+        }
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (len &lt;= 0) {</span>
+<span class="nc" id="L121">            return 0;</span>
+        }
+<span class="fc" id="L123">        System.arraycopy(buf, pos, b, off, len);</span>
+<span class="fc" id="L124">        pos += len;</span>
+<span class="fc" id="L125">        return len;</span>
+    }
+
+    /**
+     * Skip characters.
+     *
+     * @param n
+     *            The number of characters to skip
+     *
+     * @throws IOException
+     *             If an I/O error occurs
+     *
+     * @return The number of characters actually skipped
+     */
+    @Override
+    public long skip(long n) throws IOException {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (pos + n &gt; count) {</span>
+<span class="nc" id="L142">            n = count - pos;</span>
+        }
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (n &lt; 0) {</span>
+<span class="nc" id="L145">            return 0;</span>
+        }
+<span class="nc" id="L147">        pos += n;</span>
+<span class="nc" id="L148">        return n;</span>
+    }
+
+    /**
+     * Tell whether this stream is ready to be read. Character-array readers are always ready to be read.
+     *
+     * @throws IOException
+     *             If an I/O error occurs
+     */
+    @Override
+    public boolean ready() throws IOException {
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        return count - pos &gt; 0;</span>
+    }
+
+    /**
+     * Tell whether this stream supports the mark() operation, which it does.
+     */
+    @Override
+    public boolean markSupported() {
+<span class="nc" id="L167">        return true;</span>
+    }
+
+    /**
+     * Mark the present position in the stream. Subsequent calls to reset() will reposition the stream to this point.
+     *
+     * @param readAheadLimit
+     *            Limit on the number of characters that may be read while still preserving the mark. Because the
+     *            stream's input comes from a character array, there is no actual limit; hence this argument is ignored.
+     *
+     * @throws IOException
+     *             If an I/O error occurs
+     */
+    @Override
+    public void mark(int readAheadLimit) throws IOException {
+<span class="nc" id="L182">        markedPos = pos;</span>
+<span class="nc" id="L183">    }</span>
+
+    /**
+     * Reset the stream to the most recent mark, or to the beginning if it has never been marked.
+     *
+     * @throws IOException
+     *             If an I/O error occurs
+     */
+    @Override
+    public void reset() throws IOException {
+<span class="nc" id="L193">        pos = markedPos;</span>
+<span class="nc" id="L194">    }</span>
+
+    /**
+     * Close the stream.
+     */
+    @Override
+    public void close() {
+<span class="fc" id="L201">        buf = null;</span>
+<span class="fc" id="L202">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

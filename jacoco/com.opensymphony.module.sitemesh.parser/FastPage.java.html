@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FastPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.parser</a> &gt; <span class="el_source">FastPage.java</span></div><h1>FastPage.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        FastPage
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.parser;
+
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
+
+/**
+ * HTMLPage implementation produced by FastPageParser.
+ *
+ * @author &lt;a href=&quot;mailto:salaman@qoretech.com&quot;&gt;Victor Salaman&lt;/a&gt;
+ */
+public final class FastPage extends AbstractHTMLPage {
+
+    /** The head. */
+    private String head;
+
+    /** The body. */
+    private String body;
+
+    /**
+     * Instantiates a new fast page.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     * @param sitemeshProps
+     *            the sitemesh props
+     * @param htmlProps
+     *            the html props
+     * @param metaProps
+     *            the meta props
+     * @param bodyProps
+     *            the body props
+     * @param title
+     *            the title
+     * @param head
+     *            the head
+     * @param body
+     *            the body
+     * @param frameSet
+     *            the frame set
+     */
+    public FastPage(SitemeshBuffer sitemeshBuffer, Map&lt;String, String&gt; sitemeshProps, Map&lt;String, String&gt; htmlProps,
+            Map&lt;String, String&gt; metaProps, Map&lt;String, String&gt; bodyProps, String title, String head, String body,
+            boolean frameSet) {
+<span class="fc" id="L69">        super(sitemeshBuffer);</span>
+<span class="fc" id="L70">        this.head = head;</span>
+<span class="fc" id="L71">        this.body = body;</span>
+<span class="fc" id="L72">        setFrameSet(frameSet);</span>
+<span class="fc" id="L73">        addAttributeList(&quot;&quot;, htmlProps);</span>
+<span class="fc" id="L74">        addAttributeList(&quot;page.&quot;, sitemeshProps);</span>
+<span class="fc" id="L75">        addAttributeList(&quot;body.&quot;, bodyProps);</span>
+<span class="fc" id="L76">        addAttributeList(&quot;meta.&quot;, metaProps);</span>
+<span class="fc" id="L77">        addProperty(&quot;title&quot;, title);</span>
+<span class="fc" id="L78">    }</span>
+
+    @Override
+    public void writeHead(Writer out) throws IOException {
+<span class="fc" id="L82">        out.write(head);</span>
+<span class="fc" id="L83">    }</span>
+
+    @Override
+    public void writeBody(Writer out) throws IOException {
+<span class="fc" id="L87">        out.write(body);</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Adds the attribute list.
+     *
+     * @param prefix
+     *            the prefix
+     * @param attributes
+     *            the attributes
+     */
+    private void addAttributeList(String prefix, Map&lt;String, String&gt; attributes) {
+<span class="fc bfc" id="L99" title="All 4 branches covered.">        if (attributes == null || attributes.isEmpty()) {</span>
+<span class="fc" id="L100">            return;</span>
+        }
+
+        String name;
+        String value;
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; entry : attributes.entrySet()) {</span>
+<span class="fc" id="L106">            name = entry.getKey();</span>
+<span class="fc" id="L107">            value = entry.getValue();</span>
+
+<span class="pc bpc" id="L109" title="2 of 4 branches missed.">            if (value != null &amp;&amp; value.trim().length() &gt; 0) {</span>
+<span class="fc" id="L110">                addProperty(prefix + name, value);</span>
+            }
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">    }</span>
+
+    @Override
+    public String getBody() {
+<span class="nc" id="L117">        return body;</span>
+    }
+
+    @Override
+    public String getHead() {
+<span class="nc" id="L122">        return head;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

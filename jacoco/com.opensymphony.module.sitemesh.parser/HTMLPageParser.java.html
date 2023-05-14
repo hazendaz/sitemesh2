@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HTMLPageParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.parser</a> &gt; <span class="el_source">HTMLPageParser.java</span></div><h1>HTMLPageParser.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.parser;
+
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+import com.opensymphony.module.sitemesh.html.HTMLProcessor;
+import com.opensymphony.module.sitemesh.html.State;
+import com.opensymphony.module.sitemesh.html.StateTransitionRule;
+import com.opensymphony.module.sitemesh.html.rules.BodyTagRule;
+import com.opensymphony.module.sitemesh.html.rules.ContentBlockExtractingRule;
+import com.opensymphony.module.sitemesh.html.rules.FramesetRule;
+import com.opensymphony.module.sitemesh.html.rules.HeadExtractingRule;
+import com.opensymphony.module.sitemesh.html.rules.HtmlAttributesRule;
+import com.opensymphony.module.sitemesh.html.rules.MSOfficeDocumentPropertiesRule;
+import com.opensymphony.module.sitemesh.html.rules.MetaTagRule;
+import com.opensymphony.module.sitemesh.html.rules.PageBuilder;
+import com.opensymphony.module.sitemesh.html.rules.ParameterExtractingRule;
+import com.opensymphony.module.sitemesh.html.rules.TitleExtractingRule;
+
+import java.io.IOException;
+
+/**
+ * &lt;p&gt;
+ * Builds an HTMLPage object from an HTML document. This behaves similarly to the FastPageParser, however it's a
+ * complete rewrite that is simpler to add custom features to such as extraction and transformation of elements.
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * To customize the rules used, this class can be extended and have the userDefinedRules() methods overridden.
+ * &lt;/p&gt;
+ *
+ * @author Joe Walnes
+ *
+ * @see HTMLProcessor
+ */
+<span class="fc" id="L50">public class HTMLPageParser implements PageParser {</span>
+
+    @Override
+    public Page parse(char[] buffer) throws IOException {
+<span class="fc" id="L54">        return parse(new DefaultSitemeshBuffer(buffer));</span>
+    }
+
+    @Override
+    public Page parse(SitemeshBuffer buffer) throws IOException {
+<span class="fc" id="L59">        SitemeshBufferFragment.Builder head = SitemeshBufferFragment.builder().setBuffer(buffer).setLength(0);</span>
+<span class="fc" id="L60">        SitemeshBufferFragment.Builder body = SitemeshBufferFragment.builder().setBuffer(buffer);</span>
+<span class="fc" id="L61">        TokenizedHTMLPage page = new TokenizedHTMLPage(buffer);</span>
+<span class="fc" id="L62">        HTMLProcessor processor = new HTMLProcessor(buffer, body);</span>
+<span class="fc" id="L63">        State html = processor.defaultState();</span>
+
+        // Core rules for SiteMesh to be functional.
+<span class="fc" id="L66">        html.addRule(new HeadExtractingRule(head)); // contents of &lt;head&gt;</span>
+<span class="fc" id="L67">        html.addRule(new BodyTagRule(page, body)); // contents of &lt;body&gt;</span>
+<span class="fc" id="L68">        html.addRule(new TitleExtractingRule(page)); // the &lt;title&gt;</span>
+<span class="fc" id="L69">        html.addRule(new FramesetRule(page)); // if the page is a frameset</span>
+
+        // Additional rules - designed to be tweaked.
+<span class="fc" id="L72">        addUserDefinedRules(html, page);</span>
+
+<span class="fc" id="L74">        processor.process();</span>
+<span class="fc" id="L75">        page.setBody(body.build());</span>
+<span class="fc" id="L76">        page.setHead(head.build());</span>
+<span class="fc" id="L77">        return page;</span>
+    }
+
+    /**
+     * Adds the user defined rules.
+     *
+     * @param html
+     *            the html
+     * @param page
+     *            the page
+     */
+    protected void addUserDefinedRules(State html, PageBuilder page) {
+        // Ensure that while in &lt;xml&gt; tag, none of the other rules kick in.
+        // For example &lt;xml&gt;&lt;book&gt;&lt;title&gt;hello&lt;/title&gt;&lt;/book&gt;&lt;/xml&gt; should not change the affect the title of the page.
+<span class="fc" id="L91">        State xml = new State();</span>
+<span class="fc" id="L92">        html.addRule(new StateTransitionRule(&quot;xml&quot;, xml));</span>
+
+        // Useful properties
+<span class="fc" id="L95">        html.addRule(new HtmlAttributesRule(page)); // attributes in &lt;html&gt; element</span>
+<span class="fc" id="L96">        html.addRule(new MetaTagRule(page)); // all &lt;meta&gt; tags</span>
+<span class="fc" id="L97">        html.addRule(new ParameterExtractingRule(page)); // &lt;parameter&gt; blocks</span>
+<span class="fc" id="L98">        html.addRule(new ContentBlockExtractingRule(page)); // &lt;content&gt; blocks</span>
+
+        // Capture properties written to documents by MS Office (author, version, company, etc).
+        // Note: These properties are from the xml state, not the html state.
+<span class="fc" id="L102">        xml.addRule(new MSOfficeDocumentPropertiesRule(page));</span>
+<span class="fc" id="L103">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Factory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh</a> &gt; <span class="el_source">Factory.java</span></div><h1>Factory.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        Factory
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh;
+
+import com.opensymphony.module.sitemesh.factory.FactoryException;
+import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
+import com.opensymphony.module.sitemesh.util.Container;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.naming.InitialContext;
+
+/**
+ * Factory responsible for creating appropriate instances of implementations. This is specific to a web context and is
+ * obtained through {@link #getInstance(com.opensymphony.module.sitemesh.Config)}.
+ * &lt;p&gt;
+ * The actual Factory method used is determined by the enviroment entry &lt;code&gt;sitemesh.factory&lt;/code&gt;. If this doesn't
+ * exist, it defaults to {@link com.opensymphony.module.sitemesh.factory.DefaultFactory} .
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ */
+<span class="nc" id="L43">public abstract class Factory implements PageParserSelector {</span>
+
+    /** Web context lookup key. */
+    private static final String SITEMESH_FACTORY = &quot;sitemesh.factory&quot;;
+
+    /**
+     * Entry-point for obtaining singleton instance of Factory. The default factory class that will be instantiated can
+     * be overridden with the environment entry &lt;code&gt;sitemesh.factory&lt;/code&gt;.
+     *
+     * @param config
+     *            the config
+     *
+     * @return single instance of Factory
+     */
+    public static Factory getInstance(Config config) {
+<span class="nc" id="L58">        Factory instance = (Factory) config.getServletContext().getAttribute(SITEMESH_FACTORY);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (instance == null) {</span>
+<span class="nc" id="L60">            String factoryClass = getEnvEntry(&quot;sitemesh.factory&quot;,</span>
+                    &quot;com.opensymphony.module.sitemesh.factory.DefaultFactory&quot;);
+            try {
+<span class="nc" id="L63">                Class&lt;?&gt; cls = ClassLoaderUtil.loadClass(factoryClass, config.getClass());</span>
+<span class="nc" id="L64">                Constructor&lt;?&gt; con = cls.getConstructor(Config.class);</span>
+<span class="nc" id="L65">                instance = (Factory) con.newInstance(config);</span>
+<span class="nc" id="L66">                config.getServletContext().setAttribute(SITEMESH_FACTORY, instance);</span>
+<span class="nc" id="L67">            } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L68">                throw new FactoryException(&quot;Cannot construct Factory : &quot; + factoryClass, e.getTargetException());</span>
+
+<span class="nc" id="L70">            } catch (Exception e) {</span>
+<span class="nc" id="L71">                throw new FactoryException(&quot;Cannot construct Factory : &quot; + factoryClass, e);</span>
+<span class="nc" id="L72">            }</span>
+        }
+<span class="nc" id="L74">        instance.refresh();</span>
+<span class="nc" id="L75">        return instance;</span>
+    }
+
+    /**
+     * Refresh.
+     */
+    public abstract void refresh();
+
+    /**
+     * Return instance of DecoratorMapper.
+     *
+     * @return the decorator mapper
+     */
+    public abstract DecoratorMapper getDecoratorMapper();
+
+    /**
+     * Determine whether the given path should be excluded from decoration or not.
+     *
+     * @param path
+     *            the path
+     *
+     * @return true, if is path excluded
+     */
+    public abstract boolean isPathExcluded(String path);
+
+    /**
+     * Find String environment entry, or return default if not found.
+     *
+     * @param envEntry
+     *            the env entry
+     * @param defaultValue
+     *            the default value
+     *
+     * @return the env entry
+     */
+    private static String getEnvEntry(String envEntry, String defaultValue) {
+<span class="nc" id="L111">        String result = null;</span>
+        try {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (Container.get() != Container.JRUN) {</span>
+                // TODO: JRun really isn't happy with this
+<span class="nc" id="L115">                InitialContext ctx = new InitialContext();</span>
+<span class="nc" id="L116">                result = (String) ctx.lookup(&quot;java:comp/env/&quot; + envEntry);</span>
+<span class="nc" id="L117">                ctx.close();</span>
+            }
+<span class="nc" id="L119">        } catch (Exception | NoClassDefFoundError e) {</span>
+            // failed - don't moan, just return default.
+<span class="nc" id="L121">        }</span>
+        // to deal with restricted class loaders (i.e. on AppEngine).
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        return result == null || result.trim().length() == 0 ? defaultValue : result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HttpContentType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.filter</a> &gt; <span class="el_source">HttpContentType.java</span></div><h1>HttpContentType.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.filter;
+
+/**
+ * Extracts the type and encoding from an HTTP Content-Type header.
+ *
+ * @author Scott Farquhar
+ */
+public class HttpContentType {
+
+    /** The type. */
+    private final String type;
+
+    /** The encoding. */
+    private final String encoding;
+
+    /**
+     * Instantiates a new http content type.
+     *
+     * @param fullValue
+     *            the full value
+     */
+<span class="nc" id="L35">    public HttpContentType(String fullValue) {</span>
+        // this is the content type + charset. eg: text/html;charset=UTF-8
+<span class="nc" id="L37">        int offset = fullValue.lastIndexOf(&quot;charset=&quot;);</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        encoding = offset != -1 ? extractContentTypeValue(fullValue, offset + 8) : null;</span>
+<span class="nc" id="L39">        type = extractContentTypeValue(fullValue, 0);</span>
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * Extract content type value.
+     *
+     * @param type
+     *            the type
+     * @param startIndex
+     *            the start index
+     *
+     * @return the string
+     */
+    private String extractContentTypeValue(String type, int startIndex) {
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (startIndex &lt; 0) {</span>
+<span class="nc" id="L54">            return null;</span>
+        }
+
+        // Skip over any leading spaces
+<span class="nc bnc" id="L58" title="All 4 branches missed.">        while (startIndex &lt; type.length() &amp;&amp; type.charAt(startIndex) == ' ') {</span>
+<span class="nc" id="L59">            startIndex++;</span>
+        }
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (startIndex &gt;= type.length()) {</span>
+<span class="nc" id="L63">            return null;</span>
+        }
+
+<span class="nc" id="L66">        int endIndex = startIndex;</span>
+
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (type.charAt(startIndex) == '&quot;') {</span>
+<span class="nc" id="L69">            startIndex++;</span>
+<span class="nc" id="L70">            endIndex = type.indexOf('&quot;', startIndex);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            if (endIndex == -1) {</span>
+<span class="nc" id="L72">                endIndex = type.length();</span>
+            }
+        } else {
+            // Scan through until we hit either the end of the string or a
+            // special character (as defined in RFC-2045). Note that we ignore '/'
+            // since we want to capture it as part of the value.
+            char ch;
+<span class="nc bnc" id="L79" title="All 32 branches missed.">            while (endIndex &lt; type.length() &amp;&amp; (ch = type.charAt(endIndex)) != ' ' &amp;&amp; ch != ';' &amp;&amp; ch != '('</span>
+                    &amp;&amp; ch != ')' &amp;&amp; ch != '[' &amp;&amp; ch != ']' &amp;&amp; ch != '&lt;' &amp;&amp; ch != '&gt;' &amp;&amp; ch != ':' &amp;&amp; ch != ','
+                    &amp;&amp; ch != '=' &amp;&amp; ch != '?' &amp;&amp; ch != '@' &amp;&amp; ch != '&quot;' &amp;&amp; ch != '\\') {
+<span class="nc" id="L82">                endIndex++;</span>
+            }
+        }
+<span class="nc" id="L85">        return type.substring(startIndex, endIndex);</span>
+    }
+
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    public String getType() {
+<span class="nc" id="L94">        return type;</span>
+    }
+
+    /**
+     * Gets the encoding.
+     *
+     * @return the encoding
+     */
+    public String getEncoding() {
+<span class="nc" id="L103">        return encoding;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Container.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.util</a> &gt; <span class="el_source">Container.java</span></div><h1>Container.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        Container
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.util;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * Utility for determining the Servlet Container the application is running in. Currently supported containers: Tomcat,
+ * Resin, Orion, OC4J, WebLogic, HPAS, JRun, Websphere.
+ * &lt;h2&gt;Usage:&lt;/h2&gt; &lt;code&gt;if (Container.get() == Container.TOMCAT) { .... }&lt;/code&gt;
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ */
+<span class="nc" id="L36">public final class Container {</span>
+
+    /** The Constant UNKNOWN. */
+    public static final int UNKNOWN = 0;
+
+    /** The Constant TOMCAT. */
+    public static final int TOMCAT = 1;
+
+    /** The Constant RESIN. */
+    public static final int RESIN = 2;
+
+    /** The Constant ORION. */
+    public static final int ORION = 3; // Orion or OC4J
+
+    /** The Constant WEBLOGIC. */
+    public static final int WEBLOGIC = 4;
+
+    /** The Constant HPAS. */
+    public static final int HPAS = 5;
+
+    /** The Constant JRUN. */
+    public static final int JRUN = 6;
+
+    /** The Constant WEBSPHERE. */
+    public static final int WEBSPHERE = 7;
+
+    /** The result. */
+<span class="nc" id="L63">    private static int result = -1;</span>
+
+    /**
+     * A map containing classes that can be searched for, and which container they are typically found in.
+     */
+<span class="nc" id="L68">    private static Map&lt;String, Integer&gt; classMappings = null;</span>
+
+    static {
+        // initialize the classes that can be searched for
+<span class="nc" id="L72">        classMappings = new HashMap&lt;String, Integer&gt;(6);</span>
+<span class="nc" id="L73">        classMappings.put(&quot;org.apache.jasper.runtime.JspFactoryImpl&quot;, Integer.valueOf(TOMCAT));</span>
+<span class="nc" id="L74">        classMappings.put(&quot;com.caucho.jsp.JspServlet&quot;, Integer.valueOf(RESIN));</span>
+<span class="nc" id="L75">        classMappings.put(&quot;com.evermind.server.http.JSPServlet&quot;, Integer.valueOf(ORION));</span>
+<span class="nc" id="L76">        classMappings.put(&quot;weblogic.servlet.JSPServlet&quot;, Integer.valueOf(WEBLOGIC));</span>
+<span class="nc" id="L77">        classMappings.put(&quot;com.hp.mwlabs.j2ee.containers.servlet.jsp.JspServlet&quot;, Integer.valueOf(HPAS));</span>
+<span class="nc" id="L78">        classMappings.put(&quot;jrun.servlet.WebApplicationService&quot;, Integer.valueOf(JRUN));</span>
+<span class="nc" id="L79">        classMappings.put(&quot;com.ibm.ws.webcontainer.jsp.servlet.JspServlet&quot;, Integer.valueOf(WEBSPHERE));</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * Get the current container.
+     *
+     * @return the int
+     */
+    public static int get() {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (result == -1) {</span>
+<span class="nc" id="L89">            final String classMatch = searchForClosestClass(classMappings);</span>
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if (classMatch == null) {</span>
+<span class="nc" id="L92">                result = UNKNOWN;</span>
+            } else {
+<span class="nc" id="L94">                result = ((Integer) classMappings.get(classMatch)).intValue();</span>
+            }
+        }
+<span class="nc" id="L97">        return result;</span>
+    }
+
+    /**
+     * Walk up the classloader hierachy and attempt to find a class in the classMappings Map that can be loaded.
+     *
+     * @param classMappings
+     *            the class mappings
+     *
+     * @return Name of the match class, or null if not found.
+     */
+    private static String searchForClosestClass(Map&lt;String, Integer&gt; classMappings) {
+        // get closest classloader
+<span class="nc" id="L110">        ClassLoader loader = Container.class.getClassLoader();</span>
+
+        // iterate up through the classloader hierachy (through parents), until no more left.
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        while (loader != null) {</span>
+
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            for (Iterator&lt;String&gt; iterator = classMappings.keySet().iterator(); iterator.hasNext();) {</span>
+<span class="nc" id="L116">                String className = (String) iterator.next();</span>
+
+                try {
+                    // attempt to load current classname with current classloader
+<span class="nc" id="L120">                    loader.loadClass(className);</span>
+                    // if no exception has been thrown, we're in luck.
+<span class="nc" id="L122">                    return className;</span>
+<span class="nc" id="L123">                } catch (ClassNotFoundException e) {</span>
+                    // no problem... we'll keep trying...
+                }
+<span class="nc" id="L126">            }</span>
+<span class="nc" id="L127">            loader = loader.getParent();</span>
+        }
+
+        // couldn't find anything
+<span class="nc" id="L131">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

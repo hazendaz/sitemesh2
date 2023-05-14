@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PartialPageParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.parser</a> &gt; <span class="el_source">PartialPageParser.java</span></div><h1>PartialPageParser.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.parser;
+
+import com.opensymphony.module.sitemesh.DefaultSitemeshBuffer;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.PageParser;
+import com.opensymphony.module.sitemesh.SitemeshBuffer;
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * Page parser that doesn't parse the full page, but rather just parses the head section of the page.
+ *
+ * @since v2.5
+ */
+<span class="fc" id="L32">public class PartialPageParser implements PageParser {</span>
+    @Override
+    public Page parse(char[] buffer) throws IOException {
+<span class="nc" id="L35">        return parse(new DefaultSitemeshBuffer(buffer));</span>
+    }
+
+    @Override
+    public Page parse(SitemeshBuffer buffer) throws IOException {
+<span class="fc" id="L40">        char[] data = buffer.getCharArray();</span>
+<span class="fc" id="L41">        int length = buffer.getBufferLength();</span>
+<span class="fc" id="L42">        int position = 0;</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        while (position &lt; data.length) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (data[position++] == '&lt;') {</span>
+<span class="pc bpc" id="L45" title="2 of 4 branches missed.">                if (position &lt; data.length &amp;&amp; data[position] == '!') {</span>
+                    // Ignore doctype
+<span class="nc" id="L47">                    continue;</span>
+                }
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                if (compareLowerCase(data, length, position, &quot;html&quot;)) {</span>
+                    // It's an HTML page, handle HTML pages
+<span class="fc" id="L51">                    return parseHtmlPage(buffer, position);</span>
+                }
+                // The whole thing is the body.
+<span class="fc" id="L54">                return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, 0, length), null);</span>
+            }
+        }
+        // If we're here, we mustn't have found a tag
+<span class="nc" id="L58">        return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, 0, length), null);</span>
+    }
+
+    /**
+     * Parses the html page.
+     *
+     * @param buffer
+     *            the buffer
+     * @param position
+     *            the position
+     *
+     * @return the page
+     */
+    private Page parseHtmlPage(SitemeshBuffer buffer, int position) {
+<span class="fc" id="L72">        char[] data = buffer.getCharArray();</span>
+<span class="fc" id="L73">        int length = buffer.getBufferLength();</span>
+<span class="fc" id="L74">        int bodyStart = -1;</span>
+<span class="fc" id="L75">        int bodyLength = -1;</span>
+<span class="fc" id="L76">        int headStart = -1;</span>
+<span class="fc" id="L77">        int headLength = -1;</span>
+        // Find head end and start, and body start
+<span class="fc" id="L79">        Map&lt;String, String&gt; bodyProperties = null;</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        while (position &lt; length) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (data[position++] == '&lt;') {</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                if (compareLowerCase(data, length, position, &quot;head&quot;)) {</span>
+<span class="fc" id="L83">                    position = findEndOf(data, length, position + 4, &quot;&gt;&quot;);</span>
+<span class="fc" id="L84">                    headStart = position;</span>
+                    // Find end of head
+<span class="fc" id="L86">                    position = findStartOf(data, length, position, &quot;&lt;/head&gt;&quot;);</span>
+<span class="fc" id="L87">                    headLength = position - headStart;</span>
+<span class="fc" id="L88">                    position += 7;</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">                } else if (compareLowerCase(data, length, position, &quot;body&quot;)) {</span>
+<span class="fc" id="L90">                    HashSimpleMap map = new HashSimpleMap();</span>
+<span class="fc" id="L91">                    bodyStart = parseProperties(data, length, position + 4, map);</span>
+<span class="fc" id="L92">                    bodyProperties = map.getMap();</span>
+<span class="fc" id="L93">                    break;</span>
+                }
+            }
+        }
+
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (bodyStart &lt; 0) {</span>
+            // No body found
+<span class="nc" id="L100">            bodyStart = length;</span>
+<span class="nc" id="L101">            bodyLength = 0;</span>
+        } else {
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            for (int i = length - 8; i &gt; bodyStart; i--) {</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                if (compareLowerCase(data, length, i, &quot;&lt;/body&gt;&quot;)) {</span>
+<span class="fc" id="L105">                    bodyLength = i - bodyStart;</span>
+<span class="fc" id="L106">                    break;</span>
+                }
+            }
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (bodyLength == -1) {</span>
+<span class="fc" id="L110">                bodyLength = length - bodyStart;</span>
+            }
+        }
+
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (headLength &lt;= 0) {</span>
+<span class="fc" id="L115">            return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, bodyStart, bodyLength),</span>
+                    bodyProperties);
+        }
+<span class="fc" id="L118">        int idx = headStart;</span>
+<span class="fc" id="L119">        int headEnd = headStart + headLength;</span>
+<span class="fc" id="L120">        String title = null;</span>
+
+<span class="fc" id="L122">        TreeMap&lt;Integer, Integer&gt; deletions = new TreeMap&lt;&gt;();</span>
+
+        // Extract meta attributes out of head
+<span class="fc" id="L125">        Map&lt;String, String&gt; metaAttributes = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        while (idx &lt; headEnd) {</span>
+<span class="fc bfc" id="L127" title="All 4 branches covered.">            if ((data[idx++] == '&lt;') &amp;&amp; compareLowerCase(data, headEnd, idx, &quot;meta&quot;)) {</span>
+<span class="fc" id="L128">                MetaTagSimpleMap map = new MetaTagSimpleMap();</span>
+<span class="fc" id="L129">                idx = parseProperties(data, headEnd, idx + 4, map);</span>
+<span class="pc bpc" id="L130" title="2 of 4 branches missed.">                if (map.getName() != null &amp;&amp; map.getContent() != null) {</span>
+<span class="fc" id="L131">                    metaAttributes.put(map.getName(), map.getContent());</span>
+                }
+<span class="fc" id="L133">            }</span>
+        }
+
+        // We need a new head buffer because we have to remove the title and content tags from it
+<span class="fc" id="L137">        Map&lt;String, String&gt; pageProperties = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for (int i = headStart; i &lt; headEnd; i++) {</span>
+<span class="fc" id="L139">            char c = data[i];</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">            if (c == '&lt;') {</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">                if (compareLowerCase(data, headEnd, i + 1, &quot;title&quot;)) {</span>
+<span class="fc" id="L142">                    int titleStart = findEndOf(data, headEnd, i + 6, &quot;&gt;&quot;);</span>
+<span class="fc" id="L143">                    int titleEnd = findStartOf(data, headEnd, titleStart, &quot;&lt;&quot;);</span>
+<span class="fc" id="L144">                    title = new String(data, titleStart, titleEnd - titleStart);</span>
+<span class="fc" id="L145">                    int titleTagEnd = titleEnd + &quot;&lt;/title&gt;&quot;.length();</span>
+<span class="fc" id="L146">                    deletions.put(i, titleTagEnd - i);</span>
+<span class="fc" id="L147">                    i = titleTagEnd - 1;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                } else if (compareLowerCase(data, headEnd, i + 1, &quot;content&quot;)) {</span>
+<span class="fc" id="L149">                    ContentTagSimpleMap map = new ContentTagSimpleMap();</span>
+<span class="fc" id="L150">                    int contentStart = parseProperties(data, headEnd, i + 8, map);</span>
+<span class="fc" id="L151">                    int contentEnd = findStartOf(data, headEnd, contentStart, &quot;&lt;/content&gt;&quot;);</span>
+<span class="fc" id="L152">                    pageProperties.put(map.getTag(), new String(data, contentStart, contentEnd - contentStart));</span>
+<span class="fc" id="L153">                    int contentTagEnd = contentEnd + &quot;&lt;/content&gt;&quot;.length();</span>
+<span class="fc" id="L154">                    deletions.put(i, contentTagEnd - i);</span>
+<span class="fc" id="L155">                    i = contentTagEnd - 1;</span>
+                }
+            }
+        }
+
+<span class="fc" id="L160">        return new PartialPageParserHtmlPage(buffer, new SitemeshBufferFragment(buffer, bodyStart, bodyLength),</span>
+                bodyProperties, new SitemeshBufferFragment(buffer, headStart, headEnd - headStart, deletions), title,
+                metaAttributes, pageProperties);
+    }
+
+    /**
+     * Compare lower case.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the data end
+     * @param position
+     *            the position
+     * @param token
+     *            the token
+     *
+     * @return true, if successful
+     */
+    private static boolean compareLowerCase(final char[] data, final int dataEnd, int position, String token) {
+<span class="fc" id="L180">        int l = position + token.length();</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        if (l &gt; dataEnd) {</span>
+<span class="nc" id="L182">            return false;</span>
+        }
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        for (int i = 0; i &lt; token.length(); i++) {</span>
+            // | 32 converts from ASCII uppercase to ASCII lowercase
+<span class="fc" id="L186">            char potential = data[position + i];</span>
+<span class="fc" id="L187">            char needed = token.charAt(i);</span>
+<span class="fc bfc" id="L188" title="All 6 branches covered.">            if (Character.isLetter(potential) &amp;&amp; (potential | 32) != needed || potential != needed) {</span>
+<span class="fc" id="L189">                return false;</span>
+            }
+        }
+<span class="fc" id="L192">        return true;</span>
+    }
+
+    /**
+     * Find end of.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the data end
+     * @param position
+     *            the position
+     * @param token
+     *            the token
+     *
+     * @return the int
+     */
+    private static int findEndOf(final char[] data, final int dataEnd, int position, String token) {
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        for (int i = position; i &lt; dataEnd - token.length(); i++) {</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">            if (compareLowerCase(data, dataEnd, i, token)) {</span>
+<span class="fc" id="L212">                return i + token.length();</span>
+            }
+        }
+<span class="nc" id="L215">        return dataEnd;</span>
+    }
+
+    /**
+     * Find start of.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the data end
+     * @param position
+     *            the position
+     * @param token
+     *            the token
+     *
+     * @return the int
+     */
+    private static int findStartOf(final char[] data, final int dataEnd, int position, String token) {
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        for (int i = position; i &lt; dataEnd - token.length(); i++) {</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            if (compareLowerCase(data, dataEnd, i, token)) {</span>
+<span class="fc" id="L235">                return i;</span>
+            }
+        }
+<span class="nc" id="L238">        return dataEnd;</span>
+    }
+
+    /**
+     * Parse the properties of the current tag.
+     *
+     * @param data
+     *            the data
+     * @param dataEnd
+     *            the end index of the data
+     * @param position
+     *            our position in the data, this should be the first character after the tag name
+     * @param map
+     *            to the map to parse the properties into
+     *
+     * @return The position of the first character after the tag
+     */
+    private static int parseProperties(char[] data, int dataEnd, int position, SimpleMap map) {
+<span class="fc" id="L256">        int idx = position;</span>
+
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">        while (idx &lt; dataEnd) {</span>
+            // Skip forward to the next non-whitespace character
+<span class="pc bpc" id="L260" title="1 of 4 branches missed.">            while (idx &lt; dataEnd &amp;&amp; Character.isWhitespace(data[idx])) {</span>
+<span class="fc" id="L261">                idx++;</span>
+            }
+
+            // Make sure its not the end of the data or the end of the tag
+<span class="pc bpc" id="L265" title="1 of 6 branches missed.">            if (idx == dataEnd || data[idx] == '&gt;' || data[idx] == '/') {</span>
+<span class="fc" id="L266">                break;</span>
+            }
+
+<span class="fc" id="L269">            int startAttr = idx;</span>
+
+            // Find the next equals
+<span class="pc bpc" id="L272" title="3 of 8 branches missed.">            while (idx &lt; dataEnd &amp;&amp; !Character.isWhitespace(data[idx]) &amp;&amp; data[idx] != '=' &amp;&amp; data[idx] != '&gt;') {</span>
+<span class="fc" id="L273">                idx++;</span>
+            }
+
+<span class="pc bpc" id="L276" title="2 of 4 branches missed.">            if (idx == dataEnd || data[idx] != '=') {</span>
+<span class="nc" id="L277">                continue;</span>
+            }
+
+<span class="fc" id="L280">            String attrName = new String(data, startAttr, idx - startAttr);</span>
+
+<span class="fc" id="L282">            idx++;</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">            if (idx == dataEnd) {</span>
+<span class="nc" id="L284">                break;</span>
+            }
+
+<span class="fc" id="L287">            int startValue = idx;</span>
+            int endValue;
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">            if (data[idx] == '&quot;') {</span>
+<span class="fc" id="L290">                idx++;</span>
+<span class="fc" id="L291">                startValue = idx;</span>
+<span class="pc bpc" id="L292" title="1 of 4 branches missed.">                while (idx &lt; dataEnd &amp;&amp; data[idx] != '&quot;') {</span>
+<span class="fc" id="L293">                    idx++;</span>
+                }
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">                if (idx == dataEnd) {</span>
+<span class="nc" id="L296">                    break;</span>
+                }
+<span class="fc" id="L298">                endValue = idx;</span>
+<span class="fc" id="L299">                idx++;</span>
+<span class="nc bnc" id="L300" title="All 2 branches missed.">            } else if (data[idx] == '\'') {</span>
+<span class="nc" id="L301">                idx++;</span>
+<span class="nc" id="L302">                startValue = idx;</span>
+<span class="nc bnc" id="L303" title="All 4 branches missed.">                while (idx &lt; dataEnd &amp;&amp; data[idx] != '\'') {</span>
+<span class="nc" id="L304">                    idx++;</span>
+                }
+<span class="nc bnc" id="L306" title="All 2 branches missed.">                if (idx == dataEnd) {</span>
+<span class="nc" id="L307">                    break;</span>
+                }
+<span class="nc" id="L309">                endValue = idx;</span>
+<span class="nc" id="L310">                idx++;</span>
+            } else {
+<span class="nc bnc" id="L312" title="All 8 branches missed.">                while (idx &lt; dataEnd &amp;&amp; !Character.isWhitespace(data[idx]) &amp;&amp; data[idx] != '/' &amp;&amp; data[idx] != '&gt;') {</span>
+<span class="nc" id="L313">                    idx++;</span>
+                }
+<span class="nc" id="L315">                endValue = idx;</span>
+            }
+<span class="fc" id="L317">            String attrValue = new String(data, startValue, endValue - startValue);</span>
+<span class="fc" id="L318">            map.put(attrName, attrValue);</span>
+<span class="fc" id="L319">        }</span>
+        // Find the end of the tag
+<span class="pc bpc" id="L321" title="1 of 4 branches missed.">        while (idx &lt; dataEnd &amp;&amp; data[idx] != '&gt;') {</span>
+<span class="fc" id="L322">            idx++;</span>
+        }
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (idx == dataEnd) {</span>
+<span class="nc" id="L325">            return idx;</span>
+        }
+        // Return the first character after the end of the tag
+<span class="fc" id="L328">        return idx + 1;</span>
+    }
+
+    /**
+     * The Interface SimpleMap.
+     */
+    public interface SimpleMap {
+
+        /**
+         * Put.
+         *
+         * @param key
+         *            the key
+         * @param value
+         *            the value
+         */
+        void put(String key, String value);
+    }
+
+    /**
+     * The Class MetaTagSimpleMap.
+     */
+<span class="fc" id="L350">    public static class MetaTagSimpleMap implements SimpleMap {</span>
+
+        /** The name. */
+        private String name;
+
+        /** The content. */
+        private String content;
+
+        @Override
+        public void put(String key, String value) {
+<span class="fc bfc" id="L360" title="All 2 branches covered.">            if (key.equals(&quot;name&quot;)) {</span>
+<span class="fc" id="L361">                name = value;</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">            } else if (key.equals(&quot;content&quot;)) {</span>
+<span class="fc" id="L363">                content = value;</span>
+            }
+<span class="fc" id="L365">        }</span>
+
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
+        public String getName() {
+<span class="fc" id="L373">            return name;</span>
+        }
+
+        /**
+         * Gets the content.
+         *
+         * @return the content
+         */
+        public String getContent() {
+<span class="fc" id="L382">            return content;</span>
+        }
+    }
+
+    /**
+     * The Class ContentTagSimpleMap.
+     */
+<span class="fc" id="L389">    public static class ContentTagSimpleMap implements SimpleMap {</span>
+
+        /** The tag. */
+        private String tag;
+
+        @Override
+        public void put(String key, String value) {
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">            if (key.equals(&quot;tag&quot;)) {</span>
+<span class="fc" id="L397">                tag = value;</span>
+            }
+<span class="fc" id="L399">        }</span>
+
+        /**
+         * Gets the tag.
+         *
+         * @return the tag
+         */
+        public String getTag() {
+<span class="fc" id="L407">            return tag;</span>
+        }
+    }
+
+    /**
+     * The Class HashSimpleMap.
+     */
+<span class="fc" id="L414">    public static class HashSimpleMap implements SimpleMap {</span>
+
+        /** The map. */
+<span class="fc" id="L417">        private final Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
+
+        @Override
+        public void put(String key, String value) {
+<span class="fc" id="L421">            map.put(key, value);</span>
+<span class="fc" id="L422">        }</span>
+
+        /**
+         * Gets the map.
+         *
+         * @return the map
+         */
+        public Map&lt;String, String&gt; getMap() {
+<span class="fc" id="L430">            return map;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

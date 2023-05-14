@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassLoaderUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.util</a> &gt; <span class="el_source">ClassLoaderUtil.java</span></div><h1>ClassLoaderUtil.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+/**
+ * This class is extremely useful for loading resources and classes in a fault tolerant manner that works across
+ * different applications servers. It has come out of many months of frustrating use of multiple application servers at
+ * Atlassian, please don't change things unless you're sure they're not going to break in one server or another!
+ */
+<span class="nc" id="L25">public class ClassLoaderUtil {</span>
+
+    /**
+     * Load a given resource. This method will try to load the resource using the following methods (in order):
+     * &lt;ul&gt;
+     * &lt;li&gt;From Thread.currentThread().getContextClassLoader()
+     * &lt;li&gt;From ClassLoaderUtil.class.getClassLoader()
+     * &lt;li&gt;callingClass.getClassLoader()
+     * &lt;/ul&gt;
+     *
+     * @param resourceName
+     *            The name of the resource to load
+     * @param callingClass
+     *            The Class object of the calling object
+     *
+     * @return the resource
+     */
+    public static URL getResource(String resourceName, Class&lt;?&gt; callingClass) {
+<span class="nc" id="L43">        URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);</span>
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (url == null) {</span>
+<span class="nc" id="L46">            url = ClassLoaderUtil.class.getClassLoader().getResource(resourceName);</span>
+        }
+
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (url == null) {</span>
+<span class="nc" id="L50">            ClassLoader cl = callingClass.getClassLoader();</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (cl != null) {</span>
+<span class="nc" id="L53">                url = cl.getResource(resourceName);</span>
+            }
+        }
+
+<span class="nc bnc" id="L57" title="All 6 branches missed.">        if (url == null &amp;&amp; resourceName != null &amp;&amp; resourceName.charAt(0) != '/') {</span>
+<span class="nc" id="L58">            return getResource('/' + resourceName, callingClass);</span>
+        }
+
+<span class="nc" id="L61">        return url;</span>
+    }
+
+    /**
+     * This is a convenience method to load a resource as a stream. The algorithm used to find the resource is given in
+     * getResource()
+     *
+     * @param resourceName
+     *            The name of the resource to load
+     * @param callingClass
+     *            The Class object of the calling object
+     *
+     * @return the resource as stream
+     */
+    public static InputStream getResourceAsStream(String resourceName, Class&lt;?&gt; callingClass) {
+<span class="nc" id="L76">        URL url = getResource(resourceName, callingClass);</span>
+
+        try {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">            return url != null ? url.openStream() : null;</span>
+<span class="nc" id="L80">        } catch (IOException e) {</span>
+<span class="nc" id="L81">            return null;</span>
+        }
+    }
+
+    /**
+     * Load a class with a given name. It will try to load the class in the following order:
+     * &lt;ul&gt;
+     * &lt;li&gt;From Thread.currentThread().getContextClassLoader()
+     * &lt;li&gt;Using the basic Class.forName()
+     * &lt;li&gt;From ClassLoaderUtil.class.getClassLoader()
+     * &lt;li&gt;From the callingClass.getClassLoader()
+     * &lt;/ul&gt;
+     *
+     * @param className
+     *            The name of the class to load
+     * @param callingClass
+     *            The Class object of the calling object
+     *
+     * @return the class
+     *
+     * @throws ClassNotFoundException
+     *             If the class cannot be found anywhere.
+     */
+    public static Class&lt;?&gt; loadClass(String className, Class&lt;?&gt; callingClass) throws ClassNotFoundException {
+        try {
+<span class="nc" id="L106">            return Thread.currentThread().getContextClassLoader().loadClass(className);</span>
+<span class="nc" id="L107">        } catch (ClassNotFoundException e) {</span>
+            try {
+<span class="nc" id="L109">                return Class.forName(className);</span>
+<span class="nc" id="L110">            } catch (ClassNotFoundException ex) {</span>
+                try {
+<span class="nc" id="L112">                    return ClassLoaderUtil.class.getClassLoader().loadClass(className);</span>
+<span class="nc" id="L113">                } catch (ClassNotFoundException exc) {</span>
+<span class="nc" id="L114">                    return callingClass.getClassLoader().loadClass(className);</span>
+                }
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

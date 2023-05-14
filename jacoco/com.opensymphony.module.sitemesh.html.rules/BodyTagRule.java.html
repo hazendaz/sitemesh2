@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BodyTagRule.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html.rules</a> &gt; <span class="el_source">BodyTagRule.java</span></div><h1>BodyTagRule.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh.html.rules;
+
+import com.opensymphony.module.sitemesh.SitemeshBufferFragment;
+import com.opensymphony.module.sitemesh.html.BasicRule;
+import com.opensymphony.module.sitemesh.html.Tag;
+
+/**
+ * The Class BodyTagRule.
+ */
+public class BodyTagRule extends BasicRule {
+
+    /** The page. */
+    private final PageBuilder page;
+
+    /** The body. */
+    private final SitemeshBufferFragment.Builder body;
+
+    /**
+     * Instantiates a new body tag rule.
+     *
+     * @param page
+     *            the page
+     * @param body
+     *            the body
+     */
+    public BodyTagRule(PageBuilder page, SitemeshBufferFragment.Builder body) {
+<span class="fc" id="L40">        super(&quot;body&quot;);</span>
+<span class="fc" id="L41">        this.page = page;</span>
+<span class="fc" id="L42">        this.body = body;</span>
+<span class="fc" id="L43">    }</span>
+
+    @Override
+    public void process(Tag tag) {
+<span class="fc bfc" id="L47" title="All 4 branches covered.">        if (tag.getType() == Tag.OPEN || tag.getType() == Tag.EMPTY) {</span>
+<span class="fc" id="L48">            context.currentBuffer().setStart(tag.getPosition() + tag.getLength());</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            for (int i = 0; i &lt; tag.getAttributeCount(); i++) {</span>
+<span class="fc" id="L50">                page.addProperty(&quot;body.&quot; + tag.getAttributeName(i), tag.getAttributeValue(i));</span>
+            }
+<span class="fc" id="L52">            body.markStart(tag.getPosition() + tag.getLength());</span>
+        } else {
+<span class="fc" id="L54">            body.end(tag.getPosition());</span>
+<span class="fc" id="L55">            context.pushBuffer(SitemeshBufferFragment.builder()); // unused buffer: everything after &lt;/body&gt; is</span>
+            // discarded.
+        }
+<span class="fc" id="L58">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

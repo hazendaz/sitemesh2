@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FastByteArrayOutputStream.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.util</a> &gt; <span class="el_source">FastByteArrayOutputStream.java</span></div><h1>FastByteArrayOutputStream.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        FastByteArrayOutputStream
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.util;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+/**
+ * A speedy implementation of ByteArrayOutputStream. It's not synchronized, and it does not copy buffers when it's
+ * expanded. There's also no copying of the internal buffer if it's contents is extracted with the writeTo(stream)
+ * method.
+ *
+ * @author Rickard �berg
+ * @author &lt;a href=&quot;mailto:scott@atlassian.com&quot;&gt;Scott Farquhar&lt;/a&gt;
+ */
+public class FastByteArrayOutputStream extends ByteArrayOutputStream {
+
+    /** The Constant DEFAULT_BLOCK_SIZE. */
+    private static final int DEFAULT_BLOCK_SIZE = 8192;
+
+    /** Internal buffer. */
+    private byte[] buffer;
+
+    /** The buffers. */
+    private LinkedList&lt;byte[]&gt; buffers;
+
+    /** The index. */
+    private int index;
+
+    /** The size. */
+    private int size;
+
+    /** The block size. */
+    private int blockSize;
+
+    /**
+     * Instantiates a new fast byte array output stream.
+     */
+    public FastByteArrayOutputStream() {
+<span class="nc" id="L66">        this(DEFAULT_BLOCK_SIZE);</span>
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * Instantiates a new fast byte array output stream.
+     *
+     * @param aSize
+     *            the a size
+     */
+<span class="nc" id="L75">    public FastByteArrayOutputStream(int aSize) {</span>
+<span class="nc" id="L76">        blockSize = aSize;</span>
+<span class="nc" id="L77">        buffer = new byte[blockSize];</span>
+<span class="nc" id="L78">    }</span>
+
+    @Override
+    public void writeTo(OutputStream out) throws IOException {
+        // check if we have a list of buffers
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (buffers != null) {</span>
+<span class="nc" id="L84">            Iterator&lt;byte[]&gt; iterator = buffers.iterator();</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
+<span class="nc" id="L86">                byte[] bytes = (byte[]) iterator.next();</span>
+<span class="nc" id="L87">                out.write(bytes, 0, blockSize);</span>
+<span class="nc" id="L88">            }</span>
+        }
+
+        // write the internal buffer directly
+<span class="nc" id="L92">        out.write(buffer, 0, index);</span>
+<span class="nc" id="L93">    }</span>
+
+    @Override
+    public int size() {
+<span class="nc" id="L97">        return size + index;</span>
+    }
+
+    @Override
+    public byte[] toByteArray() {
+<span class="nc" id="L102">        byte[] data = new byte[size()];</span>
+
+        // check if we have a list of buffers
+<span class="nc" id="L105">        int pos = 0;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (buffers != null) {</span>
+<span class="nc" id="L107">            Iterator&lt;byte[]&gt; iterator = buffers.iterator();</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            while (iterator.hasNext()) {</span>
+<span class="nc" id="L109">                byte[] bytes = (byte[]) iterator.next();</span>
+<span class="nc" id="L110">                System.arraycopy(bytes, 0, data, pos, blockSize);</span>
+<span class="nc" id="L111">                pos += blockSize;</span>
+<span class="nc" id="L112">            }</span>
+        }
+
+        // write the internal buffer directly
+<span class="nc" id="L116">        System.arraycopy(buffer, 0, data, pos, index);</span>
+
+<span class="nc" id="L118">        return data;</span>
+    }
+
+    @Override
+    public void write(int datum) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (index == blockSize) {</span>
+            // Create new buffer and store current in linked list
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (buffers == null) {</span>
+<span class="nc" id="L126">                buffers = new LinkedList&lt;byte[]&gt;();</span>
+            }
+
+<span class="nc" id="L129">            buffers.addLast(buffer);</span>
+
+<span class="nc" id="L131">            buffer = new byte[blockSize];</span>
+<span class="nc" id="L132">            size += index;</span>
+<span class="nc" id="L133">            index = 0;</span>
+        }
+
+        // store the byte
+<span class="nc" id="L137">        buffer[index++] = (byte) datum;</span>
+<span class="nc" id="L138">    }</span>
+
+    @Override
+    public void write(byte[] data, int offset, int length) {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (data == null) {</span>
+<span class="nc" id="L143">            throw new NullPointerException();</span>
+        }
+<span class="nc bnc" id="L145" title="All 6 branches missed.">        if (offset &lt; 0 || offset + length &gt; data.length || length &lt; 0) {</span>
+<span class="nc" id="L146">            throw new IndexOutOfBoundsException();</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        } else if (index + length &gt;= blockSize) {</span>
+            // Write byte by byte
+            // FIXME optimize this to use arraycopy's instead
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            for (int i = 0; i &lt; length; i++) {</span>
+<span class="nc" id="L151">                write(data[offset + i]);</span>
+            }
+        } else {
+            // copy in the subarray
+<span class="nc" id="L155">            System.arraycopy(data, offset, buffer, index, length);</span>
+<span class="nc" id="L156">            index += length;</span>
+        }
+<span class="nc" id="L158">    }</span>
+
+    @Override
+    public synchronized void reset() {
+<span class="nc" id="L162">        buffer = new byte[blockSize];</span>
+<span class="nc" id="L163">        buffers = null;</span>
+<span class="nc" id="L164">    }</span>
+
+    @Override
+    public String toString(String enc) throws UnsupportedEncodingException {
+<span class="nc" id="L168">        return new String(toByteArray(), Charset.forName(enc));</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L173">        return new String(toByteArray(), StandardCharsets.UTF_8);</span>
+    }
+
+    @Override
+    public void flush() throws IOException {
+        // does nothing
+<span class="nc" id="L179">    }</span>
+
+    @Override
+    public void close() throws IOException {
+        // does nothing
+<span class="nc" id="L184">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

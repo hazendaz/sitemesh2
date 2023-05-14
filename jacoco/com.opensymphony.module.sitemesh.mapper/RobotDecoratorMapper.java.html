@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RobotDecoratorMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">RobotDecoratorMapper.java</span></div><h1>RobotDecoratorMapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        RobotDecoratorMapper
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.mapper;
+
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.RequestConstants;
+
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+/**
+ * The RobotDecoratorMapper will use the specified decorator when the requester is identified as a robot (also known as
+ * spider, crawler, ferret) of a search engine.
+ * &lt;p&gt;
+ * The name of this decorator should be supplied in the &lt;code&gt;decorator&lt;/code&gt; property.
+ *
+ * @author &lt;a href=&quot;mailto:pathos@pandora.be&quot;&gt;Mathias Bogaert&lt;/a&gt;
+ *
+ * @see com.opensymphony.module.sitemesh.DecoratorMapper
+ */
+<span class="nc" id="L46">public class RobotDecoratorMapper extends AbstractDecoratorMapper {</span>
+
+    /** The decorator name. */
+<span class="nc" id="L49">    private String decoratorName = null;</span>
+
+    /** All known robot hosts (list can be found &lt;a href=&quot;http://www.spiderhunter.com&quot;&gt;here&lt;/a&gt;). */
+<span class="nc" id="L52">    private static final String[] botHosts = { &quot;alltheweb.com&quot;, &quot;alta-vista.net&quot;, &quot;altavista.com&quot;, &quot;atext.com&quot;,</span>
+            &quot;euroseek.net&quot;, &quot;excite.com&quot;, &quot;fast-search.net&quot;, &quot;google.com&quot;, &quot;googlebot.com&quot;, &quot;infoseek.co.jp&quot;,
+            &quot;infoseek.com&quot;, &quot;inktomi.com&quot;, &quot;inktomisearch.com&quot;, &quot;linuxtoday.com.au&quot;, &quot;lycos.com&quot;, &quot;lycos.com&quot;,
+            &quot;northernlight.com&quot;, &quot;pa-x.dec.com&quot; };
+
+    /**
+     * All known robot user-agent headers (list can be found
+     * &lt;a href=&quot;http://www.robotstxt.org/wc/active.html&quot;&gt;here&lt;/a&gt;).
+     * &lt;p&gt;
+     * NOTE: To avoid bad detection:
+     * &lt;/p&gt;
+     * &lt;ul&gt;
+     * &lt;li&gt;Robots with ID of 2 letters only were removed&lt;/li&gt;
+     * &lt;li&gt;Robot called &quot;webs&quot; were removed&lt;/li&gt;
+     * &lt;li&gt;directhit was changed in direct_hit (its real id)&lt;/li&gt;
+     * &lt;/ul&gt;
+     */
+<span class="nc" id="L69">    private static final String[] botAgents = { &quot;acme.spider&quot;, &quot;ahoythehomepagefinder&quot;, &quot;alkaline&quot;, &quot;appie&quot;,</span>
+            &quot;arachnophilia&quot;, &quot;architext&quot;, &quot;aretha&quot;, &quot;ariadne&quot;, &quot;aspider&quot;, &quot;atn.txt&quot;, &quot;atomz&quot;, &quot;auresys&quot;, &quot;backrub&quot;,
+            &quot;bigbrother&quot;, &quot;bjaaland&quot;, &quot;blackwidow&quot;, &quot;blindekuh&quot;, &quot;bloodhound&quot;, &quot;brightnet&quot;, &quot;bspider&quot;,
+            &quot;cactvschemistryspider&quot;, &quot;calif&quot;, &quot;cassandra&quot;, &quot;cgireader&quot;, &quot;checkbot&quot;, &quot;churl&quot;, &quot;cmc&quot;, &quot;collective&quot;,
+            &quot;combine&quot;, &quot;conceptbot&quot;, &quot;core&quot;, &quot;cshkust&quot;, &quot;cusco&quot;, &quot;cyberspyder&quot;, &quot;deweb&quot;, &quot;dienstspider&quot;, &quot;diibot&quot;,
+            &quot;direct_hit&quot;, &quot;dnabot&quot;, &quot;download_express&quot;, &quot;dragonbot&quot;, &quot;dwcp&quot;, &quot;ebiness&quot;, &quot;eit&quot;, &quot;emacs&quot;, &quot;emcspider&quot;,
+            &quot;esther&quot;, &quot;evliyacelebi&quot;, &quot;fdse&quot;, &quot;felix&quot;, &quot;ferret&quot;, &quot;fetchrover&quot;, &quot;fido&quot;, &quot;finnish&quot;, &quot;fireball&quot;, &quot;fish&quot;,
+            &quot;fouineur&quot;, &quot;francoroute&quot;, &quot;freecrawl&quot;, &quot;funnelweb&quot;, &quot;gazz&quot;, &quot;gcreep&quot;, &quot;getbot&quot;, &quot;geturl&quot;, &quot;golem&quot;,
+            &quot;googlebot&quot;, &quot;grapnel&quot;, &quot;griffon&quot;, &quot;gromit&quot;, &quot;gulliver&quot;, &quot;hambot&quot;, &quot;harvest&quot;, &quot;havindex&quot;, &quot;hometown&quot;,
+            &quot;wired-digital&quot;, &quot;htdig&quot;, &quot;htmlgobble&quot;, &quot;hyperdecontextualizer&quot;, &quot;ibm&quot;, &quot;iconoclast&quot;, &quot;ilse&quot;, &quot;imagelock&quot;,
+            &quot;incywincy&quot;, &quot;informant&quot;, &quot;infoseek&quot;, &quot;infoseeksidewinder&quot;, &quot;infospider&quot;, &quot;inspectorwww&quot;, &quot;intelliagent&quot;,
+            &quot;iron33&quot;, &quot;israelisearch&quot;, &quot;javabee&quot;, &quot;jcrawler&quot;, &quot;jeeves&quot;, &quot;jobot&quot;, &quot;joebot&quot;, &quot;jubii&quot;, &quot;jumpstation&quot;,
+            &quot;katipo&quot;, &quot;kdd&quot;, &quot;kilroy&quot;, &quot;ko_yappo_robot&quot;, &quot;labelgrabber.txt&quot;, &quot;larbin&quot;, &quot;legs&quot;, &quot;linkscan&quot;, &quot;linkwalker&quot;,
+            &quot;lockon&quot;, &quot;logo_gif&quot;, &quot;lycos&quot;, &quot;macworm&quot;, &quot;magpie&quot;, &quot;mediafox&quot;, &quot;merzscope&quot;, &quot;meshexplorer&quot;, &quot;mindcrawler&quot;,
+            &quot;moget&quot;, &quot;momspider&quot;, &quot;monster&quot;, &quot;motor&quot;, &quot;muscatferret&quot;, &quot;mwdsearch&quot;, &quot;myweb&quot;, &quot;netcarta&quot;, &quot;netmechanic&quot;,
+            &quot;netscoop&quot;, &quot;newscan-online&quot;, &quot;nhse&quot;, &quot;nomad&quot;, &quot;northstar&quot;, &quot;nzexplorer&quot;, &quot;occam&quot;, &quot;octopus&quot;, &quot;orb_search&quot;,
+            &quot;packrat&quot;, &quot;pageboy&quot;, &quot;parasite&quot;, &quot;patric&quot;, &quot;perignator&quot;, &quot;perlcrawler&quot;, &quot;phantom&quot;, &quot;piltdownman&quot;,
+            &quot;pioneer&quot;, &quot;pitkow&quot;, &quot;pjspider&quot;, &quot;pka&quot;, &quot;plumtreewebaccessor&quot;, &quot;poppi&quot;, &quot;portalb&quot;, &quot;puu&quot;, &quot;python&quot;, &quot;raven&quot;,
+            &quot;rbse&quot;, &quot;resumerobot&quot;, &quot;rhcs&quot;, &quot;roadrunner&quot;, &quot;robbie&quot;, &quot;robi&quot;, &quot;roverbot&quot;, &quot;safetynetrobot&quot;, &quot;scooter&quot;,
+            &quot;search_au&quot;, &quot;searchprocess&quot;, &quot;senrigan&quot;, &quot;sgscout&quot;, &quot;shaggy&quot;, &quot;shaihulud&quot;, &quot;sift&quot;, &quot;simbot&quot;, &quot;site-valet&quot;,
+            &quot;sitegrabber&quot;, &quot;sitetech&quot;, &quot;slurp&quot;, &quot;smartspider&quot;, &quot;snooper&quot;, &quot;solbot&quot;, &quot;spanner&quot;, &quot;speedy&quot;,
+            &quot;spider_monkey&quot;, &quot;spiderbot&quot;, &quot;spiderman&quot;, &quot;spry&quot;, &quot;ssearcher&quot;, &quot;suke&quot;, &quot;sven&quot;, &quot;tach_bw&quot;, &quot;tarantula&quot;,
+            &quot;tarspider&quot;, &quot;tcl&quot;, &quot;techbot&quot;, &quot;templeton&quot;, &quot;titin&quot;, &quot;titan&quot;, &quot;tkwww&quot;, &quot;tlspider&quot;, &quot;ucsd&quot;, &quot;udmsearch&quot;,
+            &quot;urlck&quot;, &quot;valkyrie&quot;, &quot;victoria&quot;, &quot;visionsearch&quot;, &quot;voyager&quot;, &quot;vwbot&quot;, &quot;w3index&quot;, &quot;w3m2&quot;, &quot;wanderer&quot;,
+            &quot;webbandit&quot;, &quot;webcatcher&quot;, &quot;webcopy&quot;, &quot;webfetcher&quot;, &quot;webfoot&quot;, &quot;weblayers&quot;, &quot;weblinker&quot;, &quot;webmirror&quot;,
+            &quot;webmoose&quot;, &quot;webquest&quot;, &quot;webreader&quot;, &quot;webreaper&quot;, &quot;websnarf&quot;, &quot;webspider&quot;, &quot;webvac&quot;, &quot;webwalk&quot;, &quot;webwalker&quot;,
+            &quot;webwatch&quot;, &quot;wget&quot;, &quot;whowhere&quot;, &quot;wmir&quot;, &quot;wolp&quot;, &quot;wombat&quot;, &quot;worm&quot;, &quot;wwwc&quot;, &quot;wz101&quot;, &quot;xget&quot;,
+            &quot;nederland.zoek&quot; };
+
+    @Override
+    public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
+<span class="nc" id="L100">        super.init(config, properties, parent);</span>
+<span class="nc" id="L101">        decoratorName = properties.getProperty(&quot;decorator&quot;);</span>
+<span class="nc" id="L102">    }</span>
+
+    @Override
+    public Decorator getDecorator(HttpServletRequest request, Page page) {
+<span class="nc" id="L106">        Decorator result = null;</span>
+
+<span class="nc bnc" id="L108" title="All 4 branches missed.">        if (decoratorName != null &amp;&amp; isBot(request)) {</span>
+<span class="nc" id="L109">            result = getNamedDecorator(request, decoratorName);</span>
+        }
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        return result == null ? super.getDecorator(request, page) : result;</span>
+    }
+
+    /**
+     * Check if the current request came from a robot (also known as spider, crawler, ferret).
+     *
+     * @param request
+     *            the request
+     *
+     * @return true, if is bot
+     */
+    private static boolean isBot(HttpServletRequest request) {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (request == null) {</span>
+<span class="nc" id="L125">            return false;</span>
+        }
+
+        // force creation of a session
+<span class="nc" id="L129">        HttpSession session = request.getSession(true);</span>
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (Boolean.FALSE.equals(session.getAttribute(RequestConstants.ROBOT))) {</span>
+<span class="nc" id="L132">            return false;</span>
+        }
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (Boolean.TRUE.equals(session.getAttribute(RequestConstants.ROBOT))) {</span>
+            // a key was found in the session indicating it is a robot
+<span class="nc" id="L136">            return true;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        } else if (&quot;robots.txt&quot;.indexOf(request.getRequestURI()) != -1) {</span>
+            // there is a specific request for the robots.txt file, so we assume
+            // it must be a robot (only robots request robots.txt)
+
+            // set a key in the session, so the next time we don't have to manually
+            // detect the robot again
+<span class="nc" id="L143">            session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);</span>
+<span class="nc" id="L144">            return true;</span>
+        } else {
+<span class="nc" id="L146">            String userAgent = request.getHeader(&quot;User-Agent&quot;);</span>
+
+<span class="nc bnc" id="L148" title="All 4 branches missed.">            if (userAgent != null &amp;&amp; userAgent.trim().length() &gt; 2) {</span>
+                // first check for common user-agent headers, so that we can speed
+                // this thing up, hopefully clever spiders will not send a fake header
+<span class="nc bnc" id="L151" title="All 4 branches missed.">                if (userAgent.indexOf(&quot;MSIE&quot;) != -1 || userAgent.indexOf(&quot;Gecko&quot;) != -1 // MSIE and Mozilla</span>
+<span class="nc bnc" id="L152" title="All 4 branches missed.">                        || userAgent.indexOf(&quot;Opera&quot;) != -1 || userAgent.indexOf(&quot;iCab&quot;) != -1 // Opera and iCab</span>
+                        // (mac browser)
+<span class="nc bnc" id="L154" title="All 4 branches missed.">                        || userAgent.indexOf(&quot;Konqueror&quot;) != -1 || userAgent.indexOf(&quot;KMeleon&quot;) != -1 // Konqueror</span>
+                        // and KMeleon
+<span class="nc bnc" id="L156" title="All 4 branches missed.">                        || userAgent.indexOf(&quot;4.7&quot;) != -1 || userAgent.indexOf(&quot;Lynx&quot;) != -1) { // NS 4.78 and Lynx</span>
+                    // indicate this session is not a robot
+<span class="nc" id="L158">                    session.setAttribute(RequestConstants.ROBOT, Boolean.FALSE);</span>
+<span class="nc" id="L159">                    return false;</span>
+                }
+
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                for (String botAgent : botAgents) {</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">                    if (userAgent.indexOf(botAgent) != -1) {</span>
+                        // set a key in the session, so the next time we don't have to manually
+                        // detect the robot again
+<span class="nc" id="L166">                        session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);</span>
+<span class="nc" id="L167">                        return true;</span>
+                    }
+                }
+            }
+
+            // detect the robot from the host or user-agent
+<span class="nc" id="L173">            String remoteHost = request.getRemoteHost(); // requires one DNS lookup</span>
+
+            // if the DNS server didn't return a hostname, getRemoteHost returns the
+            // IP address, which is ignored here (the last char is checked, because some
+            // remote hosts begin with the IP)
+<span class="nc bnc" id="L178" title="All 6 branches missed.">            if (remoteHost != null &amp;&amp; remoteHost.length() &gt; 0 &amp;&amp; remoteHost.charAt(remoteHost.length() - 1) &gt; 64) {</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                for (String botHost : botHosts) {</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                    if (remoteHost.indexOf(botHost) != -1) {</span>
+                        // set a key in the session, so the next time we don't have to manually
+                        // detect the robot again
+<span class="nc" id="L183">                        session.setAttribute(RequestConstants.ROBOT, Boolean.TRUE);</span>
+<span class="nc" id="L184">                        return true;</span>
+                    }
+                }
+            }
+
+            // remote host and user agent are not in the predefined list,
+            // so it must be an unknown robot or not a robot
+
+            // indicate this session is not a robot
+<span class="nc" id="L193">            session.setAttribute(RequestConstants.ROBOT, Boolean.FALSE);</span>
+<span class="nc" id="L194">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

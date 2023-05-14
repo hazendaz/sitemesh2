@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HTMLPage2Content.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.sitemesh.compatability</a> &gt; <span class="el_source">HTMLPage2Content.java</span></div><h1>HTMLPage2Content.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.sitemesh.compatability;
+
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.sitemesh.Content;
+
+import java.io.IOException;
+import java.io.Writer;
+
+/**
+ * Adapts a SiteMesh 2 {@link HTMLPage} to a SiteMesh 3 {@link Content}.
+ *
+ * @author Joe Walnes
+ *
+ * @since SiteMesh 3
+ */
+public class HTMLPage2Content implements Content {
+
+    /** The page. */
+    private final HTMLPage page;
+
+    /**
+     * Instantiates a new HTML page 2 content.
+     *
+     * @param page
+     *            the page
+     */
+<span class="nc" id="L40">    public HTMLPage2Content(HTMLPage page) {</span>
+<span class="nc" id="L41">        this.page = page;</span>
+<span class="nc" id="L42">    }</span>
+
+    @Override
+    public void writeOriginal(Writer out) throws IOException {
+<span class="nc" id="L46">        page.writePage(out);</span>
+<span class="nc" id="L47">    }</span>
+
+    @Override
+    public void writeBody(Writer out) throws IOException {
+<span class="nc" id="L51">        page.writeBody(out);</span>
+<span class="nc" id="L52">    }</span>
+
+    @Override
+    public void writeHead(Writer out) throws IOException {
+<span class="nc" id="L56">        page.writeHead(out);</span>
+<span class="nc" id="L57">    }</span>
+
+    @Override
+    public String getTitle() {
+<span class="nc" id="L61">        return page.getTitle();</span>
+    }
+
+    @Override
+    public String getProperty(String name) {
+<span class="nc" id="L66">        return page.getProperty(name);</span>
+    }
+
+    @Override
+    public String[] getPropertyKeys() {
+<span class="nc" id="L71">        return page.getPropertyKeys();</span>
+    }
+
+    @Override
+    public void addProperty(String name, String value) {
+<span class="nc" id="L76">        page.addProperty(name, value);</span>
+<span class="nc" id="L77">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

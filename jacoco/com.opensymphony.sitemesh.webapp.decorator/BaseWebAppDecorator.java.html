@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseWebAppDecorator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.sitemesh.webapp.decorator</a> &gt; <span class="el_source">BaseWebAppDecorator.java</span></div><h1>BaseWebAppDecorator.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.sitemesh.webapp.decorator;
+
+import com.opensymphony.sitemesh.Content;
+import com.opensymphony.sitemesh.Decorator;
+import com.opensymphony.sitemesh.SiteMeshContext;
+import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
+
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Convenient base class for all Java web-app based decorators that make use of the Servlet API.
+ *
+ * @author Joe Walnes
+ *
+ * @since SiteMesh 3.0
+ */
+<span class="nc" id="L35">public abstract class BaseWebAppDecorator implements Decorator {</span>
+
+    /**
+     * More convenient version of
+     * {@link #render(com.opensymphony.sitemesh.Content, com.opensymphony.sitemesh.SiteMeshContext)} suited for Servlet
+     * API calls.
+     *
+     * @param content
+     *            the content
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param servletContext
+     *            the servlet context
+     * @param webAppContext
+     *            the web app context
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws ServletException
+     *             the servlet exception
+     */
+    protected abstract void render(Content content, HttpServletRequest request, HttpServletResponse response,
+            ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException;
+
+    /**
+     * Render.
+     *
+     * @param content
+     *            the content
+     * @param context
+     *            the context
+     */
+    @Override
+    public void render(Content content, SiteMeshContext context) {
+<span class="nc" id="L71">        SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;</span>
+        try {
+<span class="nc" id="L73">            render(content, webAppContext.getRequest(), webAppContext.getResponse(), webAppContext.getServletContext(),</span>
+                    webAppContext);
+<span class="nc" id="L75">        } catch (IOException | ServletException e) {</span>
+<span class="nc" id="L76">            throw new RuntimeException(&quot;Unexpected exception during rendering&quot;, e);</span>
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

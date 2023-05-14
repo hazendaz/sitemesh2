@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSitemeshBuffer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh</a> &gt; <span class="el_source">DefaultSitemeshBuffer.java</span></div><h1>DefaultSitemeshBuffer.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * The default implementation of sitemesh buffer.
+ */
+public class DefaultSitemeshBuffer implements SitemeshBuffer {
+
+    /** The buffer. */
+    private final char[] buffer;
+
+    /** The length. */
+    private final int length;
+
+    /** The buffer fragments. */
+    private final TreeMap&lt;Integer, SitemeshBufferFragment&gt; bufferFragments;
+
+    /**
+     * Instantiates a new default sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     */
+    public DefaultSitemeshBuffer(char[] buffer) {
+<span class="fc" id="L42">        this(buffer, buffer.length);</span>
+<span class="fc" id="L43">    }</span>
+
+    /**
+     * Instantiates a new default sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     * @param length
+     *            the length
+     */
+    public DefaultSitemeshBuffer(char[] buffer, int length) {
+<span class="fc" id="L54">        this(buffer, length, new TreeMap&lt;Integer, SitemeshBufferFragment&gt;());</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Instantiates a new default sitemesh buffer.
+     *
+     * @param buffer
+     *            the buffer
+     * @param length
+     *            the length
+     * @param bufferFragments
+     *            the buffer fragments
+     */
+<span class="fc" id="L67">    public DefaultSitemeshBuffer(char[] buffer, int length, TreeMap&lt;Integer, SitemeshBufferFragment&gt; bufferFragments) {</span>
+<span class="fc" id="L68">        this.buffer = buffer;</span>
+<span class="fc" id="L69">        this.length = length;</span>
+<span class="fc" id="L70">        this.bufferFragments = bufferFragments;</span>
+<span class="fc" id="L71">    }</span>
+
+    @Override
+    public void writeTo(Writer writer, int start, int length) throws IOException {
+<span class="fc" id="L75">        int pos = start;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, SitemeshBufferFragment&gt; entry : bufferFragments.entrySet()) {</span>
+<span class="fc" id="L77">            int fragmentPosition = entry.getKey();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (fragmentPosition &lt; pos) {</span>
+<span class="fc" id="L79">                continue;</span>
+            }
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (fragmentPosition &gt; start + length) {</span>
+<span class="fc" id="L82">                break;</span>
+            }
+            // Write the buffer up to the fragment
+<span class="fc" id="L85">            writer.write(buffer, pos, fragmentPosition - pos);</span>
+            // Write the fragment
+<span class="fc" id="L87">            entry.getValue().writeTo(writer);</span>
+            // increment pos
+<span class="fc" id="L89">            pos = fragmentPosition;</span>
+<span class="fc" id="L90">        }</span>
+        // Write out the remaining buffer
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (pos &lt; start + length) {</span>
+<span class="fc" id="L93">            writer.write(buffer, pos, start + length - pos);</span>
+        }
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    public int getTotalLength() {
+<span class="fc" id="L99">        return getTotalLength(0, length);</span>
+    }
+
+    @Override
+    public int getTotalLength(int start, int length) {
+<span class="fc" id="L104">        int total = length;</span>
+
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, SitemeshBufferFragment&gt; entry : bufferFragments.entrySet()) {</span>
+<span class="fc" id="L107">            int fragmentPosition = entry.getKey();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">            if (fragmentPosition &lt; start) {</span>
+<span class="nc" id="L109">                continue;</span>
+            }
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">            if (fragmentPosition &gt; start + length) {</span>
+<span class="nc" id="L112">                break;</span>
+            }
+<span class="fc" id="L114">            total += entry.getValue().getTotalLength();</span>
+<span class="fc" id="L115">        }</span>
+<span class="fc" id="L116">        return total;</span>
+    }
+
+    @Override
+    public int getBufferLength() {
+<span class="fc" id="L121">        return length;</span>
+    }
+
+    @Override
+    public char[] getCharArray() {
+<span class="fc" id="L126">        return buffer;</span>
+    }
+
+    @Override
+    public boolean hasFragments() {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        return !bufferFragments.isEmpty();</span>
+    }
+
+    /**
+     * Builder.
+     *
+     * @return the builder
+     */
+    public static Builder builder() {
+<span class="nc" id="L140">        return new Builder();</span>
+    }
+
+    /**
+     * Builder.
+     *
+     * @param sitemeshBuffer
+     *            the sitemesh buffer
+     *
+     * @return the builder
+     */
+    public static Builder builder(SitemeshBuffer sitemeshBuffer) {
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (sitemeshBuffer instanceof DefaultSitemeshBuffer) {</span>
+<span class="fc" id="L153">            return new Builder((DefaultSitemeshBuffer) sitemeshBuffer);</span>
+        }
+<span class="fc" id="L155">        return new Builder(sitemeshBuffer);</span>
+    }
+
+    /**
+     * The Class Builder.
+     */
+    public static class Builder {
+
+        /** The buffer. */
+        private char[] buffer;
+
+        /** The length. */
+        private int length;
+
+        /** The fragments. */
+        private final TreeMap&lt;Integer, SitemeshBufferFragment&gt; fragments;
+
+        /**
+         * Instantiates a new builder.
+         */
+<span class="nc" id="L175">        private Builder() {</span>
+<span class="nc" id="L176">            this.fragments = new TreeMap&lt;&gt;();</span>
+<span class="nc" id="L177">        }</span>
+
+        /**
+         * Instantiates a new builder.
+         *
+         * @param buffer
+         *            the buffer
+         */
+<span class="fc" id="L185">        private Builder(DefaultSitemeshBuffer buffer) {</span>
+<span class="fc" id="L186">            this.buffer = buffer.buffer;</span>
+<span class="fc" id="L187">            this.length = buffer.length;</span>
+<span class="fc" id="L188">            this.fragments = new TreeMap&lt;&gt;(buffer.bufferFragments);</span>
+<span class="fc" id="L189">        }</span>
+
+        /**
+         * Instantiates a new builder.
+         *
+         * @param buffer
+         *            the buffer
+         */
+<span class="fc" id="L197">        private Builder(SitemeshBuffer buffer) {</span>
+<span class="fc" id="L198">            this.buffer = buffer.getCharArray();</span>
+<span class="fc" id="L199">            this.length = buffer.getBufferLength();</span>
+<span class="fc" id="L200">            this.fragments = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L201">        }</span>
+
+        /**
+         * Sets the buffer.
+         *
+         * @param buffer
+         *            the buffer
+         *
+         * @return the builder
+         */
+        public Builder setBuffer(char[] buffer) {
+<span class="nc" id="L212">            this.buffer = buffer;</span>
+<span class="nc" id="L213">            return this;</span>
+        }
+
+        /**
+         * Sets the length.
+         *
+         * @param length
+         *            the length
+         *
+         * @return the builder
+         */
+        public Builder setLength(int length) {
+<span class="nc" id="L225">            this.length = length;</span>
+<span class="nc" id="L226">            return this;</span>
+        }
+
+        /**
+         * Insert.
+         *
+         * @param position
+         *            the position
+         * @param fragment
+         *            the fragment
+         *
+         * @return the builder
+         */
+        public Builder insert(int position, SitemeshBufferFragment fragment) {
+<span class="fc" id="L240">            this.fragments.put(position, fragment);</span>
+<span class="fc" id="L241">            return this;</span>
+        }
+
+        /**
+         * Builds the.
+         *
+         * @return the sitemesh buffer
+         */
+        public SitemeshBuffer build() {
+<span class="fc" id="L250">            return new DefaultSitemeshBuffer(buffer, length, fragments);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

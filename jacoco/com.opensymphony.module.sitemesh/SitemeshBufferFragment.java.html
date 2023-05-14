@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SitemeshBufferFragment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh</a> &gt; <span class="el_source">SitemeshBufferFragment.java</span></div><h1>SitemeshBufferFragment.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.module.sitemesh;
+
+import com.opensymphony.module.sitemesh.html.util.StringSitemeshBuffer;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * A fragment of a sitemesh buffer. This includes a start and a length, and may contain a list of deleted sections of
+ * the buffer.
+ */
+public class SitemeshBufferFragment {
+
+    /** The buffer. */
+    private final SitemeshBuffer buffer;
+
+    /** The start. */
+    private final int start;
+
+    /** The length. */
+    private final int length;
+
+    /** The deletions. */
+    private final TreeMap&lt;Integer, Integer&gt; deletions;
+
+    /**
+     * Instantiates a new sitemesh buffer fragment.
+     *
+     * @param buffer
+     *            the buffer
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     */
+    public SitemeshBufferFragment(SitemeshBuffer buffer, int start, int length) {
+<span class="fc" id="L53">        this(buffer, start, length, new TreeMap&lt;Integer, Integer&gt;());</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Create a sitemesh buffer fragment.
+     *
+     * @param buffer
+     *            The buffer that this is a fragment of
+     * @param start
+     *            The start of the fragment
+     * @param length
+     *            The length of the fragment
+     * @param deletions
+     *            Deleted parts of the fragment, as a map of positions to the length to be deleted.
+     */
+<span class="fc" id="L68">    public SitemeshBufferFragment(SitemeshBuffer buffer, int start, int length, TreeMap&lt;Integer, Integer&gt; deletions) {</span>
+<span class="fc" id="L69">        this.buffer = buffer;</span>
+<span class="fc" id="L70">        this.start = start;</span>
+<span class="fc" id="L71">        this.length = length;</span>
+<span class="fc" id="L72">        this.deletions = deletions;</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Write the fragment to the given writer.
+     *
+     * @param writer
+     *            The writer to write the fragment to
+     *
+     * @throws IOException
+     *             If an error occured
+     */
+    public void writeTo(Writer writer) throws IOException {
+<span class="fc" id="L85">        int pos = start;</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, Integer&gt; delete : deletions.entrySet()) {</span>
+<span class="fc" id="L87">            int deletePos = delete.getKey();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (deletePos &gt;= pos) {</span>
+<span class="fc" id="L89">                buffer.writeTo(writer, pos, deletePos - pos);</span>
+            }
+<span class="fc" id="L91">            pos = Math.max(deletePos + delete.getValue(), start);</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        int remain = start + length - pos;</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (remain &gt;= 0) {</span>
+<span class="fc" id="L95">            buffer.writeTo(writer, pos, remain);</span>
+        }
+<span class="fc" id="L97">    }</span>
+
+    /**
+     * Get the total length of the fragment, taking deletions and chained buffers of the buffer.
+     *
+     * @return The total length of the fragment
+     */
+    public int getTotalLength() {
+<span class="fc" id="L105">        int total = 0;</span>
+<span class="fc" id="L106">        int pos = start;</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        for (Map.Entry&lt;Integer, Integer&gt; delete : deletions.entrySet()) {</span>
+<span class="nc" id="L108">            int deletePos = delete.getKey();</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (deletePos &gt; pos) {</span>
+<span class="nc" id="L110">                total += buffer.getTotalLength(pos, deletePos - pos);</span>
+            }
+<span class="nc" id="L112">            pos = deletePos + delete.getValue();</span>
+<span class="nc" id="L113">        }</span>
+<span class="fc" id="L114">        int remain = start + length - pos;</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        if (remain &gt; 0) {</span>
+<span class="fc" id="L116">            total += buffer.getTotalLength(pos, remain);</span>
+        }
+<span class="fc" id="L118">        return total;</span>
+    }
+
+    /**
+     * Gets the string content.
+     *
+     * @return the string content
+     */
+    public String getStringContent() {
+<span class="fc" id="L127">        StringWriter writer = new StringWriter();</span>
+        try {
+<span class="fc" id="L129">            writeTo(writer);</span>
+<span class="nc" id="L130">        } catch (IOException e) {</span>
+<span class="nc" id="L131">            throw new RuntimeException(&quot;Exception writing to buffer&quot;, e);</span>
+<span class="fc" id="L132">        }</span>
+<span class="fc" id="L133">        return writer.toString();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L138">        return &quot;SitemeshBufferFragment{&quot; +</span>
+        // Here we generate our own ID, because if the underlying writer is a CharArrayWriter, we'll end up
+        // with its entire contents, which we don't really want in this method.
+<span class="nc" id="L141">                &quot;buffer=&quot; + buffer.getClass().getName() + &quot;@&quot; + Integer.toHexString(hashCode()) + &quot;, start=&quot; + start</span>
+                + &quot;, length=&quot; + length + &quot;, deletions=&quot; + deletions + '}';
+    }
+
+    /**
+     * Gets the start.
+     *
+     * @return the start
+     */
+    public int getStart() {
+<span class="nc" id="L151">        return start;</span>
+    }
+
+    /**
+     * Gets the length.
+     *
+     * @return the length
+     */
+    public int getLength() {
+<span class="nc" id="L160">        return length;</span>
+    }
+
+    /**
+     * Builder.
+     *
+     * @return the builder
+     */
+    public static Builder builder() {
+<span class="fc" id="L169">        return new Builder();</span>
+    }
+
+    /**
+     * Builder.
+     *
+     * @param fragment
+     *            the fragment
+     *
+     * @return the builder
+     */
+    public static Builder builder(SitemeshBufferFragment fragment) {
+<span class="nc" id="L181">        return new Builder(fragment);</span>
+    }
+
+    /**
+     * A builder for fragments.
+     */
+    public static class Builder {
+
+        /** The buffer. */
+        private DefaultSitemeshBuffer.Builder buffer;
+
+        /** The start. */
+        private int start;
+
+        /** The length. */
+        private int length;
+
+        /** The deletions. */
+        private final TreeMap&lt;Integer, Integer&gt; deletions;
+
+        /** The start delete. */
+        private Integer startDelete;
+
+        /**
+         * Instantiates a new builder.
+         */
+<span class="fc" id="L207">        private Builder() {</span>
+<span class="fc" id="L208">            this.deletions = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L209">        }</span>
+
+        /**
+         * Instantiates a new builder.
+         *
+         * @param fragment
+         *            the fragment
+         */
+<span class="nc" id="L217">        private Builder(SitemeshBufferFragment fragment) {</span>
+<span class="nc" id="L218">            this.buffer = DefaultSitemeshBuffer.builder(fragment.buffer);</span>
+<span class="nc" id="L219">            this.start = fragment.start;</span>
+<span class="nc" id="L220">            this.length = fragment.length;</span>
+<span class="nc" id="L221">            this.deletions = new TreeMap&lt;&gt;(fragment.deletions);</span>
+<span class="nc" id="L222">        }</span>
+
+        /**
+         * Sets the start.
+         *
+         * @param start
+         *            the start
+         *
+         * @return the builder
+         */
+        public Builder setStart(int start) {
+<span class="fc" id="L233">            this.start = start;</span>
+<span class="fc" id="L234">            return this;</span>
+        }
+
+        /**
+         * Sets the length.
+         *
+         * @param length
+         *            the length
+         *
+         * @return the builder
+         */
+        public Builder setLength(int length) {
+<span class="fc" id="L246">            this.length = length;</span>
+<span class="fc" id="L247">            return this;</span>
+        }
+
+        /**
+         * Delete length characters from pos in this buffer fragment.
+         *
+         * @param pos
+         *            The position to delete from
+         * @param length
+         *            The number of characters to delete
+         *
+         * @return The builder
+         */
+        public Builder delete(int pos, int length) {
+<span class="fc" id="L261">            this.deletions.put(pos, length);</span>
+<span class="fc" id="L262">            return this;</span>
+        }
+
+        /**
+         * Mark the start of the fragment.
+         *
+         * @param pos
+         *            The start of the fragment
+         *
+         * @return The builder
+         */
+        public Builder markStart(int pos) {
+<span class="fc" id="L274">            this.start = pos;</span>
+<span class="fc" id="L275">            this.length = 0;</span>
+<span class="fc" id="L276">            return this;</span>
+        }
+
+        /**
+         * End the fragment.
+         *
+         * @param pos
+         *            The position of the end of the fragment
+         *
+         * @return The builder
+         */
+        public Builder end(int pos) {
+<span class="fc" id="L288">            this.length = pos - this.start;</span>
+<span class="fc" id="L289">            return this;</span>
+        }
+
+        /**
+         * Mark the start of a deletion.
+         *
+         * @param pos
+         *            The position to start deleting from
+         *
+         * @return The builder
+         *
+         * @throws IllegalStateException
+         *             If markStartDelete() has already been called and endDelete() hasn't been called
+         */
+        public Builder markStartDelete(int pos) {
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">            if (startDelete != null) {</span>
+<span class="nc" id="L305">                throw new IllegalStateException(&quot;Can't nested delete...&quot;);</span>
+            }
+<span class="fc" id="L307">            startDelete = pos;</span>
+<span class="fc" id="L308">            return this;</span>
+        }
+
+        /**
+         * End the current deletion.
+         *
+         * @param pos
+         *            The position to delete to
+         *
+         * @return The builder
+         *
+         * @throws IllegalStateException
+         *             If markStartDelete() hasn't been called
+         */
+        public Builder endDelete(int pos) {
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">            if (startDelete == null) {</span>
+<span class="nc" id="L324">                throw new IllegalStateException(&quot;Ending delete with no start delete...&quot;);</span>
+            }
+<span class="fc" id="L326">            delete(startDelete, pos - startDelete);</span>
+<span class="fc" id="L327">            startDelete = null;</span>
+<span class="fc" id="L328">            return this;</span>
+        }
+
+        /**
+         * Insert the given fragment to the given position.
+         *
+         * @param position
+         *            The position to insert the fragment to
+         * @param fragment
+         *            The fragment to insert
+         *
+         * @return The builder
+         */
+        public Builder insert(int position, SitemeshBufferFragment fragment) {
+<span class="fc" id="L342">            buffer.insert(position, fragment);</span>
+<span class="fc" id="L343">            return this;</span>
+        }
+
+        /**
+         * Insert the given string fragment to the given position.
+         *
+         * @param position
+         *            The position to insert at
+         * @param fragment
+         *            The fragment to insert
+         *
+         * @return The builder
+         */
+        public Builder insert(int position, String fragment) {
+<span class="fc" id="L357">            buffer.insert(position, StringSitemeshBuffer.createBufferFragment(fragment));</span>
+<span class="fc" id="L358">            return this;</span>
+        }
+
+        /**
+         * Set the buffer. This resets both start and length to be that of the buffer.
+         *
+         * @param sitemeshBuffer
+         *            The buffer to set.
+         *
+         * @return The builder
+         */
+        public Builder setBuffer(SitemeshBuffer sitemeshBuffer) {
+<span class="fc" id="L370">            this.buffer = DefaultSitemeshBuffer.builder(sitemeshBuffer);</span>
+<span class="fc" id="L371">            this.start = 0;</span>
+<span class="fc" id="L372">            this.length = sitemeshBuffer.getBufferLength();</span>
+<span class="fc" id="L373">            return this;</span>
+        }
+
+        /**
+         * Build the fragment.
+         *
+         * @return The built fragment
+         */
+        public SitemeshBufferFragment build() {
+<span class="fc" id="L382">            return new SitemeshBufferFragment(buffer.build(), start, length, deletions);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

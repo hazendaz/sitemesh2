@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PathMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">PathMapper.java</span></div><h1>PathMapper.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+/*
+ * Title:        PathMapper
+ * Description:
+ *
+ * This software is published under the terms of the OpenSymphony Software
+ * License version 1.1, of which a copy has been included with this
+ * distribution in the LICENSE.txt file.
+ */
+
+package com.opensymphony.module.sitemesh.mapper;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * The PathMapper is used to map file patterns to keys, and find an approriate key for a given file path. The pattern
+ * rules are consistent with those defined in the Servlet 2.3 API on the whole. Wildcard patterns are also supported,
+ * using any combination of * and ?.
+ * &lt;h2&gt;Example&lt;/h2&gt; &lt;blockquote&gt;&lt;code&gt;
+ * PathMapper pm = new PathMapper();&lt;br&gt;
+ * &lt;br&gt;
+ * pm.put(&quot;one&quot;,&quot;/&quot;);&lt;br&gt;
+ * pm.put(&quot;two&quot;,&quot;/mydir/*&quot;);&lt;br&gt;
+ * pm.put(&quot;three&quot;,&quot;*.xml&quot;);&lt;br&gt;
+ * pm.put(&quot;four&quot;,&quot;/myexactfile.html&quot;);&lt;br&gt;
+ * pm.put(&quot;five&quot;,&quot;/*\/admin/*.??ml&quot;);&lt;br&gt;
+ * &lt;br&gt;
+ * String result1 = pm.get(&quot;/mydir/myfile.xml&quot;); // returns &quot;two&quot;;&lt;br&gt;
+ * String result2 = pm.get(&quot;/mydir/otherdir/admin/myfile.html&quot;); // returns &quot;five&quot;;&lt;br&gt;
+ * &lt;/code&gt;&lt;/blockquote&gt;
+ *
+ * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:mcannon@internet.com&quot;&gt;Mike Cannon-Brookes&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:hani@formicary.net&quot;&gt;Hani Suleiman&lt;/a&gt;
+ */
+<span class="fc" id="L50">public class PathMapper {</span>
+
+    /** The mappings. */
+<span class="fc" id="L53">    private Map&lt;String, String&gt; mappings = new HashMap&lt;String, String&gt;();</span>
+
+    /**
+     * Add a key and appropriate matching pattern.
+     *
+     * @param key
+     *            the key
+     * @param pattern
+     *            the pattern
+     */
+    public void put(String key, String pattern) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (key != null) {</span>
+<span class="fc" id="L65">            mappings.put(pattern, key);</span>
+        }
+<span class="fc" id="L67">    }</span>
+
+    /**
+     * Retrieve appropriate key by matching patterns with supplied path.
+     *
+     * @param path
+     *            the path
+     *
+     * @return the string
+     */
+    public String get(String path) {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (path == null) {</span>
+<span class="fc" id="L79">            path = &quot;/&quot;;</span>
+        }
+<span class="fc" id="L81">        String mapped = findKey(path, mappings);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (mapped == null) {</span>
+<span class="fc" id="L83">            return null;</span>
+        }
+<span class="fc" id="L85">        return (String) mappings.get(mapped);</span>
+    }
+
+    /**
+     * Find exact key in mappings.
+     *
+     * @param path
+     *            the path
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
+    private static String findKey(String path, Map&lt;String, String&gt; mappings) {
+<span class="fc" id="L99">        String result = findExactKey(path, mappings);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (result == null) {</span>
+<span class="fc" id="L101">            result = findComplexKey(path, mappings);</span>
+        }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (result == null) {</span>
+<span class="fc" id="L104">            result = findDefaultKey(mappings);</span>
+        }
+<span class="fc" id="L106">        return result;</span>
+    }
+
+    /**
+     * Check if path matches exact pattern ( /blah/blah.jsp ).
+     *
+     * @param path
+     *            the path
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
+    private static String findExactKey(String path, Map&lt;String, String&gt; mappings) {
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (mappings.containsKey(path)) {</span>
+<span class="fc" id="L121">            return path;</span>
+        }
+<span class="fc" id="L123">        return null;</span>
+    }
+
+    /**
+     * Find complex key.
+     *
+     * @param path
+     *            the path
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
+    private static String findComplexKey(String path, Map&lt;String, String&gt; mappings) {
+<span class="fc" id="L137">        Iterator&lt;String&gt; i = mappings.keySet().iterator();</span>
+<span class="fc" id="L138">        String result = null, key = null;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        while (i.hasNext()) {</span>
+<span class="fc" id="L140">            key = (String) i.next();</span>
+<span class="fc bfc" id="L141" title="All 8 branches covered.">            if (key.length() &gt; 1 &amp;&amp; (key.indexOf('?') != -1 || key.indexOf('*') != -1) &amp;&amp; match(key, path, false)) {</span>
+<span class="fc bfc" id="L142" title="All 4 branches covered.">                if (result == null || key.length() &gt; result.length()) {</span>
+                    // longest key wins
+<span class="fc" id="L144">                    result = key;</span>
+                }
+            }
+        }
+<span class="fc" id="L148">        return result;</span>
+    }
+
+    /**
+     * Look for root pattern ( / ).
+     *
+     * @param mappings
+     *            the mappings
+     *
+     * @return the string
+     */
+    private static String findDefaultKey(Map&lt;String, String&gt; mappings) {
+<span class="fc" id="L160">        String[] defaultKeys = { &quot;/&quot;, &quot;*&quot;, &quot;/*&quot; };</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (String defaultKey : defaultKeys) {</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            if (mappings.containsKey(defaultKey)) {</span>
+<span class="fc" id="L163">                return defaultKey;</span>
+            }
+        }
+<span class="fc" id="L166">        return null;</span>
+    }
+
+    /**
+     * Match.
+     *
+     * @param pattern
+     *            the pattern
+     * @param str
+     *            the str
+     * @param isCaseSensitive
+     *            the is case sensitive
+     *
+     * @return true, if successful
+     */
+    private static boolean match(String pattern, String str, boolean isCaseSensitive) {
+<span class="fc" id="L182">        char[] patArr = pattern.toCharArray();</span>
+<span class="fc" id="L183">        char[] strArr = str.toCharArray();</span>
+<span class="fc" id="L184">        int patIdxStart = 0;</span>
+<span class="fc" id="L185">        int patIdxEnd = patArr.length - 1;</span>
+<span class="fc" id="L186">        int strIdxStart = 0;</span>
+<span class="fc" id="L187">        int strIdxEnd = strArr.length - 1;</span>
+        char ch;
+
+<span class="fc" id="L190">        boolean containsStar = false;</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        for (char element : patArr) {</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">            if (element == '*') {</span>
+<span class="fc" id="L193">                containsStar = true;</span>
+<span class="fc" id="L194">                break;</span>
+            }
+        }
+
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (!containsStar) {</span>
+            // No '*'s, so we make a shortcut
+<span class="nc bnc" id="L200" title="All 2 branches missed.">            if (patIdxEnd != strIdxEnd) {</span>
+<span class="nc" id="L201">                return false; // Pattern and string do not have the same size</span>
+            }
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            for (int i = 0; i &lt;= patIdxEnd; i++) {</span>
+<span class="nc" id="L204">                ch = patArr[i];</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">                if (ch != '?') {</span>
+<span class="nc bnc" id="L206" title="All 6 branches missed.">                    if ((isCaseSensitive &amp;&amp; ch != strArr[i])</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                            || (!isCaseSensitive &amp;&amp; Character.toUpperCase(ch) != Character.toUpperCase(strArr[i]))) {</span>
+<span class="nc" id="L208">                        return false; // Character mismatch</span>
+                    }
+                }
+            }
+<span class="nc" id="L212">            return true; // String matches against pattern</span>
+        }
+
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">        if (patIdxEnd == 0) {</span>
+<span class="nc" id="L216">            return true; // Pattern contains only '*', which matches anything</span>
+        }
+
+        // Process characters before first star
+<span class="fc bfc" id="L220" title="All 4 branches covered.">        while ((ch = patArr[patIdxStart]) != '*' &amp;&amp; strIdxStart &lt;= strIdxEnd) {</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">            if (ch != '?') {</span>
+<span class="pc bpc" id="L222" title="4 of 6 branches missed.">                if ((isCaseSensitive &amp;&amp; ch != strArr[strIdxStart]) || (!isCaseSensitive</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">                        &amp;&amp; Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart]))) {</span>
+<span class="fc" id="L224">                    return false; // Character mismatch</span>
+                }
+            }
+<span class="fc" id="L227">            patIdxStart++;</span>
+<span class="fc" id="L228">            strIdxStart++;</span>
+        }
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (strIdxStart &gt; strIdxEnd) {</span>
+            // All characters in the string are used. Check if only '*'s are
+            // left in the pattern. If so, we succeeded. Otherwise failure.
+<span class="fc bfc" id="L233" title="All 2 branches covered.">            for (int i = patIdxStart; i &lt;= patIdxEnd; i++) {</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">                if (patArr[i] != '*') {</span>
+<span class="fc" id="L235">                    return false;</span>
+                }
+            }
+<span class="fc" id="L238">            return true;</span>
+        }
+
+        // Process characters after last star
+<span class="pc bpc" id="L242" title="1 of 4 branches missed.">        while ((ch = patArr[patIdxEnd]) != '*' &amp;&amp; strIdxStart &lt;= strIdxEnd) {</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">            if (ch != '?') {</span>
+<span class="pc bpc" id="L244" title="4 of 6 branches missed.">                if ((isCaseSensitive &amp;&amp; ch != strArr[strIdxEnd]) || (!isCaseSensitive</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">                        &amp;&amp; Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxEnd]))) {</span>
+<span class="fc" id="L246">                    return false; // Character mismatch</span>
+                }
+            }
+<span class="fc" id="L249">            patIdxEnd--;</span>
+<span class="fc" id="L250">            strIdxEnd--;</span>
+        }
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (strIdxStart &gt; strIdxEnd) {</span>
+            // All characters in the string are used. Check if only '*'s are
+            // left in the pattern. If so, we succeeded. Otherwise failure.
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            for (int i = patIdxStart; i &lt;= patIdxEnd; i++) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                if (patArr[i] != '*') {</span>
+<span class="nc" id="L257">                    return false;</span>
+                }
+            }
+<span class="nc" id="L260">            return true;</span>
+        }
+
+        // process pattern between stars. padIdxStart and patIdxEnd point
+        // always to a '*'.
+<span class="pc bpc" id="L265" title="1 of 4 branches missed.">        while (patIdxStart != patIdxEnd &amp;&amp; strIdxStart &lt;= strIdxEnd) {</span>
+<span class="fc" id="L266">            int patIdxTmp = -1;</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">            for (int i = patIdxStart + 1; i &lt;= patIdxEnd; i++) {</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">                if (patArr[i] == '*') {</span>
+<span class="fc" id="L269">                    patIdxTmp = i;</span>
+<span class="fc" id="L270">                    break;</span>
+                }
+            }
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            if (patIdxTmp == patIdxStart + 1) {</span>
+                // Two stars next to each other, skip the first one.
+<span class="nc" id="L275">                patIdxStart++;</span>
+<span class="nc" id="L276">                continue;</span>
+            }
+            // Find the pattern between padIdxStart &amp; padIdxTmp in str between
+            // strIdxStart &amp; strIdxEnd
+<span class="fc" id="L280">            int patLength = patIdxTmp - patIdxStart - 1;</span>
+<span class="fc" id="L281">            int strLength = strIdxEnd - strIdxStart + 1;</span>
+<span class="fc" id="L282">            int foundIdx = -1;</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">            strLoop: for (int i = 0; i &lt;= strLength - patLength; i++) {</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">                for (int j = 0; j &lt; patLength; j++) {</span>
+<span class="fc" id="L285">                    ch = patArr[patIdxStart + j + 1];</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">                    if (ch != '?') {</span>
+<span class="pc bpc" id="L287" title="4 of 6 branches missed.">                        if ((isCaseSensitive &amp;&amp; ch != strArr[strIdxStart + i + j]) || (!isCaseSensitive</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">                                &amp;&amp; Character.toUpperCase(ch) != Character.toUpperCase(strArr[strIdxStart + i + j]))) {</span>
+<span class="fc" id="L289">                            continue strLoop;</span>
+                        }
+                    }
+                }
+
+<span class="fc" id="L294">                foundIdx = strIdxStart + i;</span>
+<span class="fc" id="L295">                break;</span>
+            }
+
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">            if (foundIdx == -1) {</span>
+<span class="nc" id="L299">                return false;</span>
+            }
+
+<span class="fc" id="L302">            patIdxStart = patIdxTmp;</span>
+<span class="fc" id="L303">            strIdxStart = foundIdx + patLength;</span>
+<span class="fc" id="L304">        }</span>
+
+        // All characters in the string are used. Check if only '*'s are left
+        // in the pattern. If so, we succeeded. Otherwise failure.
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        for (int i = patIdxStart; i &lt;= patIdxEnd; i++) {</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">            if (patArr[i] != '*') {</span>
+<span class="nc" id="L310">                return false;</span>
+            }
+        }
+<span class="fc" id="L313">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

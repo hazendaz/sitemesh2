@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SiteMeshWebAppContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.sitemesh.webapp</a> &gt; <span class="el_source">SiteMeshWebAppContext.java</span></div><h1>SiteMeshWebAppContext.java</h1><pre class="source lang-java linenums">/*
+ * sitemesh2 (https://github.com/hazendaz/sitemesh2)
+ *
+ * Copyright 2011-2023 Hazendaz.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of The Apache Software License,
+ * Version 2.0 which accompanies this distribution, and is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ * Contributors:
+ *     Hazendaz (Jeremy Landis).
+ */
+package com.opensymphony.sitemesh.webapp;
+
+import com.opensymphony.sitemesh.SiteMeshContext;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * The Class SiteMeshWebAppContext.
+ *
+ * @author Joe Walnes
+ *
+ * @since SiteMesh 3
+ */
+public class SiteMeshWebAppContext implements SiteMeshContext {
+
+    /** The Constant IS_USING_STRING_KEY. */
+    private static final String IS_USING_STRING_KEY = &quot;com.opensymphony.sitemesh.USINGSTREAM&quot;;
+
+    /** The request. */
+    private final HttpServletRequest request;
+
+    /** The response. */
+    private final HttpServletResponse response;
+
+    /** The servlet context. */
+    private final ServletContext servletContext;
+
+    /** The content type. */
+    private String contentType;
+
+    /**
+     * Instantiates a new site mesh web app context.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param servletContext
+     *            the servlet context
+     */
+    public SiteMeshWebAppContext(HttpServletRequest request, HttpServletResponse response,
+<span class="nc" id="L57">            ServletContext servletContext) {</span>
+<span class="nc" id="L58">        this.request = request;</span>
+<span class="nc" id="L59">        this.response = response;</span>
+<span class="nc" id="L60">        this.servletContext = servletContext;</span>
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * Gets the request.
+     *
+     * @return the request
+     */
+    public HttpServletRequest getRequest() {
+<span class="nc" id="L69">        return request;</span>
+    }
+
+    /**
+     * Gets the response.
+     *
+     * @return the response
+     */
+    public HttpServletResponse getResponse() {
+<span class="nc" id="L78">        return response;</span>
+    }
+
+    /**
+     * Gets the servlet context.
+     *
+     * @return the servlet context
+     */
+    public ServletContext getServletContext() {
+<span class="nc" id="L87">        return servletContext;</span>
+    }
+
+    /**
+     * Checks if is using stream.
+     *
+     * @return true, if is using stream
+     */
+    public boolean isUsingStream() {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        return request.getAttribute(IS_USING_STRING_KEY) == Boolean.TRUE;</span>
+    }
+
+    /**
+     * Sets the using stream.
+     *
+     * @param isUsingStream
+     *            the new using stream
+     */
+    public void setUsingStream(boolean isUsingStream) {
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        request.setAttribute(IS_USING_STRING_KEY, isUsingStream ? Boolean.TRUE : Boolean.FALSE); // JDK 1.3 friendly</span>
+<span class="nc" id="L107">    }</span>
+
+    @Override
+    public String getContentType() {
+<span class="nc" id="L111">        return contentType;</span>
+    }
+
+    @Override
+    public void setContentType(String contentType) {
+<span class="nc" id="L116">        this.contentType = contentType;</span>
+<span class="nc" id="L117">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
