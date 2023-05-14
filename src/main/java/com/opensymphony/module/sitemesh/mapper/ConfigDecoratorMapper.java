@@ -32,6 +32,9 @@ import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Default implementation of DecoratorMapper. Reads decorators and mappings from the <code>config</code> property
  * (default '/WEB-INF/decorators.xml').
@@ -44,6 +47,9 @@ import javax.servlet.http.HttpServletRequest;
  * @see com.opensymphony.module.sitemesh.mapper.ConfigLoader
  */
 public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
+
+    /** The Logger. */
+    private static final Logger logger = LoggerFactory.getLogger(ConfigDecoratorMapper.class);
 
     /** The config loader. */
     private ConfigLoader configLoader = null;
@@ -83,7 +89,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
         try {
             name = configLoader.getMappedName(thisPath);
         } catch (ServletException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
         Decorator result = getNamedDecorator(request, name);
@@ -97,7 +103,7 @@ public class ConfigDecoratorMapper extends AbstractDecoratorMapper {
         try {
             result = configLoader.getDecoratorByName(name);
         } catch (ServletException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
         if (result == null || result.getRole() != null && !request.isUserInRole(result.getRole())) {
