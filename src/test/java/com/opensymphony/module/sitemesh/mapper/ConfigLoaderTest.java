@@ -15,7 +15,8 @@ package com.opensymphony.module.sitemesh.mapper;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -46,7 +47,7 @@ public class ConfigLoaderTest {
         tempConfigFile.deleteOnExit();
 
         // write to temp file
-        BufferedWriter out = new BufferedWriter(new FileWriter(tempConfigFile));
+        BufferedWriter out = Files.newBufferedWriter(tempConfigFile.toPath(), StandardCharsets.UTF_8);
         out.write("<decorators defaultdir=\"/decorators\">");
 
         // new format test decorators
