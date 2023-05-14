@@ -55,6 +55,10 @@
     </distributionManagement>
 
     <properties>
+        <java.version>11</java.version>
+        <java.release.version>11</java.release.version>
+        <javadoc.java.release.version>11</javadoc.java.release.version>
+
         <!-- Automatic Module Name -->
         <module.name>com.github.hazendaz.sitemesh</module.name>
 
