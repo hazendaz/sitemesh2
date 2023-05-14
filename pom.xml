@@ -26,7 +26,7 @@
 
     <groupId>com.github.hazendaz</groupId>
     <artifactId>sitemesh</artifactId>
-    <version>2.5.0-SNAPSHOT</version>
+    <version>2.5.0</version>
 
     <name>sitemesh</name>
     <description>Sitemesh web-page layout system.</description>
@@ -44,7 +44,7 @@
         <connection>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/hazendaz/sitemesh.git</developerConnection>
         <url>https://github.com/hazendaz/sitemesh</url>
-        <tag>HEAD</tag>
+        <tag>sitemesh-2.5.0</tag>
     </scm>
     <distributionManagement>
         <site>
@@ -59,7 +59,7 @@
         <module.name>com.github.hazendaz.sitemesh</module.name>
 
         <!-- Reproducible Builds -->
-        <project.build.outputTimestamp>1757561022</project.build.outputTimestamp>
+        <project.build.outputTimestamp>1684026154</project.build.outputTimestamp>
     </properties>
 
     <dependencies>
