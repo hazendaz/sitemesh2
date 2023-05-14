@@ -19,7 +19,6 @@ import com.opensymphony.module.sitemesh.PageParser;
 
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -64,27 +63,16 @@ public class ParserPerformanceComparison {
         if (!file.exists()) {
             System.out.println("Downloading " + HTML_URL + " to use for performance test");
             URL url = new URL(HTML_URL);
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                is = url.openStream();
-                os = new FileOutputStream(file);
+            try (InputStream is = url.openStream(); OutputStream os = new FileOutputStream(file)) {
                 copy(is, os);
-            } finally {
-                closeQuietly(is);
-                closeQuietly(os);
             }
         } else {
             System.out.println("Using cached file " + file);
         }
         // Read the cached file into a buffer
         CharArrayWriter writer = new CharArrayWriter();
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             copy(reader, writer);
-        } finally {
-            closeQuietly(reader);
         }
 
         char[] page = writer.toCharArray();
@@ -211,19 +199,4 @@ public class ParserPerformanceComparison {
         }
     }
 
-    /**
-     * Close quietly.
-     *
-     * @param closeable
-     *            the closeable
-     */
-    private static void closeQuietly(Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException ioe) {
-            // Ignore
-        }
-    }
 }
