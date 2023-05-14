@@ -1,4 +1,5 @@
 com.opensymphony.module.sitemesh
+com.opensymphony.module.sitemesh.chaining
 com.opensymphony.module.sitemesh.factory
 com.opensymphony.module.sitemesh.filter
 com.opensymphony.module.sitemesh.freemarker

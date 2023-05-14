@@ -30,6 +30,7 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,55 +38,67 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
+import org.apache.velocity.tools.view.VelocityViewServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet that allows Velocity templates to be used as decorators.
  *
  * @author &lt;a href=&quot;mailto:joe@truemesh.com&quot;&gt;Joe Walnes&lt;/a&gt;
  */
-<span class="nc" id="L47">public class VelocityDecoratorServlet extends VelocityViewServlet {</span>
+<span class="nc" id="L50">public class VelocityDecoratorServlet extends VelocityViewServlet {</span>
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
+    /** The Logger. */
+<span class="nc" id="L56">    private static final Logger logger = LoggerFactory.getLogger(VelocityDecoratorServlet.class);</span>
+
     @Override
-    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context)
-            throws Exception {
-<span class="nc" id="L55">        HTMLPage htmlPage = (HTMLPage) request.getAttribute(RequestConstants.PAGE);</span>
+    public Template handleRequest(HttpServletRequest request, HttpServletResponse response, Context context) {
+<span class="nc" id="L60">        HTMLPage htmlPage = (HTMLPage) request.getAttribute(RequestConstants.PAGE);</span>
         String template;
 
-<span class="nc" id="L58">        context.put(&quot;base&quot;, request.getContextPath());</span>
+<span class="nc" id="L63">        context.put(&quot;base&quot;, request.getContextPath());</span>
 
         // For backwards compatability with apps that used the old VelocityDecoratorServlet
         // that extended VelocityServlet instead of VelocityViewServlet
-<span class="nc" id="L62">        context.put(&quot;req&quot;, request);</span>
-<span class="nc" id="L63">        context.put(&quot;res&quot;, response);</span>
+<span class="nc" id="L67">        context.put(&quot;req&quot;, request);</span>
+<span class="nc" id="L68">        context.put(&quot;res&quot;, response);</span>
 
-<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (htmlPage == null) {</span>
-<span class="nc" id="L66">            context.put(&quot;title&quot;, &quot;Title?&quot;);</span>
-<span class="nc" id="L67">            context.put(&quot;body&quot;, &quot;&lt;p&gt;Body?&lt;/p&gt;&quot;);</span>
-<span class="nc" id="L68">            context.put(&quot;head&quot;, &quot;&lt;!-- head --&gt;&quot;);</span>
-<span class="nc" id="L69">            template = request.getServletPath();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (htmlPage == null) {</span>
+<span class="nc" id="L71">            context.put(&quot;title&quot;, &quot;Title?&quot;);</span>
+<span class="nc" id="L72">            context.put(&quot;body&quot;, &quot;&lt;p&gt;Body?&lt;/p&gt;&quot;);</span>
+<span class="nc" id="L73">            context.put(&quot;head&quot;, &quot;&lt;!-- head --&gt;&quot;);</span>
+<span class="nc" id="L74">            template = request.getServletPath();</span>
         } else {
-<span class="nc" id="L71">            context.put(&quot;title&quot;, OutputConverter.convert(htmlPage.getTitle()));</span>
-            {
-<span class="nc" id="L73">                StringWriter buffer = new StringWriter();</span>
-<span class="nc" id="L74">                htmlPage.writeBody(OutputConverter.getWriter(buffer));</span>
-<span class="nc" id="L75">                context.put(&quot;body&quot;, buffer.toString());</span>
-            }
+<span class="nc" id="L76">            context.put(&quot;title&quot;, OutputConverter.convert(htmlPage.getTitle()));</span>
             {
 <span class="nc" id="L78">                StringWriter buffer = new StringWriter();</span>
-<span class="nc" id="L79">                htmlPage.writeHead(OutputConverter.getWriter(buffer));</span>
-<span class="nc" id="L80">                context.put(&quot;head&quot;, buffer.toString());</span>
+                try {
+<span class="nc" id="L80">                    htmlPage.writeBody(OutputConverter.getWriter(buffer));</span>
+<span class="nc" id="L81">                } catch (IOException e) {</span>
+<span class="nc" id="L82">                    logger.error(&quot;&quot;, e);</span>
+<span class="nc" id="L83">                }</span>
+<span class="nc" id="L84">                context.put(&quot;body&quot;, buffer.toString());</span>
             }
-<span class="nc" id="L82">            context.put(&quot;page&quot;, htmlPage);</span>
-<span class="nc" id="L83">            DecoratorMapper decoratorMapper = getDecoratorMapper();</span>
-<span class="nc" id="L84">            Decorator decorator = decoratorMapper.getDecorator(request, htmlPage);</span>
-<span class="nc" id="L85">            template = decorator.getPage();</span>
+            {
+<span class="nc" id="L87">                StringWriter buffer = new StringWriter();</span>
+                try {
+<span class="nc" id="L89">                    htmlPage.writeHead(OutputConverter.getWriter(buffer));</span>
+<span class="nc" id="L90">                } catch (IOException e) {</span>
+<span class="nc" id="L91">                    logger.error(&quot;&quot;, e);</span>
+<span class="nc" id="L92">                }</span>
+<span class="nc" id="L93">                context.put(&quot;head&quot;, buffer.toString());</span>
+            }
+<span class="nc" id="L95">            context.put(&quot;page&quot;, htmlPage);</span>
+<span class="nc" id="L96">            DecoratorMapper decoratorMapper = getDecoratorMapper();</span>
+<span class="nc" id="L97">            Decorator decorator = decoratorMapper.getDecorator(request, htmlPage);</span>
+<span class="nc" id="L98">            template = decorator.getPage();</span>
         }
 
-<span class="nc" id="L88">        return getTemplate(template);</span>
+<span class="nc" id="L101">        return getTemplate(template);</span>
     }
 
     /**
@@ -94,8 +107,8 @@ import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
      * @return the decorator mapper
      */
     private DecoratorMapper getDecoratorMapper() {
-<span class="nc" id="L97">        Factory factory = Factory.getInstance(new Config(getServletConfig()));</span>
-<span class="nc" id="L98">        return factory.getDecoratorMapper();</span>
+<span class="nc" id="L110">        Factory factory = Factory.getInstance(new Config(getServletConfig()));</span>
+<span class="nc" id="L111">        return factory.getDecoratorMapper();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

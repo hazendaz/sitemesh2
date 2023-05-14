@@ -20,14 +20,21 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A converter from one character type to another
  * &lt;p&gt;
  * This class is not threadsafe.
  */
-<span class="nc" id="L28">public class OutputConverter {</span>
+<span class="nc" id="L31">public class OutputConverter {</span>
+
+    /** The Logger. */
+<span class="nc" id="L34">    private static final Logger logger = LoggerFactory.getLogger(OutputConverter.class);</span>
+
     /**
-     * Resin versions 2.1.12 and previously have encoding problems for internationalisation.
+     * Resin versions 2.1.12 and previously have encoding problems for internationalization.
      * &lt;p&gt;
      * This is fixed in Resin 2.1.13. Once 2.1.13 is used more widely, this parameter (and class) can be removed.
      */
@@ -42,10 +49,10 @@ import java.nio.charset.StandardCharsets;
      * @return the writer
      */
     public static Writer getWriter(Writer out) {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (&quot;true&quot;.equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG))) {</span>
-<span class="nc" id="L46">            return new ResinWriter(out);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (Boolean.getBoolean(WORK_AROUND_RESIN_I18N_BUG)) {</span>
+<span class="nc" id="L53">            return new ResinWriter(out);</span>
         }
-<span class="nc" id="L48">        return out;</span>
+<span class="nc" id="L55">        return out;</span>
     }
 
     /**
@@ -55,21 +62,18 @@ import java.nio.charset.StandardCharsets;
      *            the input string
      *
      * @return the string
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
      */
-    public static String convert(String inputString) throws IOException {
-<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (&quot;true&quot;.equalsIgnoreCase(System.getProperty(WORK_AROUND_RESIN_I18N_BUG))) {</span>
-<span class="nc" id="L64">            StringWriter sr = new StringWriter();</span>
-<span class="nc" id="L65">            resinConvert(inputString, sr);</span>
-<span class="nc" id="L66">            return sr.getBuffer().toString();</span>
+    public static String convert(String inputString) {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (Boolean.getBoolean(WORK_AROUND_RESIN_I18N_BUG)) {</span>
+<span class="nc" id="L68">            StringWriter sr = new StringWriter();</span>
+<span class="nc" id="L69">            resinConvert(inputString, sr);</span>
+<span class="nc" id="L70">            return sr.getBuffer().toString();</span>
         }
-<span class="nc" id="L68">        return inputString;</span>
+<span class="nc" id="L72">        return inputString;</span>
     }
 
     /**
-     * To get internationalised characters to work on Resin, some conversions need to take place.
+     * To get internationalized characters to work on Resin, some conversions need to take place.
      */
     static class ResinWriter extends Writer {
 
@@ -77,7 +81,7 @@ import java.nio.charset.StandardCharsets;
         private final Writer target;
 
         /** The buffer. */
-<span class="nc" id="L80">        private final CharArrayWriter buffer = new CharArrayWriter();</span>
+<span class="nc" id="L84">        private final CharArrayWriter buffer = new CharArrayWriter();</span>
 
         /**
          * Instantiates a new resin writer.
@@ -85,26 +89,26 @@ import java.nio.charset.StandardCharsets;
          * @param target
          *            the target
          */
-<span class="nc" id="L88">        public ResinWriter(Writer target) {</span>
-<span class="nc" id="L89">            this.target = target;</span>
-<span class="nc" id="L90">        }</span>
+<span class="nc" id="L92">        public ResinWriter(Writer target) {</span>
+<span class="nc" id="L93">            this.target = target;</span>
+<span class="nc" id="L94">        }</span>
 
         @Override
         public void close() throws IOException {
-<span class="nc" id="L94">            flush();</span>
-<span class="nc" id="L95">        }</span>
+<span class="nc" id="L98">            flush();</span>
+<span class="nc" id="L99">        }</span>
 
         @Override
         public void flush() throws IOException {
-<span class="nc" id="L99">            resinConvert(buffer.toString(), target);</span>
-<span class="nc" id="L100">            buffer.reset();</span>
-<span class="nc" id="L101">        }</span>
+<span class="nc" id="L103">            resinConvert(buffer.toString(), target);</span>
+<span class="nc" id="L104">            buffer.reset();</span>
+<span class="nc" id="L105">        }</span>
 
         @Override
-        public void write(char cbuf[], int off, int len) throws IOException {
-<span class="nc" id="L105">            buffer.write(cbuf, off, len);</span>
-<span class="nc" id="L106">            flush();</span>
-<span class="nc" id="L107">        }</span>
+        public void write(char[] cbuf, int off, int len) throws IOException {
+<span class="nc" id="L109">            buffer.write(cbuf, off, len);</span>
+<span class="nc" id="L110">            flush();</span>
+<span class="nc" id="L111">        }</span>
     }
 
     /**
@@ -114,20 +118,19 @@ import java.nio.charset.StandardCharsets;
      *            the input string
      * @param writer
      *            the writer
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
      */
-    private static void resinConvert(String inputString, Writer writer) throws IOException {
+    private static void resinConvert(String inputString, Writer writer) {
         // does this need to be made configurable? Or are these two always correct?
-<span class="nc" id="L123">        InputStreamReader reader = new InputStreamReader(</span>
-<span class="nc" id="L124">                new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8)), StandardCharsets.ISO_8859_1);</span>
-        int i;
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        while ((i = reader.read()) != -1) {</span>
-<span class="nc" id="L127">            writer.write(i);</span>
-        }
-<span class="nc" id="L129">        writer.flush();</span>
-<span class="nc" id="L130">    }</span>
+<span class="nc" id="L124">        try (InputStreamReader reader = new InputStreamReader(</span>
+<span class="nc" id="L125">                new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8)), StandardCharsets.ISO_8859_1)) {</span>
+            int i;
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            while ((i = reader.read()) != -1) {</span>
+<span class="nc" id="L128">                writer.write(i);</span>
+            }
+<span class="nc" id="L130">        } catch (IOException e) {</span>
+<span class="nc" id="L131">            logger.error(&quot;Unable to perform resinConvert&quot;, e);</span>
+<span class="nc" id="L132">        }</span>
+<span class="nc" id="L133">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
