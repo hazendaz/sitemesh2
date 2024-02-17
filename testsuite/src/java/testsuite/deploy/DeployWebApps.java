@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2024 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -14,9 +14,14 @@
 package testsuite.deploy;
 
 import java.io.*;
-import java.util.*;
-import java.util.jar.*;
-import testsuite.config.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import testsuite.config.Application;
+import testsuite.config.ConfigException;
+import testsuite.config.ConfigReader;
+import testsuite.config.Server;
 
 /**
  * Class to deploy application to all the servers. To use, just call constructor with config.
