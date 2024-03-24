@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2024 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -56,16 +56,14 @@ public class NoDecorator extends BaseWebAppDecorator {
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext, SiteMeshWebAppContext webAppContext) throws IOException, ServletException {
 
+        PrintWriter writer;
         if (webAppContext.isUsingStream()) {
-            PrintWriter writer = new PrintWriter(response.getOutputStream());
-            content.writeOriginal(writer);
-            writer.flush(); // flush writer to underlying outputStream
-            response.getOutputStream().flush();
+            writer = new PrintWriter(response.getOutputStream());
         } else {
-            PrintWriter writer = response.getWriter();
-            content.writeOriginal(writer);
-            response.getWriter().flush();
+            writer = response.getWriter();
         }
+        content.writeOriginal(writer);
+        writer.flush();
     }
 
 }
