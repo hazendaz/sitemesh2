@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2024 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -16,7 +16,7 @@ package com.opensymphony.module.sitemesh.html.tokenizer;
 import com.opensymphony.module.sitemesh.html.Tag;
 import com.opensymphony.module.sitemesh.html.Text;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * The Class MockTokenHandler.
@@ -71,7 +71,7 @@ class MockTokenHandler implements TokenHandler {
 
     @Override
     public boolean shouldProcessTag(String name) {
-        Assert.assertNotNull("Name should not be null", name);
+        Assertions.assertNotNull(name, "Name should not be null");
         return true;
     }
 
@@ -92,14 +92,14 @@ class MockTokenHandler implements TokenHandler {
 
     @Override
     public void warning(String message, int line, int column) {
-        Assert.fail("Encountered error: " + message);
+        Assertions.fail("Encountered error: " + message);
     }
 
     /**
      * Verify.
      */
     public void verify() {
-        Assert.assertEquals(expected.toString(), actual.toString());
+        Assertions.assertEquals(expected.toString(), actual.toString());
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2024 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -21,13 +21,13 @@ import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
 import java.io.CharArrayWriter;
 import java.util.TreeMap;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * The Class ChainingBufferTest.
  */
-public class ChainingBufferTest {
+class ChainingBufferTest {
 
     /**
      * Test simple chain.
@@ -36,9 +36,9 @@ public class ChainingBufferTest {
      *             the exception
      */
     @Test
-    public void testSimpleChain() throws Exception {
+    void simpleChain() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("ab"));
-        Assert.assertEquals("12ab34", getContent(buffer));
+        Assertions.assertEquals("12ab34", getContent(buffer));
         assertCorrectLength(buffer);
     }
 
@@ -49,10 +49,10 @@ public class ChainingBufferTest {
      *             the exception
      */
     @Test
-    public void testBefore() throws Exception {
+    void before() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("ab"));
-        Assert.assertEquals("1", getContent(buffer, 0, 1));
-        Assert.assertEquals("12ab", getContent(buffer, 0, 2));
+        Assertions.assertEquals("1", getContent(buffer, 0, 1));
+        Assertions.assertEquals("12ab", getContent(buffer, 0, 2));
     }
 
     /**
@@ -62,10 +62,10 @@ public class ChainingBufferTest {
      *             the exception
      */
     @Test
-    public void testAfter() throws Exception {
+    void after() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("ab"));
-        Assert.assertEquals("ab34", getContent(buffer, 2, 2));
-        Assert.assertEquals("4", getContent(buffer, 3, 1));
+        Assertions.assertEquals("ab34", getContent(buffer, 2, 2));
+        Assertions.assertEquals("4", getContent(buffer, 3, 1));
     }
 
     /**
@@ -75,9 +75,9 @@ public class ChainingBufferTest {
      *             the exception
      */
     @Test
-    public void testFragment() throws Exception {
+    void fragment() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("1234", 2, newBufferFragment("abcd", 1, 2));
-        Assert.assertEquals("12bc34", getContent(buffer));
+        Assertions.assertEquals("12bc34", getContent(buffer));
         assertCorrectLength(buffer);
     }
 
@@ -88,11 +88,11 @@ public class ChainingBufferTest {
      *             the exception
      */
     @Test
-    public void testDeepFragments() throws Exception {
+    void deepFragments() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("123456789", 3,
                 newBufferFragment("abcdefg", 4, newBufferFragment("hijklm", 1, 1), 5, newBufferFragment("nopqr", 1, 4)),
                 8, newBufferFragment("tuzwx", 0, 2));
-        Assert.assertEquals("123abcdieopqrfg45678tu9", getContent(buffer));
+        Assertions.assertEquals("123abcdieopqrfg45678tu9", getContent(buffer));
         assertCorrectLength(buffer);
     }
 
@@ -103,14 +103,14 @@ public class ChainingBufferTest {
      *             the exception
      */
     @Test
-    public void testWriter() throws Exception {
+    void writer() throws Exception {
         SitemeshBuffer buffer = newSitemeshBuffer("123456");
         try (SitemeshBufferWriter writer = new SitemeshBufferWriter()) {
             writer.write("abc");
             writer.writeSitemeshBufferFragment(new SitemeshBufferFragment(buffer, 1, 4));
             writer.write("def");
-            Assert.assertEquals("abcdef", writer.toString());
-            Assert.assertEquals("abc2345def", getContent(writer.getSitemeshBuffer()));
+            Assertions.assertEquals("abcdef", writer.toString());
+            Assertions.assertEquals("abc2345def", getContent(writer.getSitemeshBuffer()));
         }
     }
 
@@ -162,7 +162,7 @@ public class ChainingBufferTest {
      *             the exception
      */
     private void assertCorrectLength(SitemeshBuffer buffer) throws Exception {
-        Assert.assertEquals(getContent(buffer).length(), buffer.getTotalLength());
+        Assertions.assertEquals(getContent(buffer).length(), buffer.getTotalLength());
     }
 
     /**

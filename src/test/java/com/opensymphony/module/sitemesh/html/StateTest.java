@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2024 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -13,13 +13,13 @@
  */
 package com.opensymphony.module.sitemesh.html;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * The Class StateTest.
  */
-public class StateTest {
+class StateTest {
 
     /**
      * The Class DummyRule.
@@ -46,7 +46,7 @@ public class StateTest {
      * Test maps tag name to rule.
      */
     @Test
-    public void testMapsTagNameToRule() {
+    void mapsTagNameToRule() {
         TagRule mouseRule = new DummyRule("mouse");
         TagRule donkeyRule = new DummyRule("donkey");
         TagRule lemonRule = new DummyRule("lemon");
@@ -56,16 +56,16 @@ public class StateTest {
         state.addRule(donkeyRule);
         state.addRule(lemonRule);
 
-        Assert.assertSame(donkeyRule, state.getRule("donkey"));
-        Assert.assertSame(lemonRule, state.getRule("lemon"));
-        Assert.assertSame(mouseRule, state.getRule("mouse"));
+        Assertions.assertSame(donkeyRule, state.getRule("donkey"));
+        Assertions.assertSame(lemonRule, state.getRule("lemon"));
+        Assertions.assertSame(mouseRule, state.getRule("mouse"));
     }
 
     /**
      * Test exposes whether it should process A tag based on available rules.
      */
     @Test
-    public void testExposesWhetherItShouldProcessATagBasedOnAvailableRules() {
+    void exposesWhetherItShouldProcessATagBasedOnAvailableRules() {
         TagRule mouseRule = new DummyRule("mouse");
         TagRule donkeyRule = new DummyRule("donkey");
         TagRule lemonRule = new DummyRule("lemon");
@@ -75,16 +75,16 @@ public class StateTest {
         state.addRule(donkeyRule);
         state.addRule(lemonRule);
 
-        Assert.assertTrue(state.shouldProcessTag("donkey"));
-        Assert.assertTrue(state.shouldProcessTag("lemon"));
-        Assert.assertFalse(state.shouldProcessTag("yeeeehaa"));
+        Assertions.assertTrue(state.shouldProcessTag("donkey"));
+        Assertions.assertTrue(state.shouldProcessTag("lemon"));
+        Assertions.assertFalse(state.shouldProcessTag("yeeeehaa"));
     }
 
     /**
      * Test returns most recently added rule if multiple matches found.
      */
     @Test
-    public void testReturnsMostRecentlyAddedRuleIfMultipleMatchesFound() {
+    void returnsMostRecentlyAddedRuleIfMultipleMatchesFound() {
         TagRule oldRule = new DummyRule("something");
         TagRule newRule = new DummyRule("something");
 
@@ -92,6 +92,6 @@ public class StateTest {
         state.addRule(oldRule);
         state.addRule(newRule);
 
-        Assert.assertSame(newRule, state.getRule("something"));
+        Assertions.assertSame(newRule, state.getRule("something"));
     }
 }

@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2024 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -19,15 +19,15 @@ import com.opensymphony.module.sitemesh.PageParser;
 
 import java.io.IOException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * The Class DivExtractingPageParserTest.
  *
  * @author Joe Walnes
  */
-public class DivExtractingPageParserTest {
+class DivExtractingPageParserTest {
 
     /**
      * Test replaces top level divs with place holders.
@@ -36,7 +36,7 @@ public class DivExtractingPageParserTest {
      *             Signals that an I/O exception has occurred.
      */
     @Test
-    public void testReplacesTopLevelDivsWithPlaceHolders() throws IOException {
+    void replacesTopLevelDivsWithPlaceHolders() throws IOException {
         String input = "" + "<html>\n" + "  <head><title>Title</title></head>\n" + "  <body>\n"
                 + "    <div id='one'>Hello</div>\n" + "    Blah\n"
                 + "    <div id='two'>World<br><div id=inner>Great</div></div>\n" + "    <div>Bye</div>\n"
@@ -47,10 +47,10 @@ public class DivExtractingPageParserTest {
 
         String expectedBody = "" + "    <sitemesh:multipass id=\"div.one\"/>\n" + "    Blah\n"
                 + "    <sitemesh:multipass id=\"div.two\"/>\n" + "    <div>Bye</div>\n";
-        Assert.assertEquals("Title", page.getTitle());
-        Assert.assertEquals(expectedBody.trim(), page.getBody().trim());
-        Assert.assertEquals("<div id='one'>Hello</div>", page.getProperty("div.one"));
-        Assert.assertEquals("<div id='two'>World<br><div id=inner>Great</div></div>", page.getProperty("div.two"));
+        Assertions.assertEquals("Title", page.getTitle());
+        Assertions.assertEquals(expectedBody.trim(), page.getBody().trim());
+        Assertions.assertEquals("<div id='one'>Hello</div>", page.getProperty("div.one"));
+        Assertions.assertEquals("<div id='two'>World<br><div id=inner>Great</div></div>", page.getProperty("div.two"));
     }
 
     /**
@@ -60,7 +60,7 @@ public class DivExtractingPageParserTest {
      *             Signals that an I/O exception has occurred.
      */
     @Test
-    public void testExtractAttributes() throws IOException {
+    void extractAttributes() throws IOException {
         String input = "" + "<html>\n" + "  <head><title>Title</title></head>\n" + "  <body>\n"
                 + "    <div id='one' class='c_one' align='center'>Hello</div>\n" + "    Blah\n"
                 + "    <div id='two'>World<br><div id=inner>Great</div></div>\n" + "    <div>Bye</div>\n"
@@ -69,8 +69,8 @@ public class DivExtractingPageParserTest {
         PageParser parser = new DivExtractingPageParser();
         Page page = parser.parse(input.toCharArray());
 
-        Assert.assertEquals("c_one", page.getProperty("div.one.class"));
-        Assert.assertEquals("center", page.getProperty("div.one.align"));
-        Assert.assertEquals("two", page.getProperty("div.two.id"));
+        Assertions.assertEquals("c_one", page.getProperty("div.one.class"));
+        Assertions.assertEquals("center", page.getProperty("div.one.align"));
+        Assertions.assertEquals("two", page.getProperty("div.two.id"));
     }
 }
