@@ -22,7 +22,7 @@ sitemesh,com.opensymphony.module.sitemesh.mapper,AgentDecoratorMapper.new Defaul
 sitemesh,com.opensymphony.module.sitemesh.mapper,AbstractDecoratorMapper,22,0,0,0,6,0,4,0,4,0
 sitemesh,com.opensymphony.module.sitemesh.mapper,ConfigDecoratorMapper,123,0,14,0,33,0,12,0,5,0
 sitemesh,com.opensymphony.sitemesh.webapp.decorator,DispatchedDecorator,42,0,0,0,13,0,3,0,3,0
-sitemesh,com.opensymphony.sitemesh.webapp.decorator,NoDecorator,31,0,2,0,11,0,3,0,2,0
+sitemesh,com.opensymphony.sitemesh.webapp.decorator,NoDecorator,22,0,2,0,7,0,3,0,2,0
 sitemesh,com.opensymphony.sitemesh.webapp.decorator,ExternalDispatchedDecorator,29,0,2,0,7,0,3,0,2,0
 sitemesh,com.opensymphony.sitemesh.webapp.decorator,BaseWebAppDecorator,25,0,0,0,7,0,2,0,2,0
 sitemesh,com.opensymphony.module.sitemesh.html.util,CharArray,90,273,20,20,19,56,17,22,3,16

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>StateTest xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * sitemesh2 (<a href="https://github.com/hazendaz/sitemesh2)" target="alexandria_uri">https://github.com/hazendaz/sitemesh2)</a></em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2023 Hazendaz.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2024 Hazendaz.</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * All rights reserved. This program and the accompanying materials</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * are made available under the terms of The Apache Software License,</em>
@@ -21,13 +21,13 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">package</strong> com.opensymphony.module.sitemesh.html;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Assertions;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * The Class StateTest.</em>
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="StateTest" href="../../../../../com/opensymphony/module/sitemesh/html/StateTest.html#StateTest">StateTest</a> {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">class</strong> <a name="StateTest" href="../../../../../com/opensymphony/module/sitemesh/html/StateTest.html#StateTest">StateTest</a> {
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">     * The Class DummyRule.</em>
@@ -54,7 +54,7 @@
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">     * Test maps tag name to rule.</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      @Test
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMapsTagNameToRule() {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">void</strong> mapsTagNameToRule() {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>          TagRule mouseRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"mouse"</span>);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          TagRule donkeyRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"donkey"</span>);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>          TagRule lemonRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"lemon"</span>);
@@ -64,16 +64,16 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>          state.addRule(donkeyRule);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>          state.addRule(lemonRule);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>          Assert.assertSame(donkeyRule, state.getRule(<span class="jxr_string">"donkey"</span>));
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>          Assert.assertSame(lemonRule, state.getRule(<span class="jxr_string">"lemon"</span>));
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>          Assert.assertSame(mouseRule, state.getRule(<span class="jxr_string">"mouse"</span>));
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          Assertions.assertSame(donkeyRule, state.getRule(<span class="jxr_string">"donkey"</span>));
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          Assertions.assertSame(lemonRule, state.getRule(<span class="jxr_string">"lemon"</span>));
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          Assertions.assertSame(mouseRule, state.getRule(<span class="jxr_string">"mouse"</span>));
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      }
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">     * Test exposes whether it should process A tag based on available rules.</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      @Test
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExposesWhetherItShouldProcessATagBasedOnAvailableRules() {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">void</strong> exposesWhetherItShouldProcessATagBasedOnAvailableRules() {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          TagRule mouseRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"mouse"</span>);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          TagRule donkeyRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"donkey"</span>);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          TagRule lemonRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"lemon"</span>);
@@ -83,16 +83,16 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>          state.addRule(donkeyRule);
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>          state.addRule(lemonRule);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>          Assert.assertTrue(state.shouldProcessTag(<span class="jxr_string">"donkey"</span>));
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>          Assert.assertTrue(state.shouldProcessTag(<span class="jxr_string">"lemon"</span>));
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          Assert.assertFalse(state.shouldProcessTag(<span class="jxr_string">"yeeeehaa"</span>));
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          Assertions.assertTrue(state.shouldProcessTag(<span class="jxr_string">"donkey"</span>));
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          Assertions.assertTrue(state.shouldProcessTag(<span class="jxr_string">"lemon"</span>));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>          Assertions.assertFalse(state.shouldProcessTag(<span class="jxr_string">"yeeeehaa"</span>));
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">     * Test returns most recently added rule if multiple matches found.</em>
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      @Test
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testReturnsMostRecentlyAddedRuleIfMultipleMatchesFound() {
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">void</strong> returnsMostRecentlyAddedRuleIfMultipleMatchesFound() {
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          TagRule oldRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"something"</span>);
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>          TagRule newRule = <strong class="jxr_keyword">new</strong> DummyRule(<span class="jxr_string">"something"</span>);
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
@@ -100,11 +100,11 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>          state.addRule(oldRule);
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>          state.addRule(newRule);
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>          Assert.assertSame(newRule, state.getRule(<span class="jxr_string">"something"</span>));
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          Assertions.assertSame(newRule, state.getRule(<span class="jxr_string">"something"</span>));
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2011&#x2013;2023 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2011&#x2013;2024 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
 </body>
 </html>

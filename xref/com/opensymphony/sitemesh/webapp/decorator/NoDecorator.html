@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>NoDecorator xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * sitemesh2 (<a href="https://github.com/hazendaz/sitemesh2)" target="alexandria_uri">https://github.com/hazendaz/sitemesh2)</a></em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2023 Hazendaz.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2024 Hazendaz.</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * All rights reserved. This program and the accompanying materials</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * are made available under the terms of The Apache Software License,</em>
@@ -64,21 +64,19 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> render(<a name="Content" href="../../../../../com/opensymphony/sitemesh/Content.html#Content">Content</a> content, HttpServletRequest request, HttpServletResponse response,
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>              ServletContext servletContext, <a name="SiteMeshWebAppContext" href="../../../../../com/opensymphony/sitemesh/webapp/SiteMeshWebAppContext.html#SiteMeshWebAppContext">SiteMeshWebAppContext</a> webAppContext) <strong class="jxr_keyword">throws</strong> IOException, ServletException {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">if</strong> (webAppContext.isUsingStream()) {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>              PrintWriter writer = <strong class="jxr_keyword">new</strong> PrintWriter(response.getOutputStream());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>              content.writeOriginal(writer);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>              writer.flush(); <em class="jxr_comment">// flush writer to underlying outputStream</em>
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>              response.getOutputStream().flush();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>              PrintWriter writer = response.getWriter();
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>              content.writeOriginal(writer);
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>              response.getWriter().flush();
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          }
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  }
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          PrintWriter writer;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">if</strong> (webAppContext.isUsingStream()) {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>              writer = <strong class="jxr_keyword">new</strong> PrintWriter(response.getOutputStream());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>              writer = response.getWriter();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          content.writeOriginal(writer);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          writer.flush();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2011&#x2013;2023 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2011&#x2013;2024 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>CustomTagTest xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * sitemesh2 (<a href="https://github.com/hazendaz/sitemesh2)" target="alexandria_uri">https://github.com/hazendaz/sitemesh2)</a></em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2023 Hazendaz.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2011-2024 Hazendaz.</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * All rights reserved. This program and the accompanying materials</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * are made available under the terms of The Apache Software License,</em>
@@ -21,62 +21,62 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">package</strong> com.opensymphony.module.sitemesh.html;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Assertions;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * The Class CustomTagTest.</em>
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="CustomTagTest" href="../../../../../com/opensymphony/module/sitemesh/html/CustomTagTest.html#CustomTagTest">CustomTagTest</a> {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">class</strong> <a name="CustomTagTest" href="../../../../../com/opensymphony/module/sitemesh/html/CustomTagTest.html#CustomTagTest">CustomTagTest</a> {
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">     * Test writes out user defined tag.</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      @Test
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testWritesOutUserDefinedTag() {
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello/&gt;"</span>, <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.EMPTY).getContents());
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello&gt;"</span>, <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.OPEN).getContents());
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>          Assert.assertEquals(<span class="jxr_string">"&lt;/hello&gt;"</span>, <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.CLOSE).getContents());
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">void</strong> writesOutUserDefinedTag() {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello/&gt;"</span>, <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.EMPTY).getContents());
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello&gt;"</span>, <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.OPEN).getContents());
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;/hello&gt;"</span>, <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.CLOSE).getContents());
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      }
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">     * Test writes attributes.</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      @Test
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testWritesAttributes() {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">void</strong> writesAttributes() {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>          CustomTag tag = <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.EMPTY);
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>          tag.addAttribute(<span class="jxr_string">"color"</span>, <span class="jxr_string">"green"</span>);
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          tag.addAttribute(<span class="jxr_string">"stuff"</span>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello color=\&quot;green\&quot; stuff/&gt;"</span>, tag.getContents());
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello color=\&quot;green\&quot; stuff/&gt;"</span>, tag.getContents());
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      }
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">     * Test allows attributes to be manipulated.</em>
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      @Test
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAllowsAttributesToBeManipulated() {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">void</strong> allowsAttributesToBeManipulated() {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>          CustomTag tag = <strong class="jxr_keyword">new</strong> CustomTag(<span class="jxr_string">"hello"</span>, Tag.OPEN);
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello&gt;"</span>, tag.getContents());
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello&gt;"</span>, tag.getContents());
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          tag.addAttribute(<span class="jxr_string">"a"</span>, <span class="jxr_string">"aaa"</span>);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          tag.addAttribute(<span class="jxr_string">"b"</span>, <span class="jxr_string">"bbb"</span>);
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello a=\&quot;aaa\&quot; b=\&quot;bbb\&quot;&gt;"</span>, tag.getContents());
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello a=\&quot;aaa\&quot; b=\&quot;bbb\&quot;&gt;"</span>, tag.getContents());
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>          tag.removeAttribute(<span class="jxr_string">"b"</span>, false);
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello a=\&quot;aaa\&quot;&gt;"</span>, tag.getContents());
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello a=\&quot;aaa\&quot;&gt;"</span>, tag.getContents());
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>          tag.setAttributeValue(<span class="jxr_string">"a"</span>, false, <span class="jxr_string">"zzz"</span>);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>          Assert.assertEquals(<span class="jxr_string">"&lt;hello a=\&quot;zzz\&quot;&gt;"</span>, tag.getContents());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          Assertions.assertEquals(<span class="jxr_string">"&lt;hello a=\&quot;zzz\&quot;&gt;"</span>, tag.getContents());
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          tag.addAttribute(<span class="jxr_string">"c"</span>, <span class="jxr_string">"ccc"</span>);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">int</strong> index = tag.getAttributeIndex(<span class="jxr_string">"c"</span>, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          Assert.assertEquals(1, index);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          Assert.assertEquals(<span class="jxr_string">"ccc"</span>, tag.getAttributeValue(index));
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          Assert.assertEquals(<span class="jxr_string">"c"</span>, tag.getAttributeName(index));
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          Assertions.assertEquals(1, index);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          Assertions.assertEquals(<span class="jxr_string">"ccc"</span>, tag.getAttributeValue(index));
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          Assertions.assertEquals(<span class="jxr_string">"c"</span>, tag.getAttributeName(index));
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      }
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2011&#x2013;2023 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2011&#x2013;2024 <a href="https://github.com/hazendaz/">hazendaz</a>. All rights reserved.</div>
 </body>
 </html>
