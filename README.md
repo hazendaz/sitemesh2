@@ -1,3 +1,5 @@
+[NOTICE] The original sitemesh 2.x line was entirely dormant and dead as replaced by version 3.  This project is heavily used in psi-probe project and it was not understood how to even upgrade to sitemesh 3.  Due to need to get to jakarta, an effort to bring this back to life was performed.  Shortly after the original sitemesh team started work again.  There was hope to bring this together but they moved to gradle.  Further, the changes done here were significant on cleanup.  So merging between is no longer possible.  Most everything is the same but there are some differences as noted on our open issues here.  Its fine I think to use either original or this fork.  Psi probe will continue using this fork as no reason to migrate back given some key performance improvements and modernization here.
+
 *************************************
 ** OpenSymphony SiteMesh 2.5.0     **
 *************************************
