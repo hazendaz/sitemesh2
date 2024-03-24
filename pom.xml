@@ -43,8 +43,8 @@
     <scm>
         <connection>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/hazendaz/sitemesh2.git</developerConnection>
-        <url>https://github.com/hazendaz/sitemesh2</url>
         <tag>HEAD</tag>
+        <url>https://github.com/hazendaz/sitemesh2</url>
     </scm>
     <distributionManagement>
         <site>
@@ -151,18 +151,18 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
-                  <execution>
-                    <id>add-source</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                      <goal>add-source</goal>
-                    </goals>
-                    <configuration>
-                      <sources>
-                        <source>${project.build.directory}/generated-sources/jflex</source>
-                      </sources>
-                    </configuration>
-                  </execution>
+                    <execution>
+                        <id>add-source</id>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/jflex</source>
+                            </sources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
