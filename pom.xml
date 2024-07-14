@@ -118,6 +118,9 @@
                                 <excludes>
                                     <!-- Jakarta jsp is provided, allow higher jdk -->
                                     <exclude>jakarta.servlet.jsp:jakarta.servlet.jsp-api</exclude>
+
+                                    <!-- Allow freemarker higher jdk as it has one java16 labeled class -->
+                                    <exclude>org.freemarker:freemarker</exclude>
                                 </excludes>
                             </enforceBytecodeVersion>
                         </rules>
