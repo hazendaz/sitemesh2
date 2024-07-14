@@ -77,7 +77,7 @@
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <version>3.1.1</version>
+            <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -107,6 +107,24 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <configuration>
+                        <rules>
+                            <enforceBytecodeVersion>
+                                <excludes>
+                                    <!-- Jakarta jsp is provided, allow higher jdk -->
+                                    <exclude>jakarta.servlet.jsp:jakarta.servlet.jsp-api</exclude>
+                                </excludes>
+                            </enforceBytecodeVersion>
+                        </rules>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>de.jflex</groupId>
