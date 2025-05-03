@@ -20,7 +20,7 @@
   <servers>
     <!-- Used for sonatype snapshots and releases -->
     <server>
-      <id>ossrh</id>
+      <id>central</id>
       <username>${env.CI_DEPLOY_USERNAME}</username>
       <password>${env.CI_DEPLOY_PASSWORD}</password>
     </server>
@@ -37,7 +37,6 @@
     <!-- Github deployments (site) -->
     <server>
       <id>github</id>
-      <username>${env.CI_DEPLOY_USERNAME}</username>
       <password>${env.GITHUB_TOKEN}</password>
     </server>
 
