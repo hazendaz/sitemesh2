@@ -64,7 +64,8 @@ public class ParserPerformanceComparison {
         if (!file.exists()) {
             System.out.println("Downloading " + HTML_URL + " to use for performance test");
             URL url = new URL(HTML_URL);
-            try (InputStream is = url.openStream(); OutputStream os = new FileOutputStream(file)) {
+            try (InputStream is = url.openStream();
+                    OutputStream os = new FileOutputStream(file)) {
                 copy(is, os);
             }
         } else {
