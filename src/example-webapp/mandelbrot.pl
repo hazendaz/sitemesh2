@@ -47,11 +47,11 @@ print <<"EOF";
 	</head>
 	<body>
 		<p>I am a Perl CGI</p>
-		
+
 		<pre>
 			$m
 		</pre>
-	
+
 	</body>
 </html>
 EOF
