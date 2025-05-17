@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -30,6 +30,7 @@ import jakarta.servlet.ServletException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -144,7 +145,7 @@ public class ConfigLoader {
         this.config = config;
         this.configFileName = configFileName;
         if (config.getServletContext().getRealPath(configFileName) != null) {
-            this.configFile = new File(config.getServletContext().getRealPath(configFileName));
+            this.configFile = Path.of(config.getServletContext().getRealPath(configFileName)).toFile();
         }
         state = loadConfig();
     }

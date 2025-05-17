@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -27,6 +27,7 @@ import com.opensymphony.module.sitemesh.Config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -110,7 +111,7 @@ public class DefaultFactory extends BaseFactory {
         String configFilePath = config.getServletContext().getRealPath(configFileName);
 
         if (configFilePath != null) { // disable config auto reloading for .war files
-            configFile = new File(configFilePath);
+            configFile = Path.of(configFilePath).toFile();
         }
 
         loadConfig();
@@ -241,7 +242,7 @@ public class DefaultFactory extends BaseFactory {
                                                                                                    // does not work on
                                                                                                    // weblogic 10.3.5
                 if (excludesFilePath != null) {
-                    excludesFile = new File(excludesFilePath);
+                    excludesFile = Path.of(excludesFilePath).toFile();
                     is = excludesFile.toURI().toURL().openStream();
                 }
             }

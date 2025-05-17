@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -18,7 +18,7 @@ import org.apache.catalina.connector.*;
 import org.apache.catalina.realm.*;
 import org.apache.catalina.startup.*;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class TomcatWebServer {// Instance variables:
     private String name = "sitemesh_tomcat_";
@@ -94,7 +94,7 @@ public class TomcatWebServer {// Instance variables:
     }
 
     public static void main(String[] args) {
-        System.out.println("new File() = " + new File("").getAbsolutePath());
-        new TomcatWebServer(9920, new File("").getAbsolutePath() + "/src/webapp").start();
+        System.out.println("new file = " + Path.of("").toFile().getAbsolutePath());
+        new TomcatWebServer(9920, Path.of("").toFile().getAbsolutePath() + "/src/webapp").start();
     }
 }
