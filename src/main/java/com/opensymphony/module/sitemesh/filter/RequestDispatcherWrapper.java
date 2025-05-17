@@ -16,12 +16,12 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import java.io.IOException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import java.io.IOException;
 
 /**
  * Special request dispatcher that will include when an inline decorator includes a resource that uses an internal

@@ -22,12 +22,12 @@
 
 package com.opensymphony.module.sitemesh;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 
 /**
- * Common interface to ServletConfig and FilterConfig (since javax.servlet.Config was removed from 2.3 spec).
+ * Common interface to ServletConfig and FilterConfig (since jakarta.servlet.Config was removed from 2.3 spec).
  *
  * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
  */

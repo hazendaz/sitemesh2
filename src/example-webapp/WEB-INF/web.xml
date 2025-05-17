@@ -14,9 +14,9 @@
         Hazendaz (Jeremy Landis).
 
 -->
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
-
-<web-app>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+  version="6.0">
 
   <filter>
     <filter-name>sitemesh</filter-name>
@@ -43,7 +43,7 @@
     </init-param>
     <init-param>
       <param-name>default_encoding</param-name>
-      <param-value>ISO-8859-1</param-value>
+      <param-value>UTF-8</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -57,15 +57,5 @@
     <servlet-name>sitemesh-freemarker</servlet-name>
     <url-pattern>*.ftl</url-pattern>
   </servlet-mapping>
-
-  <!-- not required for containers that fully support JSP 1.2 -->
-  <taglib>
-    <taglib-uri>sitemesh-page</taglib-uri>
-    <taglib-location>/WEB-INF/lib/sitemesh-page.tld</taglib-location>
-  </taglib>
-  <taglib>
-    <taglib-uri>sitemesh-decorator</taglib-uri>
-    <taglib-location>/WEB-INF/lib/sitemesh-decorator.tld</taglib-location>
-  </taglib>
 
 </web-app>

@@ -22,9 +22,9 @@
 
 package com.opensymphony.module.sitemesh;
 
-import java.util.Properties;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Properties;
 
 /**
  * The DecoratorMapper is responsible for determining which {@link com.opensymphony.module.sitemesh.Decorator} should be

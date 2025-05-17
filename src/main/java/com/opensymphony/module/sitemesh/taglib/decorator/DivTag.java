@@ -16,9 +16,9 @@ package com.opensymphony.module.sitemesh.taglib.decorator;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.taglib.AbstractTag;
 
-import java.io.IOException;
+import jakarta.servlet.jsp.JspException;
 
-import javax.servlet.jsp.JspException;
+import java.io.IOException;
 
 /**
  * Write a HTMLPage div to out.

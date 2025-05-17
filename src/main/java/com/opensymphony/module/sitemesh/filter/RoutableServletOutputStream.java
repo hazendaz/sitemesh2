@@ -16,10 +16,10 @@
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import java.io.IOException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
+import java.io.IOException;
 
 /**
  * Provides a ServletOutputStream that routes through to another ServletOutputStream, however the destination can be

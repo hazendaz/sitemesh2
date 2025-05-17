@@ -23,11 +23,11 @@ import com.opensymphony.module.sitemesh.SitemeshBuffer;
 import com.opensymphony.module.sitemesh.SitemeshBufferWriter;
 import com.opensymphony.module.sitemesh.util.FastByteArrayOutputStream;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 
 /**
  * When SiteMesh is activated for a request, the contents of the response are stored in this buffer, where they can

@@ -27,13 +27,13 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * The AgentDecoratorMapper can determine the user-agent (i.e. web-browser) requesting a page, and map to a suitable

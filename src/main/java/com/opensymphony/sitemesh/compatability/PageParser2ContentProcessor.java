@@ -24,9 +24,9 @@ import com.opensymphony.sitemesh.ContentProcessor;
 import com.opensymphony.sitemesh.SiteMeshContext;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 
-import java.io.IOException;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * Adapts a SiteMesh 2 {@link PageParser} to a SiteMesh 3 {@link ContentProcessor}.

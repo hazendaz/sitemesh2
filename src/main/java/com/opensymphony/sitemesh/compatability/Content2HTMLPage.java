@@ -16,13 +16,13 @@ package com.opensymphony.sitemesh.compatability;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.sitemesh.Content;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Adapts a SiteMesh 3 {@link Content} to a SiteMesh 2 {@link HTMLPage}.
