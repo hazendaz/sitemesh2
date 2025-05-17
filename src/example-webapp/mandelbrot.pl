@@ -2,7 +2,7 @@
 #
 # sitemesh2 (https://github.com/hazendaz/sitemesh2)
 #
-# Copyright 2011-2023 Hazendaz.
+# Copyright 2011-2025 Hazendaz.
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of The Apache Software License,
@@ -47,11 +47,11 @@ print <<"EOF";
 	</head>
 	<body>
 		<p>I am a Perl CGI</p>
-		
+
 		<pre>
 			$m
 		</pre>
-	
+
 	</body>
 </html>
 EOF
