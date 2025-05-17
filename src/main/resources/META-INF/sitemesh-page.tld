@@ -56,11 +56,11 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    <attribute>
-      <name>encoding</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
+        <attribute>
+            <name>encoding</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <!-- Deprecated tag: use applyDecorator instead -->
@@ -88,16 +88,16 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    <attribute>
+        <attribute>
             <name>contentType</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    <attribute>
-      <name>encoding</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
+        <attribute>
+            <name>encoding</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
