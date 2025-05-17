@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -16,9 +16,10 @@ package testsuite.sitemesh;
 import testsuite.tester.WebTest;
 import com.meterware.httpunit.WebResponse;
 
-import java.io.FileInputStream;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Test binary files on sitemesh
@@ -28,7 +29,7 @@ import java.io.InputStream;
 public class BinaryFileTest extends WebTest {
 
     public void testImageIsDownloadedIntact() throws Exception {
-        InputStream fis = new BufferedInputStream(new FileInputStream("src/webapp/binary/harry_potter.gif"));
+        InputStream fis = new BufferedInputStream(Files.newInputStream(Path.of("src/webapp/binary/harry_potter.gif")));
         WebResponse rs = wc.getResponse(baseUrl + "/binary/harry_potter.gif");
         InputStream wis = rs.getInputStream();
 

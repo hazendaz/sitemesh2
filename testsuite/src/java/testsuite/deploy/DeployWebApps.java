@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2024 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -14,6 +14,7 @@
 package testsuite.deploy;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -90,8 +91,8 @@ public class DeployWebApps {
 	 * Copy a file.
 	 */
 	private void copyFile( File src, File dest ) throws IOException {
-		FileInputStream in = new FileInputStream( src );
-		FileOutputStream out = new FileOutputStream( dest );
+		InputStream in = Files.newInputStream(src.toPath());
+		OutputStream out = Files.newOutputStream(dest.toPath());
     pipe(in, out);
 		in.close();
 		out.close();
@@ -118,7 +119,7 @@ public class DeployWebApps {
 			}
 			else {
 				InputStream in = jar.getInputStream( entry );
-				FileOutputStream out = new FileOutputStream( file );
+				OutputStream out = Files.newOutputStream(file.toPath());
         pipe(in, out);
 				in.close();
 				out.close();

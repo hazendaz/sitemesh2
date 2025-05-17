@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -24,6 +24,8 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
@@ -115,7 +117,7 @@ public class Report implements TestListener {
     private void generateReport() {
         try {
             // Could use a template engine here, but it seemed overkill and I didn't see the need for another complexity. -jw
-            PrintWriter writer = new PrintWriter(new FileOutputStream(writeTo));
+            PrintWriter writer = new PrintWriter(Files.newOutputStream(writeTo.toPath()));
             String title = "SiteMesh Acceptance Test Results : " + (anyFailures ? "FAILED" : "PASSED");
             writer.print("<html>");
             writer.print("<head>");
