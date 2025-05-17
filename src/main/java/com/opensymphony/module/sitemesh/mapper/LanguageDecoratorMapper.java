@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -28,6 +28,7 @@ import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -74,7 +75,7 @@ public class LanguageDecoratorMapper extends AbstractDecoratorMapper {
             final Decorator d = super.getDecorator(request, page);
             String path = modifyPath(d.getPage(), getExt(request.getHeader("Accept-Language")));
 
-            File decFile = new File(config.getServletContext().getRealPath(path));
+            File decFile = Path.of(config.getServletContext().getRealPath(path)).toFile();
 
             if (decFile.isFile()) {
                 result = new DefaultDecorator(d.getName(), path, null) {

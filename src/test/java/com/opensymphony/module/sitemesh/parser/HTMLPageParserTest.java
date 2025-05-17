@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -20,7 +20,6 @@ import com.opensymphony.module.sitemesh.PageParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -29,6 +28,7 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -67,7 +67,7 @@ public class HTMLPageParserTest extends TestCase {
         TestSuite result = new TestSuite(HTMLPageParserTest.class.getName());
 
         Properties props = new Properties();
-        props.load(new FileInputStream("src/parser-tests/parsers.properties"));
+        props.load(Files.newInputStream(Path.of("src/parser-tests/parsers.properties")));
 
         Collection<String> parsers = new ArrayList<>();
         for (String key : props.stringPropertyNames()) {
@@ -83,7 +83,7 @@ public class HTMLPageParserTest extends TestCase {
             PageParser parser = parserClass.getDeclaredConstructor().newInstance();
 
             String filesPath = props.getProperty("parser." + p + ".tests", "src/parser-tests");
-            List<File> files = new ArrayList<>(Arrays.asList(listParserTests(new File(filesPath))));
+            List<File> files = new ArrayList<>(Arrays.asList(listParserTests(Path.of(filesPath).toFile())));
             Collections.sort(files);
 
             TestSuite suiteForParser = new TestSuite(name);
@@ -270,7 +270,7 @@ public class HTMLPageParserTest extends TestCase {
         final List<String> ignoreFileNames = new ArrayList<>();
         String line;
         try (LineNumberReader ignoreReader = new LineNumberReader(
-                Files.newBufferedReader(new File(dir, "ignore.txt").toPath(), StandardCharsets.UTF_8))) {
+                Files.newBufferedReader(dir.toPath().resolve("ignore.txt"), StandardCharsets.UTF_8))) {
             while ((line = ignoreReader.readLine()) != null) {
                 ignoreFileNames.add(line);
             }

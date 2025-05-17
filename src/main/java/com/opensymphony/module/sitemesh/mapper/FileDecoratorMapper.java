@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -27,6 +27,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -66,7 +67,7 @@ public class FileDecoratorMapper extends AbstractDecoratorMapper {
             return super.getNamedDecorator(req, name);
         }
         if (filePath != null) { // do we really need this disk file check?!
-            File file = new File(filePath);
+            File file = Path.of(filePath).toFile();
 
             if (file.exists() && file.canRead() && file.isFile()) {
                 // if filename exists with name of supplied decorator, return Decorator

@@ -20,7 +20,6 @@ import com.opensymphony.module.sitemesh.PageParser;
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +28,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This performance test compares the three HTML parsers performance. It downloads a large real world HTML file (at time
@@ -60,12 +60,12 @@ public class ParserPerformanceComparison {
      */
     public static void main(String... args) throws Exception {
         // Download the file if it doesn't exist
-        File file = new File(System.getProperty("java.io.tmpdir"), HTML_FILE);
+        File file = Path.of(System.getProperty("java.io.tmpdir"), HTML_FILE).toFile();
         if (!file.exists()) {
             System.out.println("Downloading " + HTML_URL + " to use for performance test");
             URL url = new URL(HTML_URL);
             try (InputStream is = url.openStream();
-                    OutputStream os = new FileOutputStream(file)) {
+                    OutputStream os = Files.newOutputStream(file.toPath())) {
                 copy(is, os);
             }
         } else {
