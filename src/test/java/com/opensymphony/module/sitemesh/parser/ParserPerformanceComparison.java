@@ -1,7 +1,7 @@
 /*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -64,7 +64,8 @@ public class ParserPerformanceComparison {
         if (!file.exists()) {
             System.out.println("Downloading " + HTML_URL + " to use for performance test");
             URL url = new URL(HTML_URL);
-            try (InputStream is = url.openStream(); OutputStream os = new FileOutputStream(file)) {
+            try (InputStream is = url.openStream();
+                    OutputStream os = new FileOutputStream(file)) {
                 copy(is, os);
             }
         } else {
