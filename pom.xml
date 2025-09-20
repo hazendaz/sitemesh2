@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.github.hazendaz</groupId>
         <artifactId>base-parent</artifactId>
-        <version>52</version>
+        <version>54</version>
         <relativePath />
     </parent>
 
@@ -56,11 +56,15 @@
     </distributionManagement>
 
     <properties>
+        <java.version>11</java.version>
+        <java.release.version>11</java.release.version>
+        <javadoc.java.release.version>11</javadoc.java.release.version>
+
         <!-- Automatic Module Name -->
         <module.name>com.github.hazendaz.sitemesh</module.name>
 
         <!-- Reproducible Builds -->
-        <project.build.outputTimestamp>1747520122</project.build.outputTimestamp>
+        <project.build.outputTimestamp>1747521155</project.build.outputTimestamp>
     </properties>
 
     <dependencies>
@@ -119,13 +123,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.12.2</version>
+            <version>5.13.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.12.2</version>
+            <version>5.13.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
