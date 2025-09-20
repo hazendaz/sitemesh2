@@ -3,5 +3,9 @@
   "extends": [
     "config:recommended",
     "helpers:pinGitHubActionDigests"
+  ],
+  "baseBranches": [
+    "master",
+    "support-javax"
   ]
 }
