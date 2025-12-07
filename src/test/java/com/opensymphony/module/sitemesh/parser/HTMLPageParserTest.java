@@ -39,69 +39,23 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Test case for HTMLPageParser implementations. See parser-tests/readme.txt.
  *
  * @author Joe Walnes
  */
-public class HTMLPageParserTest extends TestCase {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class HTMLPageParserTest {
 
     /** The Constant PARSER_PATTERN. */
     private static final Pattern PARSER_PATTERN = Pattern.compile("parser\\.(.+)\\.class");
-
-    /**
-     * This test case builds a custom suite, containing a collection of smaller suites (one for each file in
-     * src/parser-tests).
-     *
-     * @return the test
-     *
-     * @throws Exception
-     *             the exception
-     */
-    public static Test suite() throws Exception {
-        TestSuite result = new TestSuite(HTMLPageParserTest.class.getName());
-
-        Properties props = new Properties();
-        props.load(Files.newInputStream(Path.of("src/parser-tests/parsers.properties")));
-
-        Collection<String> parsers = new ArrayList<>();
-        for (String key : props.stringPropertyNames()) {
-            Matcher matcher = PARSER_PATTERN.matcher(key);
-            if (matcher.matches()) {
-                parsers.add(matcher.group(1));
-            }
-        }
-
-        for (String p : parsers) {
-            String name = props.getProperty("parser." + p + ".class");
-            Class<? extends PageParser> parserClass = Class.forName(name).asSubclass(PageParser.class);
-            PageParser parser = parserClass.getDeclaredConstructor().newInstance();
-
-            String filesPath = props.getProperty("parser." + p + ".tests", "src/parser-tests");
-            List<File> files = new ArrayList<>(Arrays.asList(listParserTests(Path.of(filesPath).toFile())));
-            Collections.sort(files);
-
-            TestSuite suiteForParser = new TestSuite(name);
-            for (File file : files) {
-                TestSuite suiteForFile = new TestSuite(file.getName().replace('.', '_'));
-                suiteForFile.addTest(new HTMLPageParserTest(parser, file, "testTitle"));
-                suiteForFile.addTest(new HTMLPageParserTest(parser, file, "testBody"));
-                suiteForFile.addTest(new HTMLPageParserTest(parser, file, "testHead"));
-                suiteForFile.addTest(new HTMLPageParserTest(parser, file, "testFullPage"));
-                suiteForFile.addTest(new HTMLPageParserTest(parser, file, "testProperties"));
-                suiteForFile.addTest(new HTMLPageParserTest(parser, file, "testContentSanity"));
-                suiteForParser.addTest(suiteForFile);
-            }
-            result.addTest(suiteForParser);
-        }
-
-        return result;
-    }
 
     /** The page. */
     private Page page;
@@ -113,34 +67,89 @@ public class HTMLPageParserTest extends TestCase {
     private String encoding;
 
     /** The parser. */
-    private final PageParser parser;
+    private PageParser parser;
 
     /** The file. */
     private File file;
 
     /**
-     * Instantiates a new HTML page parser test.
-     *
-     * @param parser
-     *            the parser
-     * @param inputFile
-     *            the input file
-     * @param test
-     *            the test
+     * The Class TestParams.
      */
-    public HTMLPageParserTest(PageParser parser, File inputFile, String test) {
-        super(test);
-        this.parser = parser;
-        file = inputFile;
-        encoding = "UTF8";
+    static class TestParams {
+
+        /** The parser. */
+        final PageParser parser;
+
+        /** The file. */
+        final File file;
+
+        /** The encoding. */
+        final String encoding;
+
+        /**
+         * Instantiates a new test params.
+         *
+         * @param parser
+         *            the parser
+         * @param file
+         *            the file
+         * @param encoding
+         *            the encoding
+         */
+        TestParams(PageParser parser, File file, String encoding) {
+            this.parser = parser;
+            this.file = file;
+            this.encoding = encoding;
+        }
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        // read blocks from input file.
+    /**
+     * Test params provider.
+     *
+     * @return the stream
+     *
+     * @throws Exception
+     *             the exception
+     */
+    static Stream<TestParams> testParamsProvider() throws Exception {
+        Properties props = new Properties();
+        props.load(Files.newInputStream(Path.of("src/parser-tests/parsers.properties")));
+        Collection<String> parsers = new ArrayList<>();
+        for (String key : props.stringPropertyNames()) {
+            Matcher matcher = PARSER_PATTERN.matcher(key);
+            if (matcher.matches()) {
+                parsers.add(matcher.group(1));
+            }
+        }
+        List<TestParams> params = new ArrayList<>();
+        for (String p : parsers) {
+            String name = props.getProperty("parser." + p + ".class");
+            Class<? extends PageParser> parserClass = Class.forName(name).asSubclass(PageParser.class);
+            PageParser parser = parserClass.getDeclaredConstructor().newInstance();
+            String filesPath = props.getProperty("parser." + p + ".tests", "src/parser-tests");
+            List<File> files = new ArrayList<>(Arrays.asList(listParserTests(Path.of(filesPath).toFile())));
+            Collections.sort(files);
+            for (File file : files) {
+                params.add(new TestParams(parser, file, "UTF8"));
+            }
+        }
+        return params.stream();
+    }
+
+    /**
+     * Inits the.
+     *
+     * @param params
+     *            the params
+     *
+     * @throws Exception
+     *             the exception
+     */
+    void init(TestParams params) throws Exception {
+        this.parser = params.parser;
+        this.file = params.file;
+        this.encoding = params.encoding;
         this.blocks = readBlocks(Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8));
-        // create PageParser and parse input block into HTMLPage object.
         String input = (String) blocks.get("INPUT");
         this.page = parser.parse(new DefaultSitemeshBuffer(input.toCharArray()));
     }
@@ -148,33 +157,53 @@ public class HTMLPageParserTest extends TestCase {
     /**
      * Test title.
      *
+     * @param params
+     *            the params
+     *
      * @throws Exception
      *             the exception
      */
-    public void testTitle() throws Exception {
-        assertBlock("TITLE", page.getTitle());
+    @ParameterizedTest(name = "{1} - testTitle")
+    @MethodSource("testParamsProvider")
+    void testTitle(TestParams params) throws Exception {
+        init(params);
+        Assertions.assertEquals(((String) blocks.get("TITLE")).trim(), page.getTitle().trim(),
+                file.getName() + " : Block did not match");
     }
 
     /**
      * Test body.
      *
+     * @param params
+     *            the params
+     *
      * @throws Exception
      *             the exception
      */
-    public void testBody() throws Exception {
+    @ParameterizedTest(name = "{1} - testBody")
+    @MethodSource("testParamsProvider")
+    void testBody(TestParams params) throws Exception {
+        init(params);
         StringWriter body = new StringWriter();
         page.writeBody(body);
         body.flush();
-        assertBlock("BODY", body.toString());
+        Assertions.assertEquals(((String) blocks.get("BODY")).trim(), body.toString().trim(),
+                file.getName() + " : Block did not match");
     }
 
     /**
      * Test head.
      *
+     * @param params
+     *            the params
+     *
      * @throws Exception
      *             the exception
      */
-    public void testHead() throws Exception {
+    @ParameterizedTest(name = "{1} - testHead")
+    @MethodSource("testParamsProvider")
+    void testHead(TestParams params) throws Exception {
+        init(params);
         String head;
         if (page instanceof HTMLPage) {
             StringWriter headWriter = new StringWriter();
@@ -184,60 +213,77 @@ public class HTMLPageParserTest extends TestCase {
         } else {
             head = "";
         }
-        assertBlock("HEAD", head.toString());
+        Assertions.assertEquals(((String) blocks.get("HEAD")).trim(), head.trim(),
+                file.getName() + " : Block did not match");
     }
 
     /**
      * Test full page.
      *
+     * @param params
+     *            the params
+     *
      * @throws Exception
      *             the exception
      */
-    public void testFullPage() throws Exception {
+    @ParameterizedTest(name = "{1} - testFullPage")
+    @MethodSource("testParamsProvider")
+    void testFullPage(TestParams params) throws Exception {
+        init(params);
         StringWriter fullPage = new StringWriter();
         page.writePage(fullPage);
         fullPage.flush();
-        assertBlock("INPUT", fullPage.toString());
+        Assertions.assertEquals(((String) blocks.get("INPUT")).trim(), fullPage.toString().trim(),
+                file.getName() + " : Block did not match");
     }
 
     /**
      * Test properties.
      *
-     * @throws Exception
-     *             the exception
-     */
-    public void testProperties() throws Exception {
-        Properties props = new Properties();
-        String propsString = (String) blocks.get("PROPERTIES");
-        ByteArrayInputStream input = new ByteArrayInputStream(propsString.trim().getBytes(Charset.forName(encoding)));
-        props.load(input);
-
-        String[] pageKeys = page.getPropertyKeys();
-        assertEquals(file.getName() + " : Unexpected number of page properties [" + join(pageKeys) + "]", props.size(),
-                pageKeys.length);
-
-        for (String pageKey : pageKeys) {
-            String blockValue = props.getProperty(pageKey);
-            String pageValue = page.getProperty(pageKey);
-            assertEquals(file.getName() + ": " + pageKey, blockValue == null ? null : blockValue.trim(),
-                    pageValue == null ? null : pageValue.trim());
-        }
-    }
-
-    /**
-     * compare difference between using parse(char[]) and parse(char[], length).
+     * @param params
+     *            the params
      *
      * @throws Exception
      *             the exception
      */
-    public void testContentSanity() throws Exception {
+    @ParameterizedTest(name = "{1} - testProperties")
+    @MethodSource("testParamsProvider")
+    void testProperties(TestParams params) throws Exception {
+        init(params);
+        Properties props = new Properties();
+        String propsString = (String) blocks.get("PROPERTIES");
+        ByteArrayInputStream input = new ByteArrayInputStream(propsString.trim().getBytes(Charset.forName(encoding)));
+        props.load(input);
+        String[] pageKeys = page.getPropertyKeys();
+        Assertions.assertEquals(props.size(), pageKeys.length,
+                file.getName() + " : Unexpected number of page properties [" + join(pageKeys) + "]");
+        for (String pageKey : pageKeys) {
+            String blockValue = props.getProperty(pageKey);
+            String pageValue = page.getProperty(pageKey);
+            Assertions.assertEquals(blockValue == null ? null : blockValue.trim(),
+                    pageValue == null ? null : pageValue.trim(), file.getName() + ": " + pageKey);
+        }
+    }
+
+    /**
+     * Test content sanity.
+     *
+     * @param params
+     *            the params
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @ParameterizedTest(name = "{1} - testContentSanity")
+    @MethodSource("testParamsProvider")
+    void testContentSanity(TestParams params) throws Exception {
+        init(params);
         String input = (String) blocks.get("INPUT");
         final char[] chars = input.toCharArray();
-        final char[] bigChars = new char[chars.length * 2 + 10]; // make it bigger
+        final char[] bigChars = new char[chars.length * 2 + 10];
         System.arraycopy(chars, 0, bigChars, 0, chars.length);
         Page bigPage = parser.parse(new DefaultSitemeshBuffer(bigChars, chars.length));
-
-        assertEquals(bigPage.getPage(), page.getPage());
+        Assertions.assertEquals(bigPage.getPage(), page.getPage());
     }
 
     /**
@@ -252,8 +298,6 @@ public class HTMLPageParserTest extends TestCase {
         return String.join(",", values);
     }
 
-    // -------------------------------------------------
-
     /**
      * List parser tests.
      *
@@ -266,7 +310,6 @@ public class HTMLPageParserTest extends TestCase {
      *             Signals that an I/O exception has occurred.
      */
     private static File[] listParserTests(File dir) throws IOException {
-        // get list of files to ignore
         final List<String> ignoreFileNames = new ArrayList<>();
         String line;
         try (LineNumberReader ignoreReader = new LineNumberReader(
@@ -280,23 +323,7 @@ public class HTMLPageParserTest extends TestCase {
     }
 
     /**
-     * Assert block.
-     *
-     * @param blockName
-     *            the block name
-     * @param result
-     *            the result
-     *
-     * @throws Exception
-     *             the exception
-     */
-    private void assertBlock(String blockName, String result) throws Exception {
-        String expected = (String) blocks.get(blockName);
-        assertEquals(file.getName() + " : Block did not match", expected.trim(), result.trim());
-    }
-
-    /**
-     * Read input to test and break down into blocks. See parser-tests/readme.txt
+     * Read blocks.
      *
      * @param input
      *            the input
@@ -324,11 +351,9 @@ public class HTMLPageParserTest extends TestCase {
                 blockContents.append('\n');
             }
         }
-
         if (blockName != null) {
             blocks.put(blockName, blockContents.toString());
         }
-
         return blocks;
     }
 
