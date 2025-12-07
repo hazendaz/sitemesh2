@@ -1,7 +1,1 @@
-com.opensymphony.module.sitemesh.chaining
-com.opensymphony.module.sitemesh.html
-com.opensymphony.module.sitemesh.html.rules
-com.opensymphony.module.sitemesh.html.tokenizer
-com.opensymphony.module.sitemesh.mapper
-com.opensymphony.module.sitemesh.multipass
 com.opensymphony.module.sitemesh.parser

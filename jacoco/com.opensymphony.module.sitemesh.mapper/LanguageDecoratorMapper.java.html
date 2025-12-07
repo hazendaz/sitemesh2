@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LanguageDecoratorMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">LanguageDecoratorMapper.java</span></div><h1>LanguageDecoratorMapper.java</h1><pre class="source lang-java linenums">/*
  * sitemesh2 (https://github.com/hazendaz/sitemesh2)
  *
- * Copyright 2011-2023 Hazendaz.
+ * Copyright 2011-2025 Hazendaz.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of The Apache Software License,
@@ -27,12 +27,13 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * The LanguageDecoratorMapper can determine the preferred language set in the browser requesting a page, and map to a
@@ -55,38 +56,38 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
-<span class="nc" id="L58">public class LanguageDecoratorMapper extends AbstractDecoratorMapper {</span>
+<span class="nc" id="L59">public class LanguageDecoratorMapper extends AbstractDecoratorMapper {</span>
 
     /** The map. */
     private Map&lt;String, Object&gt; map;
 
     @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
-<span class="nc" id="L65">        super.init(config, properties, parent);</span>
-<span class="nc" id="L66">        map = new HashMap&lt;String, Object&gt;();</span>
-<span class="nc" id="L67">        initMap(properties);</span>
-<span class="nc" id="L68">    }</span>
+<span class="nc" id="L66">        super.init(config, properties, parent);</span>
+<span class="nc" id="L67">        map = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L68">        initMap(properties);</span>
+<span class="nc" id="L69">    }</span>
 
     @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         try {
-<span class="nc" id="L73">            Decorator result = null;</span>
-<span class="nc" id="L74">            final Decorator d = super.getDecorator(request, page);</span>
-<span class="nc" id="L75">            String path = modifyPath(d.getPage(), getExt(request.getHeader(&quot;Accept-Language&quot;)));</span>
+<span class="nc" id="L74">            Decorator result = null;</span>
+<span class="nc" id="L75">            final Decorator d = super.getDecorator(request, page);</span>
+<span class="nc" id="L76">            String path = modifyPath(d.getPage(), getExt(request.getHeader(&quot;Accept-Language&quot;)));</span>
 
-<span class="nc" id="L77">            File decFile = new File(config.getServletContext().getRealPath(path));</span>
+<span class="nc" id="L78">            File decFile = Path.of(config.getServletContext().getRealPath(path)).toFile();</span>
 
-<span class="nc bnc" id="L79" title="All 2 branches missed.">            if (decFile.isFile()) {</span>
-<span class="nc" id="L80">                result = new DefaultDecorator(d.getName(), path, null) {</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            if (decFile.isFile()) {</span>
+<span class="nc" id="L81">                result = new DefaultDecorator(d.getName(), path, null) {</span>
                     @Override
                     public String getInitParameter(String paramName) {
-<span class="nc" id="L83">                        return d.getInitParameter(paramName);</span>
+<span class="nc" id="L84">                        return d.getInitParameter(paramName);</span>
                     }
                 };
             }
-<span class="nc bnc" id="L87" title="All 2 branches missed.">            return result == null ? super.getDecorator(request, page) : result;</span>
-<span class="nc" id="L88">        } catch (NullPointerException e) {</span>
-<span class="nc" id="L89">            return super.getDecorator(request, page);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            return result == null ? super.getDecorator(request, page) : result;</span>
+<span class="nc" id="L89">        } catch (NullPointerException e) {</span>
+<span class="nc" id="L90">            return super.getDecorator(request, page);</span>
         }
     }
 
@@ -99,13 +100,13 @@ import javax.servlet.http.HttpServletRequest;
      * @return the ext
      */
     private String getExt(String acceptLanguage) {
-<span class="nc bnc" id="L102" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : map.entrySet()) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : map.entrySet()) {</span>
 
             // Get the first language (preferred one) in the header, and
             // only check the first two chars (the acceptLanguage could be en-gb, but
             // we don't support this for now).
-<span class="nc bnc" id="L107" title="All 2 branches missed.">            if (acceptLanguage.substring(0, 2).equals(entry.getKey())) {</span>
-<span class="nc" id="L108">                return (String) entry.getValue();</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (acceptLanguage.substring(0, 2).equals(entry.getKey())) {</span>
+<span class="nc" id="L109">                return (String) entry.getValue();</span>
             }
 
             // When the user-agent has multiple accept-languages (separated by ;),
@@ -114,8 +115,8 @@ import javax.servlet.http.HttpServletRequest;
             // decorator (in the default language), and not in some other
             // language given by the browser (most of them are specified by
             // default at install).
-<span class="nc" id="L117">        }</span>
-<span class="nc" id="L118">        return null;</span>
+<span class="nc" id="L118">        }</span>
+<span class="nc" id="L119">        return null;</span>
     }
 
     /**
@@ -129,11 +130,11 @@ import javax.servlet.http.HttpServletRequest;
      * @return the string
      */
     private static String modifyPath(String path, String ext) {
-<span class="nc" id="L132">        int dot = path.indexOf('.');</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (dot &gt; -1) {</span>
-<span class="nc" id="L134">            return path.substring(0, dot) + '-' + ext + path.substring(dot);</span>
+<span class="nc" id="L133">        int dot = path.indexOf('.');</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (dot &gt; -1) {</span>
+<span class="nc" id="L135">            return path.substring(0, dot) + '-' + ext + path.substring(dot);</span>
         }
-<span class="nc" id="L136">        return path + '-' + ext;</span>
+<span class="nc" id="L137">        return path + '-' + ext;</span>
     }
 
     /**
@@ -143,13 +144,13 @@ import javax.servlet.http.HttpServletRequest;
      *            the props
      */
     private void initMap(Properties props) {
-<span class="nc bnc" id="L146" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : props.entrySet()) {</span>
-<span class="nc" id="L147">            String key = (String) entry.getKey();</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (key.startsWith(&quot;match.&quot;)) {</span>
-<span class="nc" id="L149">                String match = key.substring(6);</span>
-<span class="nc" id="L150">                map.put(match, entry.getValue());</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : props.entrySet()) {</span>
+<span class="nc" id="L148">            String key = (String) entry.getKey();</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (key.startsWith(&quot;match.&quot;)) {</span>
+<span class="nc" id="L150">                String match = key.substring(6);</span>
+<span class="nc" id="L151">                map.put(match, entry.getValue());</span>
             }
-<span class="nc" id="L152">        }</span>
-<span class="nc" id="L153">    }</span>
+<span class="nc" id="L153">        }</span>
+<span class="nc" id="L154">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
