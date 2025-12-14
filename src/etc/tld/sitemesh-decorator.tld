@@ -14,13 +14,11 @@
         Hazendaz (Jeremy Landis).
 
 -->
-<taglib xmlns="https://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
         version="2.1">
-<taglib>
 
     <tlib-version>2.1</tlib-version>
-    <jsp-version>2.3</jsp-version>
     <short-name>sitemesh-decorator-tags</short-name>
     <uri>http://www.opensymphony.com/sitemesh/decorator</uri>
 
