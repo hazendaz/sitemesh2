@@ -21,7 +21,6 @@ import com.opensymphony.module.sitemesh.html.util.CharArray;
 import com.opensymphony.module.sitemesh.util.CharArrayReader;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -755,7 +754,7 @@ public final class FastPageParser implements PageParser {
         int idx = tag.nameEndIdx;
 
         // Start with an empty hashmap. A new HashMap is lazy-created if we happen to find any properties
-        tag.properties = Collections.emptyMap();
+        tag.properties = Map.of();
         int begin;
         while (idx < len) {
             // Skip forward to the next non-whitespace character
@@ -881,7 +880,7 @@ public final class FastPageParser implements PageParser {
          * This holds a map of the various properties for a particular tag. This map is only populated when required -
          * normally it will remain empty.
          */
-        public Map<String, String> properties = Collections.emptyMap();
+        public Map<String, String> properties = Map.of();
 
         /**
          * Adds a name/value property pair to this tag. Each property that is added represents a property that was
