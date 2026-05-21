@@ -15,7 +15,6 @@ package com.opensymphony.module.sitemesh.mapper;
 
 import com.opensymphony.module.sitemesh.Decorator;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -167,7 +166,7 @@ public class DefaultDecorator implements Decorator {
     public Iterator<Object> getInitParameterNames() {
         if (parameters == null) {
             // make sure we always return an empty iterator
-            return Collections.emptyMap().keySet().iterator();
+            return Map.of().keySet().iterator();
         }
 
         return parameters.keySet().iterator();

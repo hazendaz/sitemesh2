@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +119,7 @@ public class HTMLPageParserTest {
             PageParser parser = parserClass.getDeclaredConstructor().newInstance();
             String filesPath = props.getProperty("parser." + p + ".tests", "src/parser-tests");
             List<File> files = new ArrayList<>(Arrays.asList(listParserTests(Path.of(filesPath).toFile())));
-            Collections.sort(files);
+            files.sort(Comparator.naturalOrder());
             for (File file : files) {
                 params.add(new TestParams(parser, file, "UTF8"));
             }
