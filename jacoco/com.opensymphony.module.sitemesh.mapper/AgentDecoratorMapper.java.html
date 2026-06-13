@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AgentDecoratorMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.mapper</a> &gt; <span class="el_source">AgentDecoratorMapper.java</span></div><h1>AgentDecoratorMapper.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2025 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 /*
  * Title:        AgentDecoratorMapper
@@ -27,13 +18,13 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * The AgentDecoratorMapper can determine the user-agent (i.e. web-browser) requesting a page, and map to a suitable
@@ -57,38 +48,38 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @see com.opensymphony.module.sitemesh.DecoratorMapper
  */
-<span class="nc" id="L60">public class AgentDecoratorMapper extends AbstractDecoratorMapper {</span>
+<span class="nc" id="L51">public class AgentDecoratorMapper extends AbstractDecoratorMapper {</span>
 
     /** The map. */
     private Map&lt;Object, Object&gt; map;
 
     @Override
     public void init(Config config, Properties properties, DecoratorMapper parent) throws InstantiationException {
-<span class="nc" id="L67">        super.init(config, properties, parent);</span>
-<span class="nc" id="L68">        map = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L69">        initMap(properties);</span>
-<span class="nc" id="L70">    }</span>
+<span class="nc" id="L58">        super.init(config, properties, parent);</span>
+<span class="nc" id="L59">        map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L60">        initMap(properties);</span>
+<span class="nc" id="L61">    }</span>
 
     @Override
     public Decorator getDecorator(HttpServletRequest request, Page page) {
         try {
-<span class="nc" id="L75">            Decorator result = null;</span>
-<span class="nc" id="L76">            final Decorator d = super.getDecorator(request, page);</span>
-<span class="nc" id="L77">            String path = modifyPath(d.getPage(), getExt(request.getHeader(&quot;User-Agent&quot;)));</span>
+<span class="nc" id="L66">            Decorator result = null;</span>
+<span class="nc" id="L67">            final Decorator d = super.getDecorator(request, page);</span>
+<span class="nc" id="L68">            String path = modifyPath(d.getPage(), getExt(request.getHeader(&quot;User-Agent&quot;)));</span>
 
-<span class="nc" id="L79">            File decFile = Path.of(config.getServletContext().getRealPath(path)).toFile();</span>
+<span class="nc" id="L70">            File decFile = Path.of(config.getServletContext().getRealPath(path)).toFile();</span>
 
-<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (decFile.isFile()) {</span>
-<span class="nc" id="L82">                result = new DefaultDecorator(d.getName(), path, null) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (decFile.isFile()) {</span>
+<span class="nc" id="L73">                result = new DefaultDecorator(d.getName(), path, null) {</span>
                     @Override
                     public String getInitParameter(String paramName) {
-<span class="nc" id="L85">                        return d.getInitParameter(paramName);</span>
+<span class="nc" id="L76">                        return d.getInitParameter(paramName);</span>
                     }
                 };
             }
-<span class="nc bnc" id="L89" title="All 2 branches missed.">            return result == null ? super.getDecorator(request, page) : result;</span>
-<span class="nc" id="L90">        } catch (NullPointerException e) {</span>
-<span class="nc" id="L91">            return super.getDecorator(request, page);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            return result == null ? super.getDecorator(request, page) : result;</span>
+<span class="nc" id="L81">        } catch (NullPointerException e) {</span>
+<span class="nc" id="L82">            return super.getDecorator(request, page);</span>
         }
     }
 
@@ -101,13 +92,13 @@ import javax.servlet.http.HttpServletRequest;
      * @return the ext
      */
     private String getExt(String userAgent) {
-<span class="nc bnc" id="L104" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : map.entrySet()) {</span>
-<span class="nc" id="L105">            String curr = (String) entry.getKey();</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">            if (userAgent.indexOf(curr) &gt; -1) {</span>
-<span class="nc" id="L107">                return (String) entry.getValue();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : map.entrySet()) {</span>
+<span class="nc" id="L96">            String curr = (String) entry.getKey();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (userAgent.indexOf(curr) &gt; -1) {</span>
+<span class="nc" id="L98">                return (String) entry.getValue();</span>
             }
-<span class="nc" id="L109">        }</span>
-<span class="nc" id="L110">        return null;</span>
+<span class="nc" id="L100">        }</span>
+<span class="nc" id="L101">        return null;</span>
     }
 
     /**
@@ -121,11 +112,11 @@ import javax.servlet.http.HttpServletRequest;
      * @return the string
      */
     private static String modifyPath(String path, String ext) {
-<span class="nc" id="L124">        int dot = path.indexOf('.');</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (dot &gt; -1) {</span>
-<span class="nc" id="L126">            return path.substring(0, dot) + '-' + ext + path.substring(dot);</span>
+<span class="nc" id="L115">        int dot = path.indexOf('.');</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (dot &gt; -1) {</span>
+<span class="nc" id="L117">            return path.substring(0, dot) + '-' + ext + path.substring(dot);</span>
         }
-<span class="nc" id="L128">        return path + '-' + ext;</span>
+<span class="nc" id="L119">        return path + '-' + ext;</span>
     }
 
     /**
@@ -135,14 +126,14 @@ import javax.servlet.http.HttpServletRequest;
      *            the props
      */
     private void initMap(Properties props) {
-<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : props.entrySet()) {</span>
-<span class="nc" id="L139">            String key = (String) entry.getKey();</span>
-<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (key.startsWith(&quot;match.&quot;)) {</span>
-<span class="nc" id="L141">                String match = key.substring(6);</span>
-<span class="nc" id="L142">                String ext = (String) entry.getValue();</span>
-<span class="nc" id="L143">                map.put(match, ext);</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        for (Map.Entry&lt;Object, Object&gt; entry : props.entrySet()) {</span>
+<span class="nc" id="L130">            String key = (String) entry.getKey();</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            if (key.startsWith(&quot;match.&quot;)) {</span>
+<span class="nc" id="L132">                String match = key.substring(6);</span>
+<span class="nc" id="L133">                String ext = (String) entry.getValue();</span>
+<span class="nc" id="L134">                map.put(match, ext);</span>
             }
-<span class="nc" id="L145">        }</span>
-<span class="nc" id="L146">    }</span>
+<span class="nc" id="L136">        }</span>
+<span class="nc" id="L137">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

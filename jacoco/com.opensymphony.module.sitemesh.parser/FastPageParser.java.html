@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FastPageParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.parser</a> &gt; <span class="el_source">FastPageParser.java</span></div><h1>FastPageParser.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 /*
  * Title:        FastPageParser
@@ -30,7 +21,6 @@ import com.opensymphony.module.sitemesh.html.util.CharArray;
 import com.opensymphony.module.sitemesh.util.CharArrayReader;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +34,7 @@ import java.util.Map;
  * @deprecated Use HTMLPageParser instead - it performs better and is more extensible.
  */
 @Deprecated
-<span class="fc" id="L47">public final class FastPageParser implements PageParser {</span>
+<span class="fc" id="L37">public final class FastPageParser implements PageParser {</span>
 
     /** The Constant TOKEN_NONE. */
     private static final int TOKEN_NONE = -0;
@@ -178,485 +168,485 @@ import java.util.Map;
 
     @Override
     public Page parse(char[] buffer) throws IOException {
-<span class="nc" id="L181">        return parse(new DefaultSitemeshBuffer(buffer));</span>
+<span class="nc" id="L171">        return parse(new DefaultSitemeshBuffer(buffer));</span>
     }
 
     @Override
     public Page parse(SitemeshBuffer buffer) throws IOException {
-<span class="fc" id="L186">        CharArrayReader reader = new CharArrayReader(buffer.getCharArray(), 0, buffer.getBufferLength());</span>
-<span class="fc" id="L187">        CharArray _buffer = new CharArray(4096);</span>
-<span class="fc" id="L188">        CharArray _body = new CharArray(4096);</span>
-<span class="fc" id="L189">        CharArray _head = new CharArray(512);</span>
-<span class="fc" id="L190">        CharArray _title = new CharArray(128);</span>
-<span class="fc" id="L191">        Map&lt;String, String&gt; _htmlProperties = null;</span>
-<span class="fc" id="L192">        Map&lt;String, String&gt; _metaProperties = new HashMap&lt;&gt;(6);</span>
-<span class="fc" id="L193">        Map&lt;String, String&gt; _sitemeshProperties = new HashMap&lt;&gt;(6);</span>
-<span class="fc" id="L194">        Map&lt;String, String&gt; _bodyProperties = null;</span>
+<span class="fc" id="L176">        CharArrayReader reader = new CharArrayReader(buffer.getCharArray(), 0, buffer.getBufferLength());</span>
+<span class="fc" id="L177">        CharArray _buffer = new CharArray(4096);</span>
+<span class="fc" id="L178">        CharArray _body = new CharArray(4096);</span>
+<span class="fc" id="L179">        CharArray _head = new CharArray(512);</span>
+<span class="fc" id="L180">        CharArray _title = new CharArray(128);</span>
+<span class="fc" id="L181">        Map&lt;String, String&gt; _htmlProperties = null;</span>
+<span class="fc" id="L182">        Map&lt;String, String&gt; _metaProperties = new HashMap&lt;&gt;(6);</span>
+<span class="fc" id="L183">        Map&lt;String, String&gt; _sitemeshProperties = new HashMap&lt;&gt;(6);</span>
+<span class="fc" id="L184">        Map&lt;String, String&gt; _bodyProperties = null;</span>
 
-<span class="fc" id="L196">        CharArray _currentTaggedContent = new CharArray(1024);</span>
-<span class="fc" id="L197">        String _contentTagId = null;</span>
-<span class="fc" id="L198">        boolean tagged = false;</span>
+<span class="fc" id="L186">        CharArray _currentTaggedContent = new CharArray(1024);</span>
+<span class="fc" id="L187">        String _contentTagId = null;</span>
+<span class="fc" id="L188">        boolean tagged = false;</span>
 
-<span class="fc" id="L200">        boolean _frameSet = false;</span>
+<span class="fc" id="L190">        boolean _frameSet = false;</span>
 
-<span class="fc" id="L202">        int _state = STATE_TEXT;</span>
-<span class="fc" id="L203">        int _tokenType = TOKEN_NONE;</span>
-<span class="fc" id="L204">        int _pushBack = 0;</span>
-<span class="fc" id="L205">        int _comment = 0;</span>
-<span class="fc" id="L206">        int _quote = 0;</span>
-<span class="fc" id="L207">        boolean hide = false;</span>
+<span class="fc" id="L192">        int _state = STATE_TEXT;</span>
+<span class="fc" id="L193">        int _tokenType = TOKEN_NONE;</span>
+<span class="fc" id="L194">        int _pushBack = 0;</span>
+<span class="fc" id="L195">        int _comment = 0;</span>
+<span class="fc" id="L196">        int _quote = 0;</span>
+<span class="fc" id="L197">        boolean hide = false;</span>
 
-<span class="fc" id="L209">        int state = TAG_STATE_NONE;</span>
-<span class="fc" id="L210">        int laststate = TAG_STATE_NONE;</span>
-<span class="fc" id="L211">        boolean doneTitle = false;</span>
+<span class="fc" id="L199">        int state = TAG_STATE_NONE;</span>
+<span class="fc" id="L200">        int laststate = TAG_STATE_NONE;</span>
+<span class="fc" id="L201">        boolean doneTitle = false;</span>
 
         // This tag object gets reused each iteration.
-<span class="fc" id="L214">        Tag tagObject = new Tag();</span>
+<span class="fc" id="L204">        Tag tagObject = new Tag();</span>
 
-<span class="fc bfc" id="L216" title="All 2 branches covered.">        while (_tokenType != TOKEN_EOF) {</span>
-<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (tagged) {</span>
-<span class="pc bpc" id="L218" title="1 of 4 branches missed.">                if (_tokenType == TOKEN_TAG || _tokenType == TOKEN_EMPTYTAG) {</span>
-<span class="pc bpc" id="L219" title="2 of 4 branches missed.">                    if (_buffer == null || _buffer.length() == 0) {</span>
-<span class="nc" id="L220">                        _tokenType = TOKEN_NONE;</span>
-<span class="nc" id="L221">                        continue;</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        while (_tokenType != TOKEN_EOF) {</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">            if (tagged) {</span>
+<span class="pc bpc" id="L208" title="1 of 4 branches missed.">                if (_tokenType == TOKEN_TAG || _tokenType == TOKEN_EMPTYTAG) {</span>
+<span class="pc bpc" id="L209" title="2 of 4 branches missed.">                    if (_buffer == null || _buffer.length() == 0) {</span>
+<span class="nc" id="L210">                        _tokenType = TOKEN_NONE;</span>
+<span class="nc" id="L211">                        continue;</span>
                     }
 
-<span class="pc bpc" id="L224" title="1 of 2 branches missed.">                    if (parseTag(tagObject, _buffer) == null) {</span>
-<span class="nc" id="L225">                        continue;</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">                    if (parseTag(tagObject, _buffer) == null) {</span>
+<span class="nc" id="L215">                        continue;</span>
                     }
 
                     // Note that the '/' survives the | 32 operation
-<span class="fc bfc" id="L229" title="All 2 branches covered.">                    if (_buffer.compareLowerSubstr(&quot;/content&quot;)) {</span>
-<span class="fc" id="L230">                        tagged = false;</span>
-<span class="pc bpc" id="L231" title="1 of 2 branches missed.">                        if (_contentTagId != null) {</span>
-<span class="fc" id="L232">                            state = TAG_STATE_NONE;</span>
-<span class="fc" id="L233">                            _sitemeshProperties.put(_contentTagId, _currentTaggedContent.toString());</span>
-<span class="fc" id="L234">                            _currentTaggedContent.setLength(0);</span>
-<span class="fc" id="L235">                            _contentTagId = null;</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">                    if (_buffer.compareLowerSubstr(&quot;/content&quot;)) {</span>
+<span class="fc" id="L220">                        tagged = false;</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">                        if (_contentTagId != null) {</span>
+<span class="fc" id="L222">                            state = TAG_STATE_NONE;</span>
+<span class="fc" id="L223">                            _sitemeshProperties.put(_contentTagId, _currentTaggedContent.toString());</span>
+<span class="fc" id="L224">                            _currentTaggedContent.setLength(0);</span>
+<span class="fc" id="L225">                            _contentTagId = null;</span>
                         }
                     } else {
-<span class="fc" id="L238">                        _currentTaggedContent.append('&lt;').append(_buffer).append('&gt;');</span>
+<span class="fc" id="L228">                        _currentTaggedContent.append('&lt;').append(_buffer).append('&gt;');</span>
                     }
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                } else if (_tokenType == TOKEN_COMMENT) {</span>
-<span class="nc bnc" id="L241" title="All 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
-<span class="nc" id="L242">                        _currentTaggedContent.append(&quot;&lt;!--&quot;);</span>
-<span class="nc" id="L243">                        _currentTaggedContent.append(_buffer);</span>
-<span class="nc" id="L244">                        _currentTaggedContent.append(&quot;--&gt;&quot;);</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">                } else if (_tokenType == TOKEN_COMMENT) {</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
+<span class="nc" id="L232">                        _currentTaggedContent.append(&quot;&lt;!--&quot;);</span>
+<span class="nc" id="L233">                        _currentTaggedContent.append(_buffer);</span>
+<span class="nc" id="L234">                        _currentTaggedContent.append(&quot;--&gt;&quot;);</span>
                     }
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">                } else if (_tokenType == TOKEN_CDATA) {</span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
-<span class="nc" id="L248">                        _currentTaggedContent.append(&quot;&lt;![CDATA[&quot;);</span>
-<span class="nc" id="L249">                        _currentTaggedContent.append(_buffer);</span>
-<span class="nc" id="L250">                        _currentTaggedContent.append(&quot;]]&gt;&quot;);</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">                } else if (_tokenType == TOKEN_CDATA) {</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
+<span class="nc" id="L238">                        _currentTaggedContent.append(&quot;&lt;![CDATA[&quot;);</span>
+<span class="nc" id="L239">                        _currentTaggedContent.append(_buffer);</span>
+<span class="nc" id="L240">                        _currentTaggedContent.append(&quot;]]&gt;&quot;);</span>
                     }
-<span class="pc bpc" id="L252" title="1 of 2 branches missed.">                } else if (_tokenType == TOKEN_SCRIPT) {</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
-<span class="nc" id="L254">                        _currentTaggedContent.append('&lt;');</span>
-<span class="nc" id="L255">                        _currentTaggedContent.append(_buffer);</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">                } else if (_tokenType == TOKEN_SCRIPT) {</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
+<span class="nc" id="L244">                        _currentTaggedContent.append('&lt;');</span>
+<span class="nc" id="L245">                        _currentTaggedContent.append(_buffer);</span>
                     }
                 } else {
-<span class="pc bpc" id="L258" title="1 of 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
-<span class="fc" id="L259">                        _currentTaggedContent.append(_buffer);</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                    if (_buffer.length() &gt; 0) {</span>
+<span class="fc" id="L249">                        _currentTaggedContent.append(_buffer);</span>
                     }
                 }
-<span class="fc bfc" id="L262" title="All 4 branches covered.">            } else if (_tokenType == TOKEN_TAG || _tokenType == TOKEN_EMPTYTAG) {</span>
-<span class="pc bpc" id="L263" title="2 of 4 branches missed.">                if (_buffer == null || _buffer.length() == 0) {</span>
-<span class="nc" id="L264">                    _tokenType = TOKEN_NONE;</span>
-<span class="nc" id="L265">                    continue;</span>
+<span class="fc bfc" id="L252" title="All 4 branches covered.">            } else if (_tokenType == TOKEN_TAG || _tokenType == TOKEN_EMPTYTAG) {</span>
+<span class="pc bpc" id="L253" title="2 of 4 branches missed.">                if (_buffer == null || _buffer.length() == 0) {</span>
+<span class="nc" id="L254">                    _tokenType = TOKEN_NONE;</span>
+<span class="nc" id="L255">                    continue;</span>
                 }
 
-<span class="pc bpc" id="L268" title="1 of 2 branches missed.">                if (parseTag(tagObject, _buffer) == null) {</span>
-<span class="nc" id="L269">                    _tokenType = TOKEN_TEXT;</span>
-<span class="nc" id="L270">                    continue;</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">                if (parseTag(tagObject, _buffer) == null) {</span>
+<span class="nc" id="L259">                    _tokenType = TOKEN_TEXT;</span>
+<span class="nc" id="L260">                    continue;</span>
                 }
 
-<span class="fc" id="L273">                int tagHash = _buffer.substrHashCode();</span>
+<span class="fc" id="L263">                int tagHash = _buffer.substrHashCode();</span>
 
-<span class="pc bpc" id="L275" title="2 of 4 branches missed.">                if (state == TAG_STATE_XML || state == TAG_STATE_XMP) {</span>
-<span class="nc" id="L276">                    writeTag(state, laststate, hide, _head, _buffer, _body);</span>
-<span class="nc bnc" id="L277" title="All 8 branches missed.">                    if (state == TAG_STATE_XML &amp;&amp; tagHash == SLASH_XML_HASH</span>
+<span class="pc bpc" id="L265" title="2 of 4 branches missed.">                if (state == TAG_STATE_XML || state == TAG_STATE_XMP) {</span>
+<span class="nc" id="L266">                    writeTag(state, laststate, hide, _head, _buffer, _body);</span>
+<span class="nc bnc" id="L267" title="All 8 branches missed.">                    if (state == TAG_STATE_XML &amp;&amp; tagHash == SLASH_XML_HASH</span>
                             || state == TAG_STATE_XMP &amp;&amp; tagHash == SLASH_XMP_HASH) {
-<span class="nc" id="L279">                        state = laststate;</span>
+<span class="nc" id="L269">                        state = laststate;</span>
                     }
                 } else {
-<span class="fc" id="L282">                    boolean doDefault = false;</span>
-<span class="pc bpc" id="L283" title="6 of 17 branches missed.">                    switch (tagHash) {</span>
+<span class="fc" id="L272">                    boolean doDefault = false;</span>
+<span class="pc bpc" id="L273" title="6 of 17 branches missed.">                    switch (tagHash) {</span>
                         case HTML_HASH:
-<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;html&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L286">                                doDefault = true;</span>
-<span class="nc" id="L287">                                break;</span>
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;html&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L276">                                doDefault = true;</span>
+<span class="nc" id="L277">                                break;</span>
                             }
-<span class="fc" id="L289">                            state = TAG_STATE_HTML;</span>
-<span class="fc" id="L290">                            _htmlProperties = parseProperties(tagObject, _buffer).properties;</span>
-<span class="fc" id="L291">                            break;</span>
+<span class="fc" id="L279">                            state = TAG_STATE_HTML;</span>
+<span class="fc" id="L280">                            _htmlProperties = parseProperties(tagObject, _buffer).properties;</span>
+<span class="fc" id="L281">                            break;</span>
                         case HEAD_HASH:
-<span class="pc bpc" id="L293" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;head&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L294">                                doDefault = true;</span>
-<span class="nc" id="L295">                                break;</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;head&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L284">                                doDefault = true;</span>
+<span class="nc" id="L285">                                break;</span>
                             }
-<span class="fc" id="L297">                            state = TAG_STATE_HEAD;</span>
-<span class="fc" id="L298">                            break;</span>
+<span class="fc" id="L287">                            state = TAG_STATE_HEAD;</span>
+<span class="fc" id="L288">                            break;</span>
                         case XML_HASH:
-<span class="nc bnc" id="L300" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;xml&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L301">                                doDefault = true;</span>
-<span class="nc" id="L302">                                break;</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;xml&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L291">                                doDefault = true;</span>
+<span class="nc" id="L292">                                break;</span>
                             }
-<span class="nc" id="L304">                            laststate = state;</span>
-<span class="nc" id="L305">                            writeTag(state, laststate, hide, _head, _buffer, _body);</span>
-<span class="nc" id="L306">                            state = TAG_STATE_XML;</span>
-<span class="nc" id="L307">                            break;</span>
+<span class="nc" id="L294">                            laststate = state;</span>
+<span class="nc" id="L295">                            writeTag(state, laststate, hide, _head, _buffer, _body);</span>
+<span class="nc" id="L296">                            state = TAG_STATE_XML;</span>
+<span class="nc" id="L297">                            break;</span>
                         case XMP_HASH:
-<span class="nc bnc" id="L309" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;xmp&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L310">                                doDefault = true;</span>
-<span class="nc" id="L311">                                break;</span>
+<span class="nc bnc" id="L299" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;xmp&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L300">                                doDefault = true;</span>
+<span class="nc" id="L301">                                break;</span>
                             }
-<span class="nc" id="L313">                            laststate = state;</span>
-<span class="nc" id="L314">                            writeTag(state, laststate, hide, _head, _buffer, _body);</span>
-<span class="nc" id="L315">                            state = TAG_STATE_XMP;</span>
-<span class="nc" id="L316">                            break;</span>
+<span class="nc" id="L303">                            laststate = state;</span>
+<span class="nc" id="L304">                            writeTag(state, laststate, hide, _head, _buffer, _body);</span>
+<span class="nc" id="L305">                            state = TAG_STATE_XMP;</span>
+<span class="nc" id="L306">                            break;</span>
                         case TITLE_HASH:
-<span class="pc bpc" id="L318" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;title&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L319">                                doDefault = true;</span>
-<span class="nc" id="L320">                                break;</span>
+<span class="pc bpc" id="L308" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;title&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L309">                                doDefault = true;</span>
+<span class="nc" id="L310">                                break;</span>
                             }
-<span class="pc bpc" id="L322" title="1 of 2 branches missed.">                            if (doneTitle) {</span>
-<span class="nc" id="L323">                                hide = true;</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">                            if (doneTitle) {</span>
+<span class="nc" id="L313">                                hide = true;</span>
                             } else {
-<span class="fc" id="L325">                                laststate = state;</span>
-<span class="fc" id="L326">                                state = TAG_STATE_TITLE;</span>
+<span class="fc" id="L315">                                laststate = state;</span>
+<span class="fc" id="L316">                                state = TAG_STATE_TITLE;</span>
                             }
-<span class="fc" id="L328">                            break;</span>
+<span class="fc" id="L318">                            break;</span>
                         case SLASH_TITLE_HASH:
-<span class="pc bpc" id="L330" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/title&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L331">                                doDefault = true;</span>
-<span class="nc" id="L332">                                break;</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/title&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L321">                                doDefault = true;</span>
+<span class="nc" id="L322">                                break;</span>
                             }
-<span class="pc bpc" id="L334" title="1 of 2 branches missed.">                            if (doneTitle) {</span>
-<span class="nc" id="L335">                                hide = false;</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">                            if (doneTitle) {</span>
+<span class="nc" id="L325">                                hide = false;</span>
                             } else {
-<span class="fc" id="L337">                                doneTitle = true;</span>
-<span class="fc" id="L338">                                state = laststate;</span>
+<span class="fc" id="L327">                                doneTitle = true;</span>
+<span class="fc" id="L328">                                state = laststate;</span>
                             }
-<span class="fc" id="L340">                            break;</span>
+<span class="fc" id="L330">                            break;</span>
                         case PARAMETER_HASH:
-<span class="nc bnc" id="L342" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;parameter&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L343">                                doDefault = true;</span>
-<span class="nc" id="L344">                                break;</span>
+<span class="nc bnc" id="L332" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;parameter&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L333">                                doDefault = true;</span>
+<span class="nc" id="L334">                                break;</span>
                             }
-<span class="nc" id="L346">                            parseProperties(tagObject, _buffer);</span>
-<span class="nc" id="L347">                            String name = (String) tagObject.properties.get(&quot;name&quot;);</span>
-<span class="nc" id="L348">                            String value = (String) tagObject.properties.get(&quot;value&quot;);</span>
+<span class="nc" id="L336">                            parseProperties(tagObject, _buffer);</span>
+<span class="nc" id="L337">                            String name = (String) tagObject.properties.get(&quot;name&quot;);</span>
+<span class="nc" id="L338">                            String value = (String) tagObject.properties.get(&quot;value&quot;);</span>
 
-<span class="nc bnc" id="L350" title="All 4 branches missed.">                            if (name != null &amp;&amp; value != null) {</span>
-<span class="nc" id="L351">                                _sitemeshProperties.put(name, value);</span>
+<span class="nc bnc" id="L340" title="All 4 branches missed.">                            if (name != null &amp;&amp; value != null) {</span>
+<span class="nc" id="L341">                                _sitemeshProperties.put(name, value);</span>
                             }
                             break;
                         case META_HASH:
-<span class="pc bpc" id="L355" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;meta&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L356">                                doDefault = true;</span>
-<span class="nc" id="L357">                                break;</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;meta&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L346">                                doDefault = true;</span>
+<span class="nc" id="L347">                                break;</span>
                             }
-<span class="pc bpc" id="L359" title="1 of 2 branches missed.">                            CharArray metaDestination = state == TAG_STATE_HEAD ? _head : _body;</span>
-<span class="fc" id="L360">                            metaDestination.append('&lt;');</span>
-<span class="fc" id="L361">                            metaDestination.append(_buffer);</span>
-<span class="fc" id="L362">                            metaDestination.append('&gt;');</span>
-<span class="fc" id="L363">                            parseProperties(tagObject, _buffer);</span>
-<span class="fc" id="L364">                            name = (String) tagObject.properties.get(&quot;name&quot;);</span>
-<span class="fc" id="L365">                            value = (String) tagObject.properties.get(&quot;content&quot;);</span>
+<span class="pc bpc" id="L349" title="1 of 2 branches missed.">                            CharArray metaDestination = state == TAG_STATE_HEAD ? _head : _body;</span>
+<span class="fc" id="L350">                            metaDestination.append('&lt;');</span>
+<span class="fc" id="L351">                            metaDestination.append(_buffer);</span>
+<span class="fc" id="L352">                            metaDestination.append('&gt;');</span>
+<span class="fc" id="L353">                            parseProperties(tagObject, _buffer);</span>
+<span class="fc" id="L354">                            name = (String) tagObject.properties.get(&quot;name&quot;);</span>
+<span class="fc" id="L355">                            value = (String) tagObject.properties.get(&quot;content&quot;);</span>
 
-<span class="pc bpc" id="L367" title="1 of 2 branches missed.">                            if (name == null) {</span>
-<span class="nc" id="L368">                                String httpEquiv = (String) tagObject.properties.get(&quot;http-equiv&quot;);</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">                            if (name == null) {</span>
+<span class="nc" id="L358">                                String httpEquiv = (String) tagObject.properties.get(&quot;http-equiv&quot;);</span>
 
-<span class="nc bnc" id="L370" title="All 2 branches missed.">                                if (httpEquiv != null) {</span>
-<span class="nc" id="L371">                                    name = &quot;http-equiv.&quot; + httpEquiv;</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                                if (httpEquiv != null) {</span>
+<span class="nc" id="L361">                                    name = &quot;http-equiv.&quot; + httpEquiv;</span>
                                 }
                             }
 
-<span class="pc bpc" id="L375" title="2 of 4 branches missed.">                            if (name != null &amp;&amp; value != null) {</span>
-<span class="fc" id="L376">                                _metaProperties.put(name, value);</span>
+<span class="pc bpc" id="L365" title="2 of 4 branches missed.">                            if (name != null &amp;&amp; value != null) {</span>
+<span class="fc" id="L366">                                _metaProperties.put(name, value);</span>
                             }
                             break;
                         case SLASH_HEAD_HASH:
-<span class="pc bpc" id="L380" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/head&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L381">                                doDefault = true;</span>
-<span class="nc" id="L382">                                break;</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/head&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L371">                                doDefault = true;</span>
+<span class="nc" id="L372">                                break;</span>
                             }
-<span class="fc" id="L384">                            state = TAG_STATE_HTML;</span>
-<span class="fc" id="L385">                            break;</span>
+<span class="fc" id="L374">                            state = TAG_STATE_HTML;</span>
+<span class="fc" id="L375">                            break;</span>
                         case FRAME_HASH:
-<span class="nc bnc" id="L387" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;frame&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L388">                                doDefault = true;</span>
-<span class="nc" id="L389">                                break;</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;frame&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L378">                                doDefault = true;</span>
+<span class="nc" id="L379">                                break;</span>
                             }
-<span class="nc" id="L391">                            _frameSet = true;</span>
-<span class="nc" id="L392">                            break;</span>
+<span class="nc" id="L381">                            _frameSet = true;</span>
+<span class="nc" id="L382">                            break;</span>
                         case FRAMESET_HASH:
-<span class="nc bnc" id="L394" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;frameset&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L395">                                doDefault = true;</span>
-<span class="nc" id="L396">                                break;</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;frameset&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L385">                                doDefault = true;</span>
+<span class="nc" id="L386">                                break;</span>
                             }
-<span class="nc" id="L398">                            _frameSet = true;</span>
-<span class="nc" id="L399">                            break;</span>
+<span class="nc" id="L388">                            _frameSet = true;</span>
+<span class="nc" id="L389">                            break;</span>
                         case BODY_HASH:
-<span class="pc bpc" id="L401" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;body&quot;)) { // skip any accidental hash collisions</span>
+<span class="pc bpc" id="L391" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;body&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L392">                                doDefault = true;</span>
+<span class="nc" id="L393">                                break;</span>
+                            }
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">                            if (_tokenType == TOKEN_EMPTYTAG) {</span>
+<span class="nc" id="L396">                                state = TAG_STATE_BODY;</span>
+                            }
+<span class="fc" id="L398">                            _bodyProperties = parseProperties(tagObject, _buffer).properties;</span>
+<span class="fc" id="L399">                            break;</span>
+                        case CONTENT_HASH:
+<span class="pc bpc" id="L401" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;content&quot;)) { // skip any accidental hash collisions</span>
 <span class="nc" id="L402">                                doDefault = true;</span>
 <span class="nc" id="L403">                                break;</span>
                             }
-<span class="pc bpc" id="L405" title="1 of 2 branches missed.">                            if (_tokenType == TOKEN_EMPTYTAG) {</span>
-<span class="nc" id="L406">                                state = TAG_STATE_BODY;</span>
-                            }
-<span class="fc" id="L408">                            _bodyProperties = parseProperties(tagObject, _buffer).properties;</span>
-<span class="fc" id="L409">                            break;</span>
-                        case CONTENT_HASH:
-<span class="pc bpc" id="L411" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;content&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L412">                                doDefault = true;</span>
-<span class="nc" id="L413">                                break;</span>
-                            }
-<span class="fc" id="L415">                            state = TAG_STATE_NONE;</span>
-<span class="fc" id="L416">                            Map&lt;String, String&gt; props = parseProperties(tagObject, _buffer).properties;</span>
-<span class="pc bpc" id="L417" title="1 of 2 branches missed.">                            if (props != null) {</span>
-<span class="fc" id="L418">                                tagged = true;</span>
-<span class="fc" id="L419">                                _contentTagId = (String) props.get(&quot;tag&quot;);</span>
+<span class="fc" id="L405">                            state = TAG_STATE_NONE;</span>
+<span class="fc" id="L406">                            Map&lt;String, String&gt; props = parseProperties(tagObject, _buffer).properties;</span>
+<span class="pc bpc" id="L407" title="1 of 2 branches missed.">                            if (props != null) {</span>
+<span class="fc" id="L408">                                tagged = true;</span>
+<span class="fc" id="L409">                                _contentTagId = (String) props.get(&quot;tag&quot;);</span>
                             }
                             break;
                         case SLASH_XMP_HASH:
-<span class="nc bnc" id="L423" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/xmp&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L424">                                doDefault = true;</span>
-<span class="nc" id="L425">                                break;</span>
+<span class="nc bnc" id="L413" title="All 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/xmp&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L414">                                doDefault = true;</span>
+<span class="nc" id="L415">                                break;</span>
                             }
-<span class="nc" id="L427">                            hide = false;</span>
-<span class="nc" id="L428">                            break;</span>
+<span class="nc" id="L417">                            hide = false;</span>
+<span class="nc" id="L418">                            break;</span>
                         case SLASH_BODY_HASH:
-<span class="pc bpc" id="L430" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/body&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L431">                                doDefault = true;</span>
-<span class="nc" id="L432">                                break;</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/body&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L421">                                doDefault = true;</span>
+<span class="nc" id="L422">                                break;</span>
                             }
-<span class="fc" id="L434">                            state = TAG_STATE_NONE;</span>
-<span class="fc" id="L435">                            hide = true;</span>
-<span class="fc" id="L436">                            break;</span>
+<span class="fc" id="L424">                            state = TAG_STATE_NONE;</span>
+<span class="fc" id="L425">                            hide = true;</span>
+<span class="fc" id="L426">                            break;</span>
                         case SLASH_HTML_HASH:
-<span class="pc bpc" id="L438" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/html&quot;)) { // skip any accidental hash collisions</span>
-<span class="nc" id="L439">                                doDefault = true;</span>
-<span class="nc" id="L440">                                break;</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">                            if (!_buffer.compareLowerSubstr(&quot;/html&quot;)) { // skip any accidental hash collisions</span>
+<span class="nc" id="L429">                                doDefault = true;</span>
+<span class="nc" id="L430">                                break;</span>
                             }
-<span class="fc" id="L442">                            state = TAG_STATE_NONE;</span>
-<span class="fc" id="L443">                            hide = true;</span>
-<span class="fc" id="L444">                            break;</span>
+<span class="fc" id="L432">                            state = TAG_STATE_NONE;</span>
+<span class="fc" id="L433">                            hide = true;</span>
+<span class="fc" id="L434">                            break;</span>
                         default:
-<span class="fc" id="L446">                            doDefault = true;</span>
+<span class="fc" id="L436">                            doDefault = true;</span>
                     }
-<span class="fc bfc" id="L448" title="All 2 branches covered.">                    if (doDefault) {</span>
-<span class="fc" id="L449">                        writeTag(state, laststate, hide, _head, _buffer, _body);</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">                    if (doDefault) {</span>
+<span class="fc" id="L439">                        writeTag(state, laststate, hide, _head, _buffer, _body);</span>
                     }
                 }
-<span class="fc bfc" id="L452" title="All 2 branches covered.">            } else if (!hide) {</span>
-<span class="pc bpc" id="L453" title="3 of 5 branches missed.">                switch (_tokenType) {</span>
+<span class="fc bfc" id="L442" title="All 2 branches covered.">            } else if (!hide) {</span>
+<span class="pc bpc" id="L443" title="3 of 5 branches missed.">                switch (_tokenType) {</span>
                     case TOKEN_TEXT:
-<span class="fc bfc" id="L455" title="All 2 branches covered.">                        if (state == TAG_STATE_TITLE) {</span>
-<span class="fc" id="L456">                            _title.append(_buffer);</span>
-<span class="fc bfc" id="L457" title="All 2 branches covered.">                        } else if (shouldWriteToHead(state, laststate)) {</span>
-<span class="fc" id="L458">                            _head.append(_buffer);</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">                        if (state == TAG_STATE_TITLE) {</span>
+<span class="fc" id="L446">                            _title.append(_buffer);</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">                        } else if (shouldWriteToHead(state, laststate)) {</span>
+<span class="fc" id="L448">                            _head.append(_buffer);</span>
                         } else {
-<span class="fc" id="L460">                            _body.append(_buffer);</span>
+<span class="fc" id="L450">                            _body.append(_buffer);</span>
                         }
-<span class="fc" id="L462">                        break;</span>
+<span class="fc" id="L452">                        break;</span>
                     case TOKEN_COMMENT: {
-<span class="nc bnc" id="L464" title="All 2 branches missed.">                        final CharArray commentDestination = shouldWriteToHead(state, laststate) ? _head : _body;</span>
-<span class="nc" id="L465">                        commentDestination.append(&quot;&lt;!--&quot;);</span>
-<span class="nc" id="L466">                        commentDestination.append(_buffer);</span>
-<span class="nc" id="L467">                        commentDestination.append(&quot;--&gt;&quot;);</span>
-<span class="nc" id="L468">                        break;</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">                        final CharArray commentDestination = shouldWriteToHead(state, laststate) ? _head : _body;</span>
+<span class="nc" id="L455">                        commentDestination.append(&quot;&lt;!--&quot;);</span>
+<span class="nc" id="L456">                        commentDestination.append(_buffer);</span>
+<span class="nc" id="L457">                        commentDestination.append(&quot;--&gt;&quot;);</span>
+<span class="nc" id="L458">                        break;</span>
                     }
                     case TOKEN_CDATA: {
-<span class="nc bnc" id="L471" title="All 2 branches missed.">                        final CharArray commentDestination = state == TAG_STATE_HEAD ? _head : _body;</span>
-<span class="nc" id="L472">                        commentDestination.append(&quot;&lt;![CDATA[&quot;);</span>
-<span class="nc" id="L473">                        commentDestination.append(_buffer);</span>
-<span class="nc" id="L474">                        commentDestination.append(&quot;]]&gt;&quot;);</span>
-<span class="nc" id="L475">                        break;</span>
+<span class="nc bnc" id="L461" title="All 2 branches missed.">                        final CharArray commentDestination = state == TAG_STATE_HEAD ? _head : _body;</span>
+<span class="nc" id="L462">                        commentDestination.append(&quot;&lt;![CDATA[&quot;);</span>
+<span class="nc" id="L463">                        commentDestination.append(_buffer);</span>
+<span class="nc" id="L464">                        commentDestination.append(&quot;]]&gt;&quot;);</span>
+<span class="nc" id="L465">                        break;</span>
                     }
                     case TOKEN_SCRIPT: {
-<span class="nc bnc" id="L478" title="All 2 branches missed.">                        final CharArray commentDestination = state == TAG_STATE_HEAD ? _head : _body;</span>
-<span class="nc" id="L479">                        commentDestination.append('&lt;');</span>
-<span class="nc" id="L480">                        commentDestination.append(_buffer);</span>
-<span class="nc" id="L481">                        break;</span>
+<span class="nc bnc" id="L468" title="All 2 branches missed.">                        final CharArray commentDestination = state == TAG_STATE_HEAD ? _head : _body;</span>
+<span class="nc" id="L469">                        commentDestination.append('&lt;');</span>
+<span class="nc" id="L470">                        commentDestination.append(_buffer);</span>
+<span class="nc" id="L471">                        break;</span>
                     }
                     default:
                         break;
                 }
             }
-<span class="fc" id="L487">            _buffer.setLength(0);</span>
+<span class="fc" id="L477">            _buffer.setLength(0);</span>
 
             start: while (true) {
                 int c;
 
-<span class="pc bpc" id="L492" title="1 of 2 branches missed.">                if (_pushBack != 0) {</span>
-<span class="nc" id="L493">                    c = _pushBack;</span>
-<span class="nc" id="L494">                    _pushBack = 0;</span>
+<span class="pc bpc" id="L482" title="1 of 2 branches missed.">                if (_pushBack != 0) {</span>
+<span class="nc" id="L483">                    c = _pushBack;</span>
+<span class="nc" id="L484">                    _pushBack = 0;</span>
                 } else {
                     try {
-<span class="fc" id="L497">                        c = reader.read();</span>
-<span class="nc" id="L498">                    } catch (IOException e) {</span>
-<span class="nc" id="L499">                        _tokenType = TOKEN_EOF;</span>
-<span class="nc" id="L500">                        break start;</span>
-<span class="fc" id="L501">                    }</span>
+<span class="fc" id="L487">                        c = reader.read();</span>
+<span class="nc" id="L488">                    } catch (IOException e) {</span>
+<span class="nc" id="L489">                        _tokenType = TOKEN_EOF;</span>
+<span class="nc" id="L490">                        break start;</span>
+<span class="fc" id="L491">                    }</span>
                 }
 
-<span class="fc bfc" id="L504" title="All 2 branches covered.">                if (c &lt; 0) {</span>
-<span class="fc" id="L505">                    int tmpstate = _state;</span>
-<span class="fc" id="L506">                    _state = STATE_EOF;</span>
+<span class="fc bfc" id="L494" title="All 2 branches covered.">                if (c &lt; 0) {</span>
+<span class="fc" id="L495">                    int tmpstate = _state;</span>
+<span class="fc" id="L496">                    _state = STATE_EOF;</span>
 
-<span class="pc bpc" id="L508" title="1 of 4 branches missed.">                    if (_buffer.length() &gt; 0 &amp;&amp; tmpstate == STATE_TEXT) {</span>
-<span class="fc" id="L509">                        _tokenType = TOKEN_TEXT;</span>
-<span class="fc" id="L510">                        break start;</span>
+<span class="pc bpc" id="L498" title="1 of 4 branches missed.">                    if (_buffer.length() &gt; 0 &amp;&amp; tmpstate == STATE_TEXT) {</span>
+<span class="fc" id="L499">                        _tokenType = TOKEN_TEXT;</span>
+<span class="fc" id="L500">                        break start;</span>
                     }
-<span class="fc" id="L512">                    _tokenType = TOKEN_EOF;</span>
-<span class="fc" id="L513">                    break start;</span>
+<span class="fc" id="L502">                    _tokenType = TOKEN_EOF;</span>
+<span class="fc" id="L503">                    break start;</span>
                 }
 
-<span class="pc bpc" id="L516" title="5 of 8 branches missed.">                switch (_state) {</span>
+<span class="pc bpc" id="L506" title="5 of 8 branches missed.">                switch (_state) {</span>
                     case STATE_TAG: {
-<span class="fc" id="L518">                        int buflen = _buffer.length();</span>
+<span class="fc" id="L508">                        int buflen = _buffer.length();</span>
 
-<span class="fc bfc" id="L520" title="All 2 branches covered.">                        if (c == '&gt;') {</span>
-<span class="fc bfc" id="L521" title="All 4 branches covered.">                            if (_buffer.length() &gt; 1 &amp;&amp; _buffer.charAt(_buffer.length() - 1) == '/') {</span>
-<span class="fc" id="L522">                                _tokenType = TOKEN_EMPTYTAG;</span>
+<span class="fc bfc" id="L510" title="All 2 branches covered.">                        if (c == '&gt;') {</span>
+<span class="fc bfc" id="L511" title="All 4 branches covered.">                            if (_buffer.length() &gt; 1 &amp;&amp; _buffer.charAt(_buffer.length() - 1) == '/') {</span>
+<span class="fc" id="L512">                                _tokenType = TOKEN_EMPTYTAG;</span>
                             } else {
-<span class="fc" id="L524">                                _tokenType = TOKEN_TAG;</span>
+<span class="fc" id="L514">                                _tokenType = TOKEN_TAG;</span>
                             }
-<span class="fc" id="L526">                            _state = STATE_TEXT;</span>
-<span class="fc" id="L527">                            break start;</span>
+<span class="fc" id="L516">                            _state = STATE_TEXT;</span>
+<span class="fc" id="L517">                            break start;</span>
                         }
-<span class="fc bfc" id="L529" title="All 2 branches covered.">                        if (c == '/') {</span>
-<span class="fc" id="L530">                            _buffer.append('/');</span>
-<span class="pc bpc" id="L531" title="3 of 4 branches missed.">                        } else if (c == '&lt;' &amp;&amp; buflen == 0) {</span>
-<span class="nc" id="L532">                            _buffer.append(&quot;&lt;&lt;&quot;);</span>
-<span class="nc" id="L533">                            _state = STATE_TEXT;</span>
-<span class="pc bpc" id="L534" title="7 of 8 branches missed.">                        } else if (c == '-' &amp;&amp; buflen == 2 &amp;&amp; _buffer.charAt(1) == '-' &amp;&amp; _buffer.charAt(0) == '!') {</span>
-<span class="nc" id="L535">                            _buffer.setLength(0);</span>
-<span class="nc" id="L536">                            _state = STATE_COMMENT;</span>
-<span class="pc bpc" id="L537" title="7 of 8 branches missed.">                        } else if (c == '[' &amp;&amp; buflen == 7 &amp;&amp; _buffer.charAt(0) == '!' &amp;&amp; _buffer.charAt(1) == '['</span>
-<span class="nc bnc" id="L538" title="All 2 branches missed.">                                &amp;&amp; _buffer.compareLower(&quot;cdata&quot;, 2)) {</span>
-<span class="nc" id="L539">                            _buffer.setLength(0);</span>
-<span class="nc" id="L540">                            _state = STATE_CDATA;</span>
-<span class="pc bpc" id="L541" title="4 of 8 branches missed.">                        } else if ((c == 'e' || c == 'E') &amp;&amp; buflen == 7 &amp;&amp; _buffer.charAt(0) == '!'</span>
-<span class="nc bnc" id="L542" title="All 2 branches missed.">                                &amp;&amp; _buffer.compareLower(&quot;doctyp&quot;, 1)) {</span>
-<span class="nc" id="L543">                            _buffer.append((char) c);</span>
-<span class="nc" id="L544">                            _state = STATE_DOCTYPE;</span>
-<span class="pc bpc" id="L545" title="4 of 8 branches missed.">                        } else if ((c == 'T' || c == 't') &amp;&amp; buflen == 5 &amp;&amp; _buffer.compareLower(&quot;scrip&quot;, 0)) {</span>
-<span class="nc" id="L546">                            _buffer.append((char) c);</span>
-<span class="nc" id="L547">                            _state = STATE_SCRIPT;</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">                        if (c == '/') {</span>
+<span class="fc" id="L520">                            _buffer.append('/');</span>
+<span class="pc bpc" id="L521" title="3 of 4 branches missed.">                        } else if (c == '&lt;' &amp;&amp; buflen == 0) {</span>
+<span class="nc" id="L522">                            _buffer.append(&quot;&lt;&lt;&quot;);</span>
+<span class="nc" id="L523">                            _state = STATE_TEXT;</span>
+<span class="pc bpc" id="L524" title="7 of 8 branches missed.">                        } else if (c == '-' &amp;&amp; buflen == 2 &amp;&amp; _buffer.charAt(1) == '-' &amp;&amp; _buffer.charAt(0) == '!') {</span>
+<span class="nc" id="L525">                            _buffer.setLength(0);</span>
+<span class="nc" id="L526">                            _state = STATE_COMMENT;</span>
+<span class="pc bpc" id="L527" title="7 of 8 branches missed.">                        } else if (c == '[' &amp;&amp; buflen == 7 &amp;&amp; _buffer.charAt(0) == '!' &amp;&amp; _buffer.charAt(1) == '['</span>
+<span class="nc bnc" id="L528" title="All 2 branches missed.">                                &amp;&amp; _buffer.compareLower(&quot;cdata&quot;, 2)) {</span>
+<span class="nc" id="L529">                            _buffer.setLength(0);</span>
+<span class="nc" id="L530">                            _state = STATE_CDATA;</span>
+<span class="pc bpc" id="L531" title="4 of 8 branches missed.">                        } else if ((c == 'e' || c == 'E') &amp;&amp; buflen == 7 &amp;&amp; _buffer.charAt(0) == '!'</span>
+<span class="nc bnc" id="L532" title="All 2 branches missed.">                                &amp;&amp; _buffer.compareLower(&quot;doctyp&quot;, 1)) {</span>
+<span class="nc" id="L533">                            _buffer.append((char) c);</span>
+<span class="nc" id="L534">                            _state = STATE_DOCTYPE;</span>
+<span class="pc bpc" id="L535" title="4 of 8 branches missed.">                        } else if ((c == 'T' || c == 't') &amp;&amp; buflen == 5 &amp;&amp; _buffer.compareLower(&quot;scrip&quot;, 0)) {</span>
+<span class="nc" id="L536">                            _buffer.append((char) c);</span>
+<span class="nc" id="L537">                            _state = STATE_SCRIPT;</span>
                         }
 
-<span class="pc bpc" id="L550" title="1 of 4 branches missed.">                        else if (c == '&quot;' || c == '\'') {</span>
-<span class="fc" id="L551">                            _quote = c;</span>
-<span class="fc" id="L552">                            _buffer.append((char) c);</span>
-<span class="fc" id="L553">                            _state = STATE_TAG_QUOTE;</span>
+<span class="pc bpc" id="L540" title="1 of 4 branches missed.">                        else if (c == '&quot;' || c == '\'') {</span>
+<span class="fc" id="L541">                            _quote = c;</span>
+<span class="fc" id="L542">                            _buffer.append((char) c);</span>
+<span class="fc" id="L543">                            _state = STATE_TAG_QUOTE;</span>
                         } else {
-<span class="fc" id="L555">                            _buffer.append((char) c);</span>
+<span class="fc" id="L545">                            _buffer.append((char) c);</span>
                         }
                     }
-<span class="fc" id="L558">                        break;</span>
+<span class="fc" id="L548">                        break;</span>
 
                     case STATE_TEXT: {
-<span class="fc bfc" id="L561" title="All 2 branches covered.">                        if (c == '&lt;') {</span>
-<span class="fc" id="L562">                            _state = STATE_TAG;</span>
-<span class="pc bpc" id="L563" title="1 of 2 branches missed.">                            if (_buffer.length() &gt; 0) {</span>
-<span class="fc" id="L564">                                _tokenType = TOKEN_TEXT;</span>
-<span class="fc" id="L565">                                break start;</span>
+<span class="fc bfc" id="L551" title="All 2 branches covered.">                        if (c == '&lt;') {</span>
+<span class="fc" id="L552">                            _state = STATE_TAG;</span>
+<span class="pc bpc" id="L553" title="1 of 2 branches missed.">                            if (_buffer.length() &gt; 0) {</span>
+<span class="fc" id="L554">                                _tokenType = TOKEN_TEXT;</span>
+<span class="fc" id="L555">                                break start;</span>
                             }
                         } else {
-<span class="fc" id="L568">                            _buffer.append((char) c);</span>
+<span class="fc" id="L558">                            _buffer.append((char) c);</span>
                         }
                     }
-<span class="fc" id="L571">                        break;</span>
+<span class="fc" id="L561">                        break;</span>
 
                     case STATE_TAG_QUOTE: {
-<span class="pc bpc" id="L574" title="1 of 2 branches missed.">                        if (c == '&gt;') {</span>
-<span class="nc" id="L575">                            _pushBack = c;</span>
-<span class="nc" id="L576">                            _state = STATE_TAG;</span>
+<span class="pc bpc" id="L564" title="1 of 2 branches missed.">                        if (c == '&gt;') {</span>
+<span class="nc" id="L565">                            _pushBack = c;</span>
+<span class="nc" id="L566">                            _state = STATE_TAG;</span>
                         } else {
-<span class="fc" id="L578">                            _buffer.append((char) c);</span>
-<span class="fc bfc" id="L579" title="All 2 branches covered.">                            if (c == _quote) {</span>
-<span class="fc" id="L580">                                _state = STATE_TAG;</span>
+<span class="fc" id="L568">                            _buffer.append((char) c);</span>
+<span class="fc bfc" id="L569" title="All 2 branches covered.">                            if (c == _quote) {</span>
+<span class="fc" id="L570">                                _state = STATE_TAG;</span>
                             }
                         }
                     }
                         break;
 
                     case STATE_COMMENT: {
-<span class="nc bnc" id="L587" title="All 4 branches missed.">                        if (c == '&gt;' &amp;&amp; _comment &gt;= 2) {</span>
-<span class="nc" id="L588">                            _buffer.setLength(_buffer.length() - 2);</span>
-<span class="nc" id="L589">                            _comment = 0;</span>
-<span class="nc" id="L590">                            _state = STATE_TEXT;</span>
-<span class="nc" id="L591">                            _tokenType = TOKEN_COMMENT;</span>
-<span class="nc" id="L592">                            break start;</span>
+<span class="nc bnc" id="L577" title="All 4 branches missed.">                        if (c == '&gt;' &amp;&amp; _comment &gt;= 2) {</span>
+<span class="nc" id="L578">                            _buffer.setLength(_buffer.length() - 2);</span>
+<span class="nc" id="L579">                            _comment = 0;</span>
+<span class="nc" id="L580">                            _state = STATE_TEXT;</span>
+<span class="nc" id="L581">                            _tokenType = TOKEN_COMMENT;</span>
+<span class="nc" id="L582">                            break start;</span>
                         }
-<span class="nc bnc" id="L594" title="All 2 branches missed.">                        if (c == '-') {</span>
-<span class="nc" id="L595">                            _comment++;</span>
+<span class="nc bnc" id="L584" title="All 2 branches missed.">                        if (c == '-') {</span>
+<span class="nc" id="L585">                            _comment++;</span>
                         } else {
-<span class="nc" id="L597">                            _comment = 0;</span>
+<span class="nc" id="L587">                            _comment = 0;</span>
                         }
 
-<span class="nc" id="L600">                        _buffer.append((char) c);</span>
+<span class="nc" id="L590">                        _buffer.append((char) c);</span>
                     }
-<span class="nc" id="L602">                        break;</span>
+<span class="nc" id="L592">                        break;</span>
 
                     case STATE_CDATA: {
-<span class="nc bnc" id="L605" title="All 4 branches missed.">                        if (c == '&gt;' &amp;&amp; _comment &gt;= 2) {</span>
-<span class="nc" id="L606">                            _buffer.setLength(_buffer.length() - 2);</span>
-<span class="nc" id="L607">                            _comment = 0;</span>
-<span class="nc" id="L608">                            _state = STATE_TEXT;</span>
-<span class="nc" id="L609">                            _tokenType = TOKEN_CDATA;</span>
-<span class="nc" id="L610">                            break start;</span>
+<span class="nc bnc" id="L595" title="All 4 branches missed.">                        if (c == '&gt;' &amp;&amp; _comment &gt;= 2) {</span>
+<span class="nc" id="L596">                            _buffer.setLength(_buffer.length() - 2);</span>
+<span class="nc" id="L597">                            _comment = 0;</span>
+<span class="nc" id="L598">                            _state = STATE_TEXT;</span>
+<span class="nc" id="L599">                            _tokenType = TOKEN_CDATA;</span>
+<span class="nc" id="L600">                            break start;</span>
                         }
-<span class="nc bnc" id="L612" title="All 2 branches missed.">                        if (c == ']') {</span>
-<span class="nc" id="L613">                            _comment++;</span>
+<span class="nc bnc" id="L602" title="All 2 branches missed.">                        if (c == ']') {</span>
+<span class="nc" id="L603">                            _comment++;</span>
                         } else {
-<span class="nc" id="L615">                            _comment = 0;</span>
+<span class="nc" id="L605">                            _comment = 0;</span>
                         }
 
-<span class="nc" id="L618">                        _buffer.append((char) c);</span>
+<span class="nc" id="L608">                        _buffer.append((char) c);</span>
                     }
-<span class="nc" id="L620">                        break;</span>
+<span class="nc" id="L610">                        break;</span>
 
                     case STATE_SCRIPT: {
-<span class="nc" id="L623">                        _buffer.append((char) c);</span>
-<span class="nc bnc" id="L624" title="All 2 branches missed.">                        if (c == '&lt;') {</span>
-<span class="nc" id="L625">                            _comment = 0;</span>
-<span class="nc bnc" id="L626" title="All 40 branches missed.">                        } else if (c == '/' &amp;&amp; _comment == 0 || (c == 's' || c == 'S') &amp;&amp; _comment == 1</span>
+<span class="nc" id="L613">                        _buffer.append((char) c);</span>
+<span class="nc bnc" id="L614" title="All 2 branches missed.">                        if (c == '&lt;') {</span>
+<span class="nc" id="L615">                            _comment = 0;</span>
+<span class="nc bnc" id="L616" title="All 40 branches missed.">                        } else if (c == '/' &amp;&amp; _comment == 0 || (c == 's' || c == 'S') &amp;&amp; _comment == 1</span>
                                 || (c == 'c' || c == 'C') &amp;&amp; _comment == 2 || (c == 'r' || c == 'R') &amp;&amp; _comment == 3
                                 || (c == 'i' || c == 'I') &amp;&amp; _comment == 4 || (c == 'p' || c == 'P') &amp;&amp; _comment == 5
                                 || (c == 't' || c == 'T') &amp;&amp; _comment == 6) {
-<span class="nc" id="L630">                            _comment++;</span>
-<span class="nc bnc" id="L631" title="All 4 branches missed.">                        } else if (c == '&gt;' &amp;&amp; _comment &gt;= 7) {</span>
-<span class="nc" id="L632">                            _comment = 0;</span>
-<span class="nc" id="L633">                            _state = STATE_TEXT;</span>
-<span class="nc" id="L634">                            _tokenType = TOKEN_SCRIPT;</span>
-<span class="nc" id="L635">                            break start;</span>
+<span class="nc" id="L620">                            _comment++;</span>
+<span class="nc bnc" id="L621" title="All 4 branches missed.">                        } else if (c == '&gt;' &amp;&amp; _comment &gt;= 7) {</span>
+<span class="nc" id="L622">                            _comment = 0;</span>
+<span class="nc" id="L623">                            _state = STATE_TEXT;</span>
+<span class="nc" id="L624">                            _tokenType = TOKEN_SCRIPT;</span>
+<span class="nc" id="L625">                            break start;</span>
                         }
                     }
                         break;
 
                     case STATE_DOCTYPE: {
-<span class="nc" id="L641">                        _buffer.append((char) c);</span>
-<span class="nc bnc" id="L642" title="All 2 branches missed.">                        if (c == '&gt;') {</span>
-<span class="nc" id="L643">                            _state = STATE_TEXT;</span>
-<span class="nc" id="L644">                            _tokenType = TOKEN_DOCTYPE;</span>
-<span class="nc" id="L645">                            break start;</span>
+<span class="nc" id="L631">                        _buffer.append((char) c);</span>
+<span class="nc bnc" id="L632" title="All 2 branches missed.">                        if (c == '&gt;') {</span>
+<span class="nc" id="L633">                            _state = STATE_TEXT;</span>
+<span class="nc" id="L634">                            _tokenType = TOKEN_DOCTYPE;</span>
+<span class="nc" id="L635">                            break start;</span>
                         }
-<span class="nc" id="L647">                        _comment = 0;</span>
+<span class="nc" id="L637">                        _comment = 0;</span>
                     }
                         break;
                 }
-<span class="fc" id="L651">            }</span>
+<span class="fc" id="L641">            }</span>
         }
 
         // Help the GC
-<span class="fc" id="L655">        _currentTaggedContent = null;</span>
-<span class="fc" id="L656">        _buffer = null;</span>
+<span class="fc" id="L645">        _currentTaggedContent = null;</span>
+<span class="fc" id="L646">        _buffer = null;</span>
 
-<span class="fc" id="L658">        return new FastPage(buffer, _sitemeshProperties, _htmlProperties, _metaProperties, _bodyProperties,</span>
-<span class="fc" id="L659">                _title.toString().trim(), _head.toString().trim(), _body.toString().trim(), _frameSet);</span>
+<span class="fc" id="L648">        return new FastPage(buffer, _sitemeshProperties, _htmlProperties, _metaProperties, _bodyProperties,</span>
+<span class="fc" id="L649">                _title.toString().trim(), _head.toString().trim(), _body.toString().trim(), _frameSet);</span>
     }
 
     /**
@@ -677,14 +667,14 @@ import java.util.Map;
      */
     private static void writeTag(int state, int laststate, boolean hide, CharArray _head, CharArray _buffer,
             CharArray _body) {
-<span class="pc bpc" id="L680" title="1 of 2 branches missed.">        if (!hide) {</span>
-<span class="fc bfc" id="L681" title="All 2 branches covered.">            if (shouldWriteToHead(state, laststate)) {</span>
-<span class="fc" id="L682">                _head.append('&lt;').append(_buffer).append('&gt;');</span>
+<span class="pc bpc" id="L670" title="1 of 2 branches missed.">        if (!hide) {</span>
+<span class="fc bfc" id="L671" title="All 2 branches covered.">            if (shouldWriteToHead(state, laststate)) {</span>
+<span class="fc" id="L672">                _head.append('&lt;').append(_buffer).append('&gt;');</span>
             } else {
-<span class="fc" id="L684">                _body.append('&lt;').append(_buffer).append('&gt;');</span>
+<span class="fc" id="L674">                _body.append('&lt;').append(_buffer).append('&gt;');</span>
             }
         }
-<span class="fc" id="L687">    }</span>
+<span class="fc" id="L677">    }</span>
 
     /**
      * Should write to head.
@@ -697,7 +687,7 @@ import java.util.Map;
      * @return true, if successful
      */
     private static boolean shouldWriteToHead(int state, int laststate) {
-<span class="pc bpc" id="L700" title="2 of 8 branches missed.">        return state == TAG_STATE_HEAD</span>
+<span class="pc bpc" id="L690" title="2 of 8 branches missed.">        return state == TAG_STATE_HEAD</span>
                 || laststate == TAG_STATE_HEAD &amp;&amp; (state == TAG_STATE_XML || state == TAG_STATE_XMP);
     }
 
@@ -715,33 +705,33 @@ import java.util.Map;
      *         whitespace, this method will return &lt;code&gt;null&lt;/code&gt;.
      */
     private Tag parseTag(Tag tag, CharArray buf) {
-<span class="fc" id="L718">        int len = buf.length();</span>
-<span class="fc" id="L719">        int idx = 0;</span>
+<span class="fc" id="L708">        int len = buf.length();</span>
+<span class="fc" id="L709">        int idx = 0;</span>
         int begin;
 
         // Skip over any leading whitespace in the tag
-<span class="pc bpc" id="L723" title="2 of 4 branches missed.">        while (idx &lt; len &amp;&amp; Character.isWhitespace(buf.charAt(idx))) {</span>
-<span class="nc" id="L724">            idx++;</span>
+<span class="pc bpc" id="L713" title="2 of 4 branches missed.">        while (idx &lt; len &amp;&amp; Character.isWhitespace(buf.charAt(idx))) {</span>
+<span class="nc" id="L714">            idx++;</span>
         }
 
-<span class="pc bpc" id="L727" title="1 of 2 branches missed.">        if (idx == len) {</span>
-<span class="nc" id="L728">            return null;</span>
+<span class="pc bpc" id="L717" title="1 of 2 branches missed.">        if (idx == len) {</span>
+<span class="nc" id="L718">            return null;</span>
         }
 
         // Find out where the non-whitespace characters end. This will give us the tag name.
-<span class="fc" id="L732">        begin = idx;</span>
-<span class="fc bfc" id="L733" title="All 4 branches covered.">        while (idx &lt; len &amp;&amp; !Character.isWhitespace(buf.charAt(idx))) {</span>
-<span class="fc" id="L734">            idx++;</span>
+<span class="fc" id="L722">        begin = idx;</span>
+<span class="fc bfc" id="L723" title="All 4 branches covered.">        while (idx &lt; len &amp;&amp; !Character.isWhitespace(buf.charAt(idx))) {</span>
+<span class="fc" id="L724">            idx++;</span>
         }
 
         // Mark the tag name as a substring within the buffer. This allows us to perform
         // a substring comparison against it at a later date
-<span class="pc bpc" id="L739" title="1 of 2 branches missed.">        buf.setSubstr(begin, buf.charAt(idx - 1) == '/' ? idx - 1 : idx);</span>
+<span class="pc bpc" id="L729" title="1 of 2 branches missed.">        buf.setSubstr(begin, buf.charAt(idx - 1) == '/' ? idx - 1 : idx);</span>
 
         // Remember where the name finishes so we can pull out the properties later if need be
-<span class="fc" id="L742">        tag.nameEndIdx = idx;</span>
+<span class="fc" id="L732">        tag.nameEndIdx = idx;</span>
 
-<span class="fc" id="L744">        return tag;</span>
+<span class="fc" id="L734">        return tag;</span>
     }
 
     /**
@@ -760,129 +750,129 @@ import java.util.Map;
      *         specified in the tag's HTML.
      */
     private static Tag parseProperties(Tag tag, CharArray buffer) {
-<span class="fc" id="L763">        int len = buffer.length();</span>
-<span class="fc" id="L764">        int idx = tag.nameEndIdx;</span>
+<span class="fc" id="L753">        int len = buffer.length();</span>
+<span class="fc" id="L754">        int idx = tag.nameEndIdx;</span>
 
         // Start with an empty hashmap. A new HashMap is lazy-created if we happen to find any properties
-<span class="fc" id="L767">        tag.properties = Collections.emptyMap();</span>
+<span class="fc" id="L757">        tag.properties = Map.of();</span>
         int begin;
-<span class="fc bfc" id="L769" title="All 2 branches covered.">        while (idx &lt; len) {</span>
+<span class="fc bfc" id="L759" title="All 2 branches covered.">        while (idx &lt; len) {</span>
             // Skip forward to the next non-whitespace character
-<span class="pc bpc" id="L771" title="1 of 4 branches missed.">            while (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
-<span class="fc" id="L772">                idx++;</span>
+<span class="pc bpc" id="L761" title="1 of 4 branches missed.">            while (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
+<span class="fc" id="L762">                idx++;</span>
             }
 
-<span class="pc bpc" id="L775" title="1 of 2 branches missed.">            if (idx == len) {</span>
-<span class="nc" id="L776">                continue;</span>
+<span class="pc bpc" id="L765" title="1 of 2 branches missed.">            if (idx == len) {</span>
+<span class="nc" id="L766">                continue;</span>
             }
 
-<span class="fc" id="L779">            begin = idx;</span>
-<span class="pc bpc" id="L780" title="1 of 2 branches missed.">            if (buffer.charAt(idx) == '&quot;') {</span>
-<span class="nc" id="L781">                idx++;</span>
-<span class="nc bnc" id="L782" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '&quot;') {</span>
-<span class="nc" id="L783">                    idx++;</span>
+<span class="fc" id="L769">            begin = idx;</span>
+<span class="pc bpc" id="L770" title="1 of 2 branches missed.">            if (buffer.charAt(idx) == '&quot;') {</span>
+<span class="nc" id="L771">                idx++;</span>
+<span class="nc bnc" id="L772" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '&quot;') {</span>
+<span class="nc" id="L773">                    idx++;</span>
                 }
-<span class="nc bnc" id="L785" title="All 2 branches missed.">                if (idx == len) {</span>
-<span class="nc" id="L786">                    continue;</span>
+<span class="nc bnc" id="L775" title="All 2 branches missed.">                if (idx == len) {</span>
+<span class="nc" id="L776">                    continue;</span>
                 }
-<span class="nc" id="L788">                idx++;</span>
-<span class="pc bpc" id="L789" title="1 of 2 branches missed.">            } else if (buffer.charAt(idx) == '\'') {</span>
-<span class="nc" id="L790">                idx++;</span>
-<span class="nc bnc" id="L791" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '\'') {</span>
-<span class="nc" id="L792">                    idx++;</span>
+<span class="nc" id="L778">                idx++;</span>
+<span class="pc bpc" id="L779" title="1 of 2 branches missed.">            } else if (buffer.charAt(idx) == '\'') {</span>
+<span class="nc" id="L780">                idx++;</span>
+<span class="nc bnc" id="L781" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '\'') {</span>
+<span class="nc" id="L782">                    idx++;</span>
                 }
-<span class="nc bnc" id="L794" title="All 2 branches missed.">                if (idx == len) {</span>
-<span class="nc" id="L795">                    continue;</span>
+<span class="nc bnc" id="L784" title="All 2 branches missed.">                if (idx == len) {</span>
+<span class="nc" id="L785">                    continue;</span>
                 }
-<span class="nc" id="L797">                idx++;</span>
+<span class="nc" id="L787">                idx++;</span>
             } else {
-<span class="pc bpc" id="L799" title="1 of 6 branches missed.">                while (idx &lt; len &amp;&amp; !Character.isWhitespace(buffer.charAt(idx)) &amp;&amp; buffer.charAt(idx) != '=') {</span>
-<span class="fc" id="L800">                    idx++;</span>
+<span class="pc bpc" id="L789" title="1 of 6 branches missed.">                while (idx &lt; len &amp;&amp; !Character.isWhitespace(buffer.charAt(idx)) &amp;&amp; buffer.charAt(idx) != '=') {</span>
+<span class="fc" id="L790">                    idx++;</span>
                 }
             }
 
             // Mark the substring. This is the attribute name
-<span class="fc" id="L805">            buffer.setSubstr(begin, idx);</span>
+<span class="fc" id="L795">            buffer.setSubstr(begin, idx);</span>
 
-<span class="pc bpc" id="L807" title="1 of 4 branches missed.">            if (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
-<span class="nc bnc" id="L808" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
-<span class="nc" id="L809">                    idx++;</span>
+<span class="pc bpc" id="L797" title="1 of 4 branches missed.">            if (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
+<span class="nc bnc" id="L798" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
+<span class="nc" id="L799">                    idx++;</span>
                 }
             }
 
-<span class="pc bpc" id="L813" title="1 of 4 branches missed.">            if (idx == len || buffer.charAt(idx) != '=') {</span>
-<span class="nc" id="L814">                continue;</span>
+<span class="pc bpc" id="L803" title="1 of 4 branches missed.">            if (idx == len || buffer.charAt(idx) != '=') {</span>
+<span class="nc" id="L804">                continue;</span>
             }
 
-<span class="fc" id="L817">            idx++;</span>
+<span class="fc" id="L807">            idx++;</span>
 
-<span class="pc bpc" id="L819" title="1 of 2 branches missed.">            if (idx == len) {</span>
-<span class="nc" id="L820">                continue;</span>
+<span class="pc bpc" id="L809" title="1 of 2 branches missed.">            if (idx == len) {</span>
+<span class="nc" id="L810">                continue;</span>
             }
 
-<span class="pc bpc" id="L823" title="3 of 6 branches missed.">            while (idx &lt; len &amp;&amp; (buffer.charAt(idx) == '\n' || buffer.charAt(idx) == '\r')) {</span>
-<span class="nc" id="L824">                idx++;</span>
+<span class="pc bpc" id="L813" title="3 of 6 branches missed.">            while (idx &lt; len &amp;&amp; (buffer.charAt(idx) == '\n' || buffer.charAt(idx) == '\r')) {</span>
+<span class="nc" id="L814">                idx++;</span>
             }
 
-<span class="pc bpc" id="L827" title="1 of 2 branches missed.">            if (buffer.charAt(idx) == ' ') {</span>
-<span class="nc bnc" id="L828" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
-<span class="nc" id="L829">                    idx++;</span>
+<span class="pc bpc" id="L817" title="1 of 2 branches missed.">            if (buffer.charAt(idx) == ' ') {</span>
+<span class="nc bnc" id="L818" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; Character.isWhitespace(buffer.charAt(idx))) {</span>
+<span class="nc" id="L819">                    idx++;</span>
                 }
-<span class="nc bnc" id="L831" title="All 6 branches missed.">                if (idx == len || buffer.charAt(idx) != '&quot;' &amp;&amp; buffer.charAt(idx) != '&quot;') {</span>
-<span class="nc" id="L832">                    continue;</span>
+<span class="nc bnc" id="L821" title="All 6 branches missed.">                if (idx == len || buffer.charAt(idx) != '&quot;' &amp;&amp; buffer.charAt(idx) != '&quot;') {</span>
+<span class="nc" id="L822">                    continue;</span>
                 }
             }
 
-<span class="fc" id="L836">            begin = idx;</span>
+<span class="fc" id="L826">            begin = idx;</span>
             int end;
-<span class="pc bpc" id="L838" title="1 of 2 branches missed.">            if (buffer.charAt(idx) == '&quot;') {</span>
-<span class="fc" id="L839">                idx++;</span>
-<span class="fc" id="L840">                begin = idx;</span>
-<span class="pc bpc" id="L841" title="1 of 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '&quot;') {</span>
-<span class="fc" id="L842">                    idx++;</span>
+<span class="pc bpc" id="L828" title="1 of 2 branches missed.">            if (buffer.charAt(idx) == '&quot;') {</span>
+<span class="fc" id="L829">                idx++;</span>
+<span class="fc" id="L830">                begin = idx;</span>
+<span class="pc bpc" id="L831" title="1 of 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '&quot;') {</span>
+<span class="fc" id="L832">                    idx++;</span>
                 }
-<span class="pc bpc" id="L844" title="1 of 2 branches missed.">                if (idx == len) {</span>
-<span class="nc" id="L845">                    continue;</span>
+<span class="pc bpc" id="L834" title="1 of 2 branches missed.">                if (idx == len) {</span>
+<span class="nc" id="L835">                    continue;</span>
                 }
-<span class="fc" id="L847">                end = idx;</span>
-<span class="fc" id="L848">                idx++;</span>
-<span class="nc bnc" id="L849" title="All 2 branches missed.">            } else if (buffer.charAt(idx) == '\'') {</span>
-<span class="nc" id="L850">                idx++;</span>
-<span class="nc" id="L851">                begin = idx;</span>
-<span class="nc bnc" id="L852" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '\'') {</span>
-<span class="nc" id="L853">                    idx++;</span>
+<span class="fc" id="L837">                end = idx;</span>
+<span class="fc" id="L838">                idx++;</span>
+<span class="nc bnc" id="L839" title="All 2 branches missed.">            } else if (buffer.charAt(idx) == '\'') {</span>
+<span class="nc" id="L840">                idx++;</span>
+<span class="nc" id="L841">                begin = idx;</span>
+<span class="nc bnc" id="L842" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; buffer.charAt(idx) != '\'') {</span>
+<span class="nc" id="L843">                    idx++;</span>
                 }
-<span class="nc bnc" id="L855" title="All 2 branches missed.">                if (idx == len) {</span>
-<span class="nc" id="L856">                    continue;</span>
+<span class="nc bnc" id="L845" title="All 2 branches missed.">                if (idx == len) {</span>
+<span class="nc" id="L846">                    continue;</span>
                 }
-<span class="nc" id="L858">                end = idx;</span>
-<span class="nc" id="L859">                idx++;</span>
+<span class="nc" id="L848">                end = idx;</span>
+<span class="nc" id="L849">                idx++;</span>
             } else {
-<span class="nc bnc" id="L861" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; !Character.isWhitespace(buffer.charAt(idx))) {</span>
-<span class="nc" id="L862">                    idx++;</span>
+<span class="nc bnc" id="L851" title="All 4 branches missed.">                while (idx &lt; len &amp;&amp; !Character.isWhitespace(buffer.charAt(idx))) {</span>
+<span class="nc" id="L852">                    idx++;</span>
                 }
-<span class="nc" id="L864">                end = idx;</span>
+<span class="nc" id="L854">                end = idx;</span>
             }
             // Extract the name and value as String objects and add them to the property map
-<span class="fc" id="L867">            String name = buffer.getLowerSubstr();</span>
-<span class="fc" id="L868">            String value = buffer.substring(begin, end);</span>
+<span class="fc" id="L857">            String name = buffer.getLowerSubstr();</span>
+<span class="fc" id="L858">            String value = buffer.substring(begin, end);</span>
 
-<span class="fc" id="L870">            tag.addProperty(name, value);</span>
-<span class="fc" id="L871">        }</span>
-<span class="fc" id="L872">        return tag;</span>
+<span class="fc" id="L860">            tag.addProperty(name, value);</span>
+<span class="fc" id="L861">        }</span>
+<span class="fc" id="L862">        return tag;</span>
     }
 
     /**
      * The Class Tag.
      */
-<span class="fc" id="L878">    private static class Tag {</span>
+<span class="fc" id="L868">    private static class Tag {</span>
         /**
          * The name end idx.
          * &lt;p&gt;
          * The index where the name string ends. This is used as the starting offet if we need to continue processing to
          * find the tag's properties.
          */
-<span class="fc" id="L885">        public int nameEndIdx = 0;</span>
+<span class="fc" id="L875">        public int nameEndIdx = 0;</span>
 
         /**
          * The properties.
@@ -890,7 +880,7 @@ import java.util.Map;
          * This holds a map of the various properties for a particular tag. This map is only populated when required -
          * normally it will remain empty.
          */
-<span class="fc" id="L893">        public Map&lt;String, String&gt; properties = Collections.emptyMap();</span>
+<span class="fc" id="L883">        public Map&lt;String, String&gt; properties = Map.of();</span>
 
         /**
          * Adds a name/value property pair to this tag. Each property that is added represents a property that was
@@ -902,11 +892,11 @@ import java.util.Map;
          *            the value
          */
         public void addProperty(String name, String value) {
-<span class="fc bfc" id="L905" title="All 2 branches covered.">            if (properties.isEmpty()) {</span>
-<span class="fc" id="L906">                properties = new HashMap&lt;&gt;(8);</span>
+<span class="fc bfc" id="L895" title="All 2 branches covered.">            if (properties.isEmpty()) {</span>
+<span class="fc" id="L896">                properties = new HashMap&lt;&gt;(8);</span>
             }
-<span class="fc" id="L908">            properties.put(name, value);</span>
-<span class="fc" id="L909">        }</span>
+<span class="fc" id="L898">            properties.put(name, value);</span>
+<span class="fc" id="L899">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

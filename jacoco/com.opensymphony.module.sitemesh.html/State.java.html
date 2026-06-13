@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>State.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html</a> &gt; <span class="el_source">State.java</span></div><h1>State.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 package com.opensymphony.module.sitemesh.html;
 
@@ -22,13 +13,13 @@ import java.util.List;
 /**
  * The Class State.
  */
-<span class="fc" id="L25">public final class State {</span>
+<span class="fc" id="L16">public final class State {</span>
 
     /** The rules. */
-<span class="fc" id="L28">    private TagRule[] rules = new TagRule[16]; // List is too slow, according to profiler</span>
+<span class="fc" id="L19">    private TagRule[] rules = new TagRule[16]; // List is too slow, according to profiler</span>
 
     /** The rule count. */
-<span class="fc" id="L31">    private int ruleCount = 0;</span>
+<span class="fc" id="L22">    private int ruleCount = 0;</span>
 
     /** The listeners. */
     private List&lt;StateChangeListener&gt; listeners;
@@ -44,14 +35,14 @@ import java.util.List;
      *            the rule
      */
     public void addRule(TagRule rule) {
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (ruleCount == rules.length) {</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (ruleCount == rules.length) {</span>
             // grow array if necessary
-<span class="nc" id="L49">            TagRule[] longerArray = new TagRule[rules.length * 2];</span>
-<span class="nc" id="L50">            System.arraycopy(rules, 0, longerArray, 0, ruleCount);</span>
-<span class="nc" id="L51">            rules = longerArray;</span>
+<span class="nc" id="L40">            TagRule[] longerArray = new TagRule[rules.length * 2];</span>
+<span class="nc" id="L41">            System.arraycopy(rules, 0, longerArray, 0, ruleCount);</span>
+<span class="nc" id="L42">            rules = longerArray;</span>
         }
-<span class="fc" id="L53">        rules[ruleCount++] = rule;</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L44">        rules[ruleCount++] = rule;</span>
+<span class="fc" id="L45">    }</span>
 
     /**
      * Adds the text filter.
@@ -60,11 +51,11 @@ import java.util.List;
      *            the text filter
      */
     public void addTextFilter(TextFilter textFilter) {
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (textFilters == null) {</span>
-<span class="fc" id="L64">            textFilters = new ArrayList&lt;TextFilter&gt;(); // lazy instantiation</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (textFilters == null) {</span>
+<span class="fc" id="L55">            textFilters = new ArrayList&lt;TextFilter&gt;(); // lazy instantiation</span>
         }
-<span class="fc" id="L66">        textFilters.add(textFilter);</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L57">        textFilters.add(textFilter);</span>
+<span class="fc" id="L58">    }</span>
 
     /**
      * Should process tag.
@@ -75,12 +66,12 @@ import java.util.List;
      * @return true, if successful
      */
     public boolean shouldProcessTag(String tagName) {
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        for (int i = ruleCount - 1; i &gt;= 0; i--) { // reverse iteration to so most recently added rule matches</span>
-<span class="fc bfc" id="L79" title="All 2 branches covered.">            if (rules[i].shouldProcess(tagName)) {</span>
-<span class="fc" id="L80">                return true;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (int i = ruleCount - 1; i &gt;= 0; i--) { // reverse iteration to so most recently added rule matches</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (rules[i].shouldProcess(tagName)) {</span>
+<span class="fc" id="L71">                return true;</span>
             }
         }
-<span class="fc" id="L83">        return false;</span>
+<span class="fc" id="L74">        return false;</span>
     }
 
     /**
@@ -92,12 +83,12 @@ import java.util.List;
      * @return the rule
      */
     public TagRule getRule(String tagName) {
-<span class="pc bpc" id="L95" title="1 of 2 branches missed.">        for (int i = ruleCount - 1; i &gt;= 0; i--) { // reverse iteration to so most recently added rule matches</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">            if (rules[i].shouldProcess(tagName)) {</span>
-<span class="fc" id="L97">                return rules[i];</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        for (int i = ruleCount - 1; i &gt;= 0; i--) { // reverse iteration to so most recently added rule matches</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            if (rules[i].shouldProcess(tagName)) {</span>
+<span class="fc" id="L88">                return rules[i];</span>
             }
         }
-<span class="nc" id="L100">        return null;</span>
+<span class="nc" id="L91">        return null;</span>
     }
 
     /**
@@ -107,24 +98,24 @@ import java.util.List;
      *            the listener
      */
     public void addListener(StateChangeListener listener) {
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (listeners == null) {</span>
-<span class="fc" id="L111">            listeners = new ArrayList&lt;StateChangeListener&gt;();</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (listeners == null) {</span>
+<span class="fc" id="L102">            listeners = new ArrayList&lt;StateChangeListener&gt;();</span>
         }
-<span class="fc" id="L113">        listeners.add(listener);</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L104">        listeners.add(listener);</span>
+<span class="fc" id="L105">    }</span>
 
     /**
      * End of state.
      */
     public void endOfState() {
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (listeners == null) {</span>
-<span class="fc" id="L121">            return;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (listeners == null) {</span>
+<span class="fc" id="L112">            return;</span>
         }
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (Iterator&lt;StateChangeListener&gt; iter = listeners.iterator(); iter.hasNext();) {</span>
-<span class="fc" id="L124">            StateChangeListener listener = (StateChangeListener) iter.next();</span>
-<span class="fc" id="L125">            listener.stateFinished();</span>
-<span class="fc" id="L126">        }</span>
-<span class="fc" id="L127">    }</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        for (Iterator&lt;StateChangeListener&gt; iter = listeners.iterator(); iter.hasNext();) {</span>
+<span class="fc" id="L115">            StateChangeListener listener = (StateChangeListener) iter.next();</span>
+<span class="fc" id="L116">            listener.stateFinished();</span>
+<span class="fc" id="L117">        }</span>
+<span class="fc" id="L118">    }</span>
 
     /**
      * Handle text.
@@ -135,19 +126,19 @@ import java.util.List;
      *            the context
      */
     public void handleText(Text text, HTMLProcessorContext context) {
-<span class="pc bpc" id="L138" title="1 of 4 branches missed.">        if (textFilters != null &amp;&amp; !textFilters.isEmpty()) {</span>
-<span class="fc" id="L139">            String original = text.getContents();</span>
-<span class="fc" id="L140">            String asString = original;</span>
-<span class="fc bfc" id="L141" title="All 2 branches covered.">            for (Iterator&lt;TextFilter&gt; iterator = textFilters.iterator(); iterator.hasNext();) {</span>
-<span class="fc" id="L142">                TextFilter textFilter = (TextFilter) iterator.next();</span>
-<span class="fc" id="L143">                asString = textFilter.filter(asString);</span>
-<span class="fc" id="L144">            }</span>
-<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (!original.equals(asString)) {</span>
-<span class="fc" id="L146">                context.currentBuffer().delete(text.getPosition(), text.getLength());</span>
-<span class="fc" id="L147">                context.currentBuffer().insert(text.getPosition(), StringSitemeshBuffer.createBufferFragment(asString));</span>
+<span class="pc bpc" id="L129" title="1 of 4 branches missed.">        if (textFilters != null &amp;&amp; !textFilters.isEmpty()) {</span>
+<span class="fc" id="L130">            String original = text.getContents();</span>
+<span class="fc" id="L131">            String asString = original;</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            for (Iterator&lt;TextFilter&gt; iterator = textFilters.iterator(); iterator.hasNext();) {</span>
+<span class="fc" id="L133">                TextFilter textFilter = (TextFilter) iterator.next();</span>
+<span class="fc" id="L134">                asString = textFilter.filter(asString);</span>
+<span class="fc" id="L135">            }</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            if (!original.equals(asString)) {</span>
+<span class="fc" id="L137">                context.currentBuffer().delete(text.getPosition(), text.getLength());</span>
+<span class="fc" id="L138">                context.currentBuffer().insert(text.getPosition(), StringSitemeshBuffer.createBufferFragment(asString));</span>
             }
         }
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L141">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

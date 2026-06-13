@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoutableServletOutputStream.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.filter</a> &gt; <span class="el_source">RoutableServletOutputStream.java</span></div><h1>RoutableServletOutputStream.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 /* This software is published under the terms of the OpenSymphony Software
  * License version 1.1, of which a copy has been included with this
  * distribution in the LICENSE.txt file. */
 package com.opensymphony.module.sitemesh.filter;
 
-import java.io.IOException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
+import java.io.IOException;
 
 /**
  * Provides a ServletOutputStream that routes through to another ServletOutputStream, however the destination can be
@@ -58,9 +49,9 @@ public class RoutableServletOutputStream extends ServletOutputStream {
      * @param factory
      *            the factory
      */
-<span class="nc" id="L61">    public RoutableServletOutputStream(DestinationFactory factory) {</span>
-<span class="nc" id="L62">        this.factory = factory;</span>
-<span class="nc" id="L63">    }</span>
+<span class="nc" id="L52">    public RoutableServletOutputStream(DestinationFactory factory) {</span>
+<span class="nc" id="L53">        this.factory = factory;</span>
+<span class="nc" id="L54">    }</span>
 
     /**
      * Gets the destination.
@@ -71,10 +62,10 @@ public class RoutableServletOutputStream extends ServletOutputStream {
      *             Signals that an I/O exception has occurred.
      */
     private ServletOutputStream getDestination() throws IOException {
-<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (destination == null) {</span>
-<span class="nc" id="L75">            destination = factory.create();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (destination == null) {</span>
+<span class="nc" id="L66">            destination = factory.create();</span>
         }
-<span class="nc" id="L77">        return destination;</span>
+<span class="nc" id="L68">        return destination;</span>
     }
 
     /**
@@ -84,118 +75,118 @@ public class RoutableServletOutputStream extends ServletOutputStream {
      *            the factory
      */
     public void updateDestination(DestinationFactory factory) {
-<span class="nc" id="L87">        destination = null;</span>
-<span class="nc" id="L88">        this.factory = factory;</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L78">        destination = null;</span>
+<span class="nc" id="L79">        this.factory = factory;</span>
+<span class="nc" id="L80">    }</span>
 
     @Override
     public void close() throws IOException {
-<span class="nc" id="L93">        getDestination().close();</span>
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L84">        getDestination().close();</span>
+<span class="nc" id="L85">    }</span>
 
     @Override
     public void write(int b) throws IOException {
-<span class="nc" id="L98">        getDestination().write(b);</span>
-<span class="nc" id="L99">    }</span>
+<span class="nc" id="L89">        getDestination().write(b);</span>
+<span class="nc" id="L90">    }</span>
 
     @Override
     public void print(String s) throws IOException {
-<span class="nc" id="L103">        getDestination().print(s);</span>
-<span class="nc" id="L104">    }</span>
+<span class="nc" id="L94">        getDestination().print(s);</span>
+<span class="nc" id="L95">    }</span>
 
     @Override
     public void print(boolean b) throws IOException {
-<span class="nc" id="L108">        getDestination().print(b);</span>
-<span class="nc" id="L109">    }</span>
+<span class="nc" id="L99">        getDestination().print(b);</span>
+<span class="nc" id="L100">    }</span>
 
     @Override
     public void print(char c) throws IOException {
-<span class="nc" id="L113">        getDestination().print(c);</span>
-<span class="nc" id="L114">    }</span>
+<span class="nc" id="L104">        getDestination().print(c);</span>
+<span class="nc" id="L105">    }</span>
 
     @Override
     public void print(int i) throws IOException {
-<span class="nc" id="L118">        getDestination().print(i);</span>
-<span class="nc" id="L119">    }</span>
+<span class="nc" id="L109">        getDestination().print(i);</span>
+<span class="nc" id="L110">    }</span>
 
     @Override
     public void print(long l) throws IOException {
-<span class="nc" id="L123">        getDestination().print(l);</span>
-<span class="nc" id="L124">    }</span>
+<span class="nc" id="L114">        getDestination().print(l);</span>
+<span class="nc" id="L115">    }</span>
 
     @Override
     public void print(float v) throws IOException {
-<span class="nc" id="L128">        getDestination().print(v);</span>
-<span class="nc" id="L129">    }</span>
+<span class="nc" id="L119">        getDestination().print(v);</span>
+<span class="nc" id="L120">    }</span>
 
     @Override
     public void print(double v) throws IOException {
-<span class="nc" id="L133">        getDestination().print(v);</span>
-<span class="nc" id="L134">    }</span>
+<span class="nc" id="L124">        getDestination().print(v);</span>
+<span class="nc" id="L125">    }</span>
 
     @Override
     public void println() throws IOException {
-<span class="nc" id="L138">        getDestination().println();</span>
-<span class="nc" id="L139">    }</span>
+<span class="nc" id="L129">        getDestination().println();</span>
+<span class="nc" id="L130">    }</span>
 
     @Override
     public void println(String s) throws IOException {
-<span class="nc" id="L143">        getDestination().println(s);</span>
-<span class="nc" id="L144">    }</span>
+<span class="nc" id="L134">        getDestination().println(s);</span>
+<span class="nc" id="L135">    }</span>
 
     @Override
     public void println(boolean b) throws IOException {
-<span class="nc" id="L148">        getDestination().println(b);</span>
-<span class="nc" id="L149">    }</span>
+<span class="nc" id="L139">        getDestination().println(b);</span>
+<span class="nc" id="L140">    }</span>
 
     @Override
     public void println(char c) throws IOException {
-<span class="nc" id="L153">        getDestination().println(c);</span>
-<span class="nc" id="L154">    }</span>
+<span class="nc" id="L144">        getDestination().println(c);</span>
+<span class="nc" id="L145">    }</span>
 
     @Override
     public void println(int i) throws IOException {
-<span class="nc" id="L158">        getDestination().println(i);</span>
-<span class="nc" id="L159">    }</span>
+<span class="nc" id="L149">        getDestination().println(i);</span>
+<span class="nc" id="L150">    }</span>
 
     @Override
     public void println(long l) throws IOException {
-<span class="nc" id="L163">        getDestination().println(l);</span>
-<span class="nc" id="L164">    }</span>
+<span class="nc" id="L154">        getDestination().println(l);</span>
+<span class="nc" id="L155">    }</span>
 
     @Override
     public void println(float v) throws IOException {
-<span class="nc" id="L168">        getDestination().println(v);</span>
-<span class="nc" id="L169">    }</span>
+<span class="nc" id="L159">        getDestination().println(v);</span>
+<span class="nc" id="L160">    }</span>
 
     @Override
     public void println(double v) throws IOException {
-<span class="nc" id="L173">        getDestination().println(v);</span>
-<span class="nc" id="L174">    }</span>
+<span class="nc" id="L164">        getDestination().println(v);</span>
+<span class="nc" id="L165">    }</span>
 
     @Override
     public void write(byte b[]) throws IOException {
-<span class="nc" id="L178">        getDestination().write(b);</span>
-<span class="nc" id="L179">    }</span>
+<span class="nc" id="L169">        getDestination().write(b);</span>
+<span class="nc" id="L170">    }</span>
 
     @Override
     public void write(byte b[], int off, int len) throws IOException {
-<span class="nc" id="L183">        getDestination().write(b, off, len);</span>
-<span class="nc" id="L184">    }</span>
+<span class="nc" id="L174">        getDestination().write(b, off, len);</span>
+<span class="nc" id="L175">    }</span>
 
     @Override
     public void flush() throws IOException {
-<span class="nc" id="L188">        getDestination().flush();</span>
-<span class="nc" id="L189">    }</span>
+<span class="nc" id="L179">        getDestination().flush();</span>
+<span class="nc" id="L180">    }</span>
 
     @Override
     public boolean isReady() {
-<span class="nc" id="L193">        return false;</span>
+<span class="nc" id="L184">        return false;</span>
     }
 
     @Override
     public void setWriteListener(WriteListener writeListener) {
         // TODO Not Implemented
-<span class="nc" id="L199">    }</span>
+<span class="nc" id="L190">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

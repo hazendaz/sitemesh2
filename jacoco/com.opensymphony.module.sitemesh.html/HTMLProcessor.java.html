@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HTMLProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html</a> &gt; <span class="el_source">HTMLProcessor.java</span></div><h1>HTMLProcessor.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 package com.opensymphony.module.sitemesh.html;
 
@@ -32,10 +23,10 @@ public class HTMLProcessor {
     private final SitemeshBufferFragment.Builder body;
 
     /** The default state. */
-<span class="fc" id="L35">    private final State defaultState = new State();</span>
+<span class="fc" id="L26">    private final State defaultState = new State();</span>
 
     /** The current state. */
-<span class="fc" id="L38">    private State currentState = defaultState;</span>
+<span class="fc" id="L29">    private State currentState = defaultState;</span>
 
     /**
      * Instantiates a new HTML processor.
@@ -45,10 +36,10 @@ public class HTMLProcessor {
      * @param body
      *            the body
      */
-<span class="fc" id="L48">    public HTMLProcessor(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment.Builder body) {</span>
-<span class="fc" id="L49">        this.sitemeshBuffer = sitemeshBuffer;</span>
-<span class="fc" id="L50">        this.body = body;</span>
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L39">    public HTMLProcessor(SitemeshBuffer sitemeshBuffer, SitemeshBufferFragment.Builder body) {</span>
+<span class="fc" id="L40">        this.sitemeshBuffer = sitemeshBuffer;</span>
+<span class="fc" id="L41">        this.body = body;</span>
+<span class="fc" id="L42">    }</span>
 
     /**
      * Default state.
@@ -56,7 +47,7 @@ public class HTMLProcessor {
      * @return the state
      */
     public State defaultState() {
-<span class="fc" id="L59">        return defaultState;</span>
+<span class="fc" id="L50">        return defaultState;</span>
     }
 
     /**
@@ -66,8 +57,8 @@ public class HTMLProcessor {
      *            the rule
      */
     public void addRule(TagRule rule) {
-<span class="fc" id="L69">        defaultState.addRule(rule);</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L60">        defaultState.addRule(rule);</span>
+<span class="fc" id="L61">    }</span>
 
     /**
      * Process.
@@ -76,78 +67,78 @@ public class HTMLProcessor {
      *             Signals that an I/O exception has occurred.
      */
     public void process() throws IOException {
-<span class="fc" id="L79">        TagTokenizer tokenizer = new TagTokenizer(sitemeshBuffer.getCharArray(), sitemeshBuffer.getBufferLength());</span>
-<span class="fc" id="L80">        final HTMLProcessorContext context = new HTMLProcessorContext() {</span>
+<span class="fc" id="L70">        TagTokenizer tokenizer = new TagTokenizer(sitemeshBuffer.getCharArray(), sitemeshBuffer.getBufferLength());</span>
+<span class="fc" id="L71">        final HTMLProcessorContext context = new HTMLProcessorContext() {</span>
 
             @Override
             public SitemeshBuffer getSitemeshBuffer() {
-<span class="fc" id="L84">                return sitemeshBuffer;</span>
+<span class="fc" id="L75">                return sitemeshBuffer;</span>
             }
 
             @Override
             public State currentState() {
-<span class="fc" id="L89">                return currentState;</span>
+<span class="fc" id="L80">                return currentState;</span>
             }
 
             @Override
             public void changeState(State newState) {
-<span class="fc" id="L94">                currentState = newState;</span>
-<span class="fc" id="L95">            }</span>
+<span class="fc" id="L85">                currentState = newState;</span>
+<span class="fc" id="L86">            }</span>
 
-<span class="fc" id="L97">            private SitemeshBufferFragment.Builder[] buffers = new SitemeshBufferFragment.Builder[10];</span>
+<span class="fc" id="L88">            private SitemeshBufferFragment.Builder[] buffers = new SitemeshBufferFragment.Builder[10];</span>
             private int size;
 
             @Override
             public void pushBuffer(SitemeshBufferFragment.Builder buffer) {
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                if (size == buffers.length) {</span>
-<span class="nc" id="L103">                    SitemeshBufferFragment.Builder[] newBuffers = new SitemeshBufferFragment.Builder[buffers.length</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                if (size == buffers.length) {</span>
+<span class="nc" id="L94">                    SitemeshBufferFragment.Builder[] newBuffers = new SitemeshBufferFragment.Builder[buffers.length</span>
                             * 2];
-<span class="nc" id="L105">                    System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);</span>
-<span class="nc" id="L106">                    buffers = newBuffers;</span>
+<span class="nc" id="L96">                    System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);</span>
+<span class="nc" id="L97">                    buffers = newBuffers;</span>
                 }
-<span class="fc" id="L108">                buffers[size++] = buffer;</span>
-<span class="fc" id="L109">            }</span>
+<span class="fc" id="L99">                buffers[size++] = buffer;</span>
+<span class="fc" id="L100">            }</span>
 
             @Override
             public SitemeshBufferFragment.Builder currentBuffer() {
-<span class="fc" id="L113">                return buffers[size - 1];</span>
+<span class="fc" id="L104">                return buffers[size - 1];</span>
             }
 
             @Override
             public SitemeshBufferFragment.Builder popBuffer() {
-<span class="fc" id="L118">                SitemeshBufferFragment.Builder last = buffers[size - 1];</span>
-<span class="fc" id="L119">                buffers[--size] = null;</span>
-<span class="fc" id="L120">                return last;</span>
+<span class="fc" id="L109">                SitemeshBufferFragment.Builder last = buffers[size - 1];</span>
+<span class="fc" id="L110">                buffers[--size] = null;</span>
+<span class="fc" id="L111">                return last;</span>
             }
         };
-<span class="fc" id="L123">        context.pushBuffer(body);</span>
-<span class="fc" id="L124">        tokenizer.start(new TokenHandler() {</span>
+<span class="fc" id="L114">        context.pushBuffer(body);</span>
+<span class="fc" id="L115">        tokenizer.start(new TokenHandler() {</span>
 
             @Override
             public boolean shouldProcessTag(String name) {
-<span class="fc" id="L128">                return currentState.shouldProcessTag(name.toLowerCase());</span>
+<span class="fc" id="L119">                return currentState.shouldProcessTag(name.toLowerCase());</span>
             }
 
             @Override
             public void tag(Tag tag) {
-<span class="fc" id="L133">                TagRule tagRule = currentState.getRule(tag.getName().toLowerCase());</span>
-<span class="fc" id="L134">                tagRule.setContext(context);</span>
-<span class="fc" id="L135">                tagRule.process(tag);</span>
-<span class="fc" id="L136">            }</span>
+<span class="fc" id="L124">                TagRule tagRule = currentState.getRule(tag.getName().toLowerCase());</span>
+<span class="fc" id="L125">                tagRule.setContext(context);</span>
+<span class="fc" id="L126">                tagRule.process(tag);</span>
+<span class="fc" id="L127">            }</span>
 
             @Override
             public void text(Text text) {
-<span class="fc" id="L140">                currentState.handleText(text, context);</span>
-<span class="fc" id="L141">            }</span>
+<span class="fc" id="L131">                currentState.handleText(text, context);</span>
+<span class="fc" id="L132">            }</span>
 
             @Override
             public void warning(String message, int line, int column) {
                 // TODO Enable logging here
                 // logger.info(&quot;{},{}: &quot;, line, column, message);
-<span class="nc" id="L147">            }</span>
+<span class="nc" id="L138">            }</span>
         });
-<span class="fc" id="L149">        defaultState.endOfState();</span>
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L140">        defaultState.endOfState();</span>
+<span class="fc" id="L141">    }</span>
 
     /**
      * Adds the text filter.
@@ -156,8 +147,8 @@ public class HTMLProcessor {
      *            the text filter
      */
     public void addTextFilter(TextFilter textFilter) {
-<span class="fc" id="L159">        currentState.addTextFilter(textFilter);</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L150">        currentState.addTextFilter(textFilter);</span>
+<span class="fc" id="L151">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

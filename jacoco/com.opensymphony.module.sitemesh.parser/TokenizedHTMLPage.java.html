@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TokenizedHTMLPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.parser</a> &gt; <span class="el_source">TokenizedHTMLPage.java</span></div><h1>TokenizedHTMLPage.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 package com.opensymphony.module.sitemesh.parser;
 
@@ -45,9 +36,9 @@ public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
      *            the sitemesh buffer
      */
     public TokenizedHTMLPage(SitemeshBuffer sitemeshBuffer) {
-<span class="fc" id="L48">        super(sitemeshBuffer);</span>
-<span class="fc" id="L49">        addProperty(&quot;title&quot;, &quot;&quot;);</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L39">        super(sitemeshBuffer);</span>
+<span class="fc" id="L40">        addProperty(&quot;title&quot;, &quot;&quot;);</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * Sets the body.
@@ -56,8 +47,8 @@ public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
      *            the new body
      */
     public void setBody(SitemeshBufferFragment body) {
-<span class="fc" id="L59">        this.body = body;</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L50">        this.body = body;</span>
+<span class="fc" id="L51">    }</span>
 
     /**
      * Sets the head.
@@ -66,35 +57,35 @@ public class TokenizedHTMLPage extends AbstractHTMLPage implements PageBuilder {
      *            the new head
      */
     public void setHead(SitemeshBufferFragment head) {
-<span class="fc" id="L69">        this.head = head;</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L60">        this.head = head;</span>
+<span class="fc" id="L61">    }</span>
 
     @Override
     public void writeHead(Writer out) throws IOException {
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (out instanceof SitemeshWriter) {</span>
-<span class="nc" id="L75">            ((SitemeshWriter) out).writeSitemeshBufferFragment(head);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (out instanceof SitemeshWriter) {</span>
+<span class="nc" id="L66">            ((SitemeshWriter) out).writeSitemeshBufferFragment(head);</span>
         } else {
-<span class="fc" id="L77">            head.writeTo(out);</span>
+<span class="fc" id="L68">            head.writeTo(out);</span>
+        }
+<span class="fc" id="L70">    }</span>
+
+    @Override
+    public void writeBody(Writer out) throws IOException {
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (out instanceof SitemeshWriter) {</span>
+<span class="nc" id="L75">            ((SitemeshWriter) out).writeSitemeshBufferFragment(body);</span>
+        } else {
+<span class="fc" id="L77">            body.writeTo(out);</span>
         }
 <span class="fc" id="L79">    }</span>
 
     @Override
-    public void writeBody(Writer out) throws IOException {
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (out instanceof SitemeshWriter) {</span>
-<span class="nc" id="L84">            ((SitemeshWriter) out).writeSitemeshBufferFragment(body);</span>
-        } else {
-<span class="fc" id="L86">            body.writeTo(out);</span>
-        }
-<span class="fc" id="L88">    }</span>
-
-    @Override
     public String getHead() {
-<span class="nc" id="L92">        return head.getStringContent();</span>
+<span class="nc" id="L83">        return head.getStringContent();</span>
     }
 
     @Override
     public String getBody() {
-<span class="fc" id="L97">        return body.getStringContent();</span>
+<span class="fc" id="L88">        return body.getStringContent();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

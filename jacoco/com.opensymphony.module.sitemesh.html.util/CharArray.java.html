@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharArray.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.html.util</a> &gt; <span class="el_source">CharArray.java</span></div><h1>CharArray.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 package com.opensymphony.module.sitemesh.html.util;
 
@@ -26,7 +17,7 @@ import java.io.PrintWriter;
 public class CharArray {
 
     /** The size. */
-<span class="fc" id="L29">    int size = 0;</span>
+<span class="fc" id="L20">    int size = 0;</span>
 
     /** The buffer. */
     char[] buffer;
@@ -36,10 +27,10 @@ public class CharArray {
     // the comparisons are at the heart of the FastPageParser loop and any speed increase
     /** The sub str start. */
     // we can get at this level has a huge impact on performance.
-<span class="fc" id="L39">    int subStrStart = 0;</span>
+<span class="fc" id="L30">    int subStrStart = 0;</span>
 
     /** The sub str len. */
-<span class="fc" id="L42">    int subStrLen = 0;</span>
+<span class="fc" id="L33">    int subStrLen = 0;</span>
 
     /**
      * Constructs a CharArray that is initialized to the specified size. Do not pass in a negative value because there
@@ -48,16 +39,16 @@ public class CharArray {
      * @param size
      *            the size
      */
-<span class="fc" id="L51">    public CharArray(int size) {</span>
-<span class="fc" id="L52">        buffer = new char[size];</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L42">    public CharArray(int size) {</span>
+<span class="fc" id="L43">        buffer = new char[size];</span>
+<span class="fc" id="L44">    }</span>
 
     /**
      * Returns a String represenation of the character array.
      */
     @Override
     public String toString() {
-<span class="fc" id="L60">        return new String(buffer, 0, size);</span>
+<span class="fc" id="L51">        return new String(buffer, 0, size);</span>
     }
 
     /**
@@ -70,7 +61,7 @@ public class CharArray {
      * @return the char
      */
     public char charAt(int pos) {
-<span class="fc" id="L73">        return buffer[pos];</span>
+<span class="fc" id="L64">        return buffer[pos];</span>
     }
 
     /**
@@ -83,22 +74,22 @@ public class CharArray {
      *            the new size of the character array
      */
     public void setLength(int newSize) {
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (newSize &lt; 0) {</span>
-<span class="nc" id="L87">            newSize = 0;</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (newSize &lt; 0) {</span>
+<span class="nc" id="L78">            newSize = 0;</span>
         }
 
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (newSize &lt;= size) {</span>
-<span class="fc" id="L91">            size = newSize;</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (newSize &lt;= size) {</span>
+<span class="fc" id="L82">            size = newSize;</span>
         } else {
-<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (newSize &gt;= buffer.length) {</span>
-<span class="nc" id="L94">                grow(newSize);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (newSize &gt;= buffer.length) {</span>
+<span class="nc" id="L85">                grow(newSize);</span>
             }
             // Pad the array
-<span class="nc bnc" id="L97" title="All 2 branches missed.">            for (; size &lt; newSize; size++) {</span>
-<span class="nc" id="L98">                buffer[size] = '\0';</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            for (; size &lt; newSize; size++) {</span>
+<span class="nc" id="L89">                buffer[size] = '\0';</span>
             }
         }
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L92">    }</span>
 
     /**
      * Returns the current length of the character array.
@@ -106,7 +97,7 @@ public class CharArray {
      * @return the int
      */
     public int length() {
-<span class="fc" id="L109">        return size;</span>
+<span class="fc" id="L100">        return size;</span>
     }
 
     /**
@@ -119,7 +110,7 @@ public class CharArray {
      * @return the char array
      */
     public CharArray append(CharArray chars) {
-<span class="fc" id="L122">        return append(chars.buffer, 0, chars.size);</span>
+<span class="fc" id="L113">        return append(chars.buffer, 0, chars.size);</span>
     }
 
     /**
@@ -131,7 +122,7 @@ public class CharArray {
      * @return the char array
      */
     public CharArray append(char[] chars) {
-<span class="nc" id="L134">        return append(chars, 0, chars.length);</span>
+<span class="nc" id="L125">        return append(chars, 0, chars.length);</span>
     }
 
     /**
@@ -147,13 +138,13 @@ public class CharArray {
      * @return the char array
      */
     public CharArray append(char[] chars, int position, int length) {
-<span class="fc" id="L150">        int requiredSize = length + size;</span>
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (requiredSize &gt;= buffer.length) {</span>
-<span class="nc" id="L152">            grow(requiredSize);</span>
+<span class="fc" id="L141">        int requiredSize = length + size;</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (requiredSize &gt;= buffer.length) {</span>
+<span class="nc" id="L143">            grow(requiredSize);</span>
         }
-<span class="fc" id="L154">        System.arraycopy(chars, position, buffer, size, length);</span>
-<span class="fc" id="L155">        size = requiredSize;</span>
-<span class="fc" id="L156">        return this;</span>
+<span class="fc" id="L145">        System.arraycopy(chars, position, buffer, size, length);</span>
+<span class="fc" id="L146">        size = requiredSize;</span>
+<span class="fc" id="L147">        return this;</span>
     }
 
     /**
@@ -165,11 +156,11 @@ public class CharArray {
      * @return the char array
      */
     public CharArray append(char c) {
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (buffer.length == size) {</span>
-<span class="nc" id="L169">            grow(0);</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (buffer.length == size) {</span>
+<span class="nc" id="L160">            grow(0);</span>
         }
-<span class="fc" id="L171">        buffer[size++] = c;</span>
-<span class="fc" id="L172">        return this;</span>
+<span class="fc" id="L162">        buffer[size++] = c;</span>
+<span class="fc" id="L163">        return this;</span>
     }
 
     /**
@@ -182,17 +173,17 @@ public class CharArray {
      * @return the char array
      */
     public CharArray append(String str) {
-<span class="fc" id="L185">        int requiredSize = str.length() + size;</span>
-<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (requiredSize &gt;= buffer.length) {</span>
-<span class="fc" id="L187">            grow(requiredSize);</span>
+<span class="fc" id="L176">        int requiredSize = str.length() + size;</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (requiredSize &gt;= buffer.length) {</span>
+<span class="fc" id="L178">            grow(requiredSize);</span>
         }
 
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc" id="L191">            buffer[size + i] = str.charAt(i);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc" id="L182">            buffer[size + i] = str.charAt(i);</span>
         }
 
-<span class="fc" id="L194">        size = requiredSize;</span>
-<span class="fc" id="L195">        return this;</span>
+<span class="fc" id="L185">        size = requiredSize;</span>
+<span class="fc" id="L186">        return this;</span>
     }
 
     /**
@@ -206,7 +197,7 @@ public class CharArray {
      * @return the string
      */
     public String substring(int begin, int end) {
-<span class="fc" id="L209">        return new String(buffer, begin, end - begin);</span>
+<span class="fc" id="L200">        return new String(buffer, begin, end - begin);</span>
     }
 
     /**
@@ -219,9 +210,9 @@ public class CharArray {
      *            the ending offset into the character array.
      */
     public void setSubstr(int begin, int end) {
-<span class="fc" id="L222">        subStrStart = begin;</span>
-<span class="fc" id="L223">        subStrLen = end - begin;</span>
-<span class="fc" id="L224">    }</span>
+<span class="fc" id="L213">        subStrStart = begin;</span>
+<span class="fc" id="L214">        subStrLen = end - begin;</span>
+<span class="fc" id="L215">    }</span>
 
     /**
      * Returns the substring that was specified by the {@link #setSubstr(int, int)} call.
@@ -229,10 +220,10 @@ public class CharArray {
      * @return the lower substr
      */
     public String getLowerSubstr() {
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        for (int i = subStrStart; i &lt; subStrStart + subStrLen; i++) {</span>
-<span class="fc" id="L233">            buffer[i] |= 32;</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        for (int i = subStrStart; i &lt; subStrStart + subStrLen; i++) {</span>
+<span class="fc" id="L224">            buffer[i] |= 32;</span>
         }
-<span class="fc" id="L235">        return new String(buffer, subStrStart, subStrLen);</span>
+<span class="fc" id="L226">        return new String(buffer, subStrStart, subStrLen);</span>
     }
 
     /**
@@ -246,17 +237,17 @@ public class CharArray {
      */
     public boolean compareLowerSubstr(String lowerStr) {
         // Range check
-<span class="pc bpc" id="L249" title="1 of 4 branches missed.">        if (lowerStr.length() != subStrLen || subStrLen &lt;= 0) {</span>
-<span class="fc" id="L250">            return false;</span>
+<span class="pc bpc" id="L240" title="1 of 4 branches missed.">        if (lowerStr.length() != subStrLen || subStrLen &lt;= 0) {</span>
+<span class="fc" id="L241">            return false;</span>
         }
 
-<span class="fc bfc" id="L253" title="All 2 branches covered.">        for (int i = 0; i &lt; lowerStr.length(); i++) {</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        for (int i = 0; i &lt; lowerStr.length(); i++) {</span>
             // | 32 converts from ASCII uppercase to ASCII lowercase
-<span class="pc bpc" id="L255" title="1 of 2 branches missed.">            if ((buffer[subStrStart + i] | 32) != lowerStr.charAt(i)) {</span>
-<span class="nc" id="L256">                return false;</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">            if ((buffer[subStrStart + i] | 32) != lowerStr.charAt(i)) {</span>
+<span class="nc" id="L247">                return false;</span>
             }
         }
-<span class="fc" id="L259">        return true;</span>
+<span class="fc" id="L250">        return true;</span>
     }
 
     /**
@@ -267,13 +258,13 @@ public class CharArray {
      * @return the int
      */
     public int substrHashCode() {
-<span class="fc" id="L270">        int hash = 0;</span>
-<span class="fc" id="L271">        int offset = subStrStart;</span>
-<span class="fc bfc" id="L272" title="All 2 branches covered.">        for (int i = 0; i &lt; subStrLen; i++) {</span>
-<span class="fc" id="L273">            hash = 31 * hash + (buffer[offset] | 32);</span>
-<span class="fc" id="L274">            offset++;</span>
+<span class="fc" id="L261">        int hash = 0;</span>
+<span class="fc" id="L262">        int offset = subStrStart;</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        for (int i = 0; i &lt; subStrLen; i++) {</span>
+<span class="fc" id="L264">            hash = 31 * hash + (buffer[offset] | 32);</span>
+<span class="fc" id="L265">            offset++;</span>
         }
-<span class="fc" id="L276">        return hash;</span>
+<span class="fc" id="L267">        return hash;</span>
     }
 
     /**
@@ -295,17 +286,17 @@ public class CharArray {
      */
     public boolean compareLower(String lowerStr, int offset) {
         // Range check
-<span class="nc bnc" id="L298" title="All 4 branches missed.">        if (offset &lt; 0 || offset + lowerStr.length() &gt; size) {</span>
-<span class="nc" id="L299">            return false;</span>
+<span class="nc bnc" id="L289" title="All 4 branches missed.">        if (offset &lt; 0 || offset + lowerStr.length() &gt; size) {</span>
+<span class="nc" id="L290">            return false;</span>
         }
 
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        for (int i = 0; i &lt; lowerStr.length(); i++) {</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">        for (int i = 0; i &lt; lowerStr.length(); i++) {</span>
             // | 32 converts from ASCII uppercase to ASCII lowercase
-<span class="nc bnc" id="L304" title="All 2 branches missed.">            if ((buffer[offset + i] | 32) != lowerStr.charAt(i)) {</span>
-<span class="nc" id="L305">                return false;</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">            if ((buffer[offset + i] | 32) != lowerStr.charAt(i)) {</span>
+<span class="nc" id="L296">                return false;</span>
             }
         }
-<span class="nc" id="L308">        return true;</span>
+<span class="nc" id="L299">        return true;</span>
     }
 
     /**
@@ -316,23 +307,23 @@ public class CharArray {
      *            the min size
      */
     private final void grow(int minSize) {
-<span class="fc" id="L319">        int newCapacity = (buffer.length + 1) * 2;</span>
-<span class="pc bpc" id="L320" title="1 of 2 branches missed.">        if (newCapacity &lt; 0) {</span>
-<span class="nc" id="L321">            newCapacity = Integer.MAX_VALUE;</span>
-<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        } else if (minSize &gt; newCapacity) {</span>
-<span class="nc" id="L323">            newCapacity = minSize;</span>
+<span class="fc" id="L310">        int newCapacity = (buffer.length + 1) * 2;</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (newCapacity &lt; 0) {</span>
+<span class="nc" id="L312">            newCapacity = Integer.MAX_VALUE;</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        } else if (minSize &gt; newCapacity) {</span>
+<span class="nc" id="L314">            newCapacity = minSize;</span>
         }
-<span class="fc" id="L325">        char newBuffer[] = new char[newCapacity];</span>
-<span class="fc" id="L326">        System.arraycopy(buffer, 0, newBuffer, 0, size);</span>
-<span class="fc" id="L327">        buffer = newBuffer;</span>
-<span class="fc" id="L328">    }</span>
+<span class="fc" id="L316">        char newBuffer[] = new char[newCapacity];</span>
+<span class="fc" id="L317">        System.arraycopy(buffer, 0, newBuffer, 0, size);</span>
+<span class="fc" id="L318">        buffer = newBuffer;</span>
+<span class="fc" id="L319">    }</span>
 
     /**
      * Clear the contents.
      */
     public final void clear() {
-<span class="fc" id="L334">        size = 0;</span>
-<span class="fc" id="L335">    }</span>
+<span class="fc" id="L325">        size = 0;</span>
+<span class="fc" id="L326">    }</span>
 
     /**
      * Write to.
@@ -341,7 +332,7 @@ public class CharArray {
      *            the writer
      */
     public void writeTo(PrintWriter writer) {
-<span class="nc" id="L344">        writer.write(buffer, 0, size);</span>
-<span class="nc" id="L345">    }</span>
+<span class="nc" id="L335">        writer.write(buffer, 0, size);</span>
+<span class="nc" id="L336">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

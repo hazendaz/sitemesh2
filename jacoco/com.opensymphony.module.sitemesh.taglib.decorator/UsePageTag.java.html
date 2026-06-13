@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsePageTag.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sitemesh</a> &gt; <a href="index.source.html" class="el_package">com.opensymphony.module.sitemesh.taglib.decorator</a> &gt; <span class="el_source">UsePageTag.java</span></div><h1>UsePageTag.java</h1><pre class="source lang-java linenums">/*
- * sitemesh2 (https://github.com/hazendaz/sitemesh2)
- *
- * Copyright 2011-2023 Hazendaz.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of The Apache Software License,
- * Version 2.0 which accompanies this distribution, and is available at
- * https://www.apache.org/licenses/LICENSE-2.0.txt
- *
- * Contributors:
- *     Hazendaz (Jeremy Landis).
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2011-2026 Hazendaz
  */
 /*
  * Title:        UsePageTag
@@ -24,8 +15,8 @@ package com.opensymphony.module.sitemesh.taglib.decorator;
 
 import com.opensymphony.module.sitemesh.taglib.AbstractTag;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.PageContext;
 
 /**
  * Expose the Page as a bean to the page which can then be accessed from scriptlets.
@@ -38,24 +29,24 @@ import javax.servlet.jsp.PageContext;
  * @see UsePageTEI
  * @see UseHTMLPageTEI
  */
-<span class="nc" id="L41">public class UsePageTag extends AbstractTag {</span>
+<span class="nc" id="L32">public class UsePageTag extends AbstractTag {</span>
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
     /** The id. */
-<span class="nc" id="L47">    private String id = null;</span>
+<span class="nc" id="L38">    private String id = null;</span>
 
     /** Set name of variable the Page will be set as. */
     @Override
     public void setId(String id) {
-<span class="nc" id="L52">        this.id = id;</span>
-<span class="nc" id="L53">    }</span>
+<span class="nc" id="L43">        this.id = id;</span>
+<span class="nc" id="L44">    }</span>
 
     @Override
     public final int doEndTag() throws JspException {
-<span class="nc" id="L57">        pageContext.setAttribute(id, getPage(), PageContext.PAGE_SCOPE);</span>
-<span class="nc" id="L58">        return EVAL_PAGE;</span>
+<span class="nc" id="L48">        pageContext.setAttribute(id, getPage(), PageContext.PAGE_SCOPE);</span>
+<span class="nc" id="L49">        return EVAL_PAGE;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
