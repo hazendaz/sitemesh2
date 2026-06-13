@@ -13,8 +13,8 @@ The original sitemesh 2.x line was entirely dormant and dead as replaced by vers
 
 ## Version Selection
 
-* Sitemesh 2.4.x supports javax namespace.
-* Sitemesh 2.5.x+ supports jakarta namespace).
+* Sitemesh 2.5.x supports javax namespace.
+* Sitemesh 2.6.x and onwards supports jakarta namespace).
 
 *************************************
 ** OpenSymphony SiteMesh 2.x
