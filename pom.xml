@@ -51,6 +51,9 @@
         <java.release.version>11</java.release.version>
         <javadoc.java.release.version>11</javadoc.java.release.version>
 
+        <!-- Jacoco minimum code coverage -->
+        <jacoco.minimum.coverage>0.30</jacoco.minimum.coverage>
+
         <!-- Automatic Module Name -->
         <module.name>com.github.hazendaz.sitemesh</module.name>
 
