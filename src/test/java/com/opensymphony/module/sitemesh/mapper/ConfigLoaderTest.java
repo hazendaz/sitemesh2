@@ -34,7 +34,7 @@ class ConfigLoaderTest {
     @BeforeEach
     void setUp() throws Exception {
         // create temp file
-        tempConfigFile = File.createTempFile("decorators-test", ".xml");
+        tempConfigFile = Files.createTempFile("decorators-test", ".xml").toFile();
         tempConfigFile.deleteOnExit();
 
         // write to temp file
