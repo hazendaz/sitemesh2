@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,8 +54,8 @@ public class ParserPerformanceComparison {
         File file = Path.of(System.getProperty("java.io.tmpdir"), HTML_FILE).toFile();
         if (!file.exists()) {
             System.out.println("Downloading " + HTML_URL + " to use for performance test");
-            URL url = new URL(HTML_URL);
-            try (InputStream is = url.openStream();
+            URI uri = URI.create(HTML_URL);
+            try (InputStream is = uri.toURL().openStream();
                     OutputStream os = Files.newOutputStream(file.toPath())) {
                 copy(is, os);
             }

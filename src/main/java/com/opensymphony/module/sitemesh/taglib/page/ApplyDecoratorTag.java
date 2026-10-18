@@ -36,7 +36,7 @@ import jakarta.servlet.jsp.tagext.BodyTagSupport;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -223,8 +223,8 @@ public class ApplyDecoratorTag extends BodyTagSupport implements RequestConstant
                 }
             } else if (page.startsWith("http://") || page.startsWith("https://")) {
                 try {
-                    URL url = new URL(page);
-                    URLConnection urlConn = url.openConnection();
+                    URI uri = URI.create(page);
+                    URLConnection urlConn = uri.toURL().openConnection();
                     urlConn.setUseCaches(true);
 
                     try (BufferedReader in = new BufferedReader(
